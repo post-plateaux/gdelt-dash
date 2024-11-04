@@ -5,10 +5,15 @@ services:
     ports:
       - "8080:80"  # Expose port 8080 on localhost
     volumes:
-      - ./html:/usr/share/nginx/html  # Mount the hello world HTML page
+      - ./html:/usr/share/nginx/html  
       - ./html/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - grafana  # Start after Grafana to avoid any potential conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - backend
 
@@ -17,8 +22,13 @@ services:
     container_name: cloudflared
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    restart: unless-stopped
+    restart: on-failure
     command: tunnel run
+    depends_on:
+      web:
+        condition: service_healthy  # Ensure web is fully up before starting Cloudflared
+      grafana:
+        condition: service_healthy  # Ensure Grafana is fully up before starting Cloudflared
     networks:
       - backend
 
@@ -56,6 +66,11 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - backend
 

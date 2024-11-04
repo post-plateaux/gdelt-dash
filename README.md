@@ -9,3 +9,5 @@ This project is a self-hosted GDELT data pipeline and visualization dashboard, d
 - **Secure Public Access**: Nginx serves the dashboard with Cloudflare Tunnel for remote access, encapsulating the local network securely.
 
 This project demonstrates skills in Docker, Grafana, PostgreSQL, advanced networking, and virtualization. It provides a critical analysis tool to evaluate GDELT’s data coverage and accuracy.
+
+You can visit the dashboard at fifteen.postplateaux.com
