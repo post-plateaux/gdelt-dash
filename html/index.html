@@ -1,0 +1,223 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Modern+Typewriter&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+		<script type="text/javascript">
+			window.tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							border: 'hsl(var(--border))',
+							input: 'hsl(var(--input))',
+							ring: 'hsl(var(--ring))',
+							background: 'hsl(var(--background))',
+							foreground: 'hsl(var(--foreground))',
+							primary: {
+								DEFAULT: 'hsl(var(--primary))',
+								foreground: 'hsl(var(--primary-foreground))'
+							},
+							secondary: {
+								DEFAULT: 'hsl(var(--secondary))',
+								foreground: 'hsl(var(--secondary-foreground))'
+							},
+							destructive: {
+								DEFAULT: 'hsl(var(--destructive))',
+								foreground: 'hsl(var(--destructive-foreground))'
+							},
+							muted: {
+								DEFAULT: 'hsl(var(--muted))',
+								foreground: 'hsl(var(--muted-foreground))'
+							},
+							accent: {
+								DEFAULT: 'hsl(var(--accent))',
+								foreground: 'hsl(var(--accent-foreground))'
+							},
+							popover: {
+								DEFAULT: 'hsl(var(--popover))',
+								foreground: 'hsl(var(--popover-foreground))'
+							},
+							card: {
+								DEFAULT: 'hsl(var(--card))',
+								foreground: 'hsl(var(--card-foreground))'
+							},
+						},
+					}
+				}
+			}
+		</script>
+    <style>
+      body {
+        font-family: 'Modern Typewriter', monospace;
+      }
+    </style>
+		<style type="text/tailwindcss">
+			@layer base {
+				:root {
+					--background: 0 0% 100%;
+--foreground: 240 10% 3.9%;
+--card: 0 0% 100%;
+--card-foreground: 240 10% 3.9%;
+--popover: 0 0% 100%;
+--popover-foreground: 240 10% 3.9%;
+--primary: 240 5.9% 10%;
+--primary-foreground: 0 0% 98%;
+--secondary: 240 4.8% 95.9%;
+--secondary-foreground: 240 5.9% 10%;
+--muted: 240 4.8% 95.9%;
+--muted-foreground: 240 3.8% 46.1%;
+--accent: 240 4.8% 95.9%;
+--accent-foreground: 240 5.9% 10%;
+--destructive: 0 84.2% 60.2%;
+--destructive-foreground: 0 0% 98%;
+--border: 240 5.9% 90%;
+--input: 240 5.9% 90%;
+--ring: 240 5.9% 10%;
+--radius: 0.5rem;
+				}
+				.dark {
+					--background: 240 10% 3.9%;
+--foreground: 0 0% 98%;
+--card: 240 10% 3.9%;
+--card-foreground: 0 0% 98%;
+--popover: 240 10% 3.9%;
+--popover-foreground: 0 0% 98%;
+--primary: 0 0% 98%;
+--primary-foreground: 240 5.9% 10%;
+--secondary: 240 3.7% 15.9%;
+--secondary-foreground: 0 0% 98%;
+--muted: 240 3.7% 15.9%;
+--muted-foreground: 240 5% 64.9%;
+--accent: 240 3.7% 15.9%;
+--accent-foreground: 0 0% 98%;
+--destructive: 0 62.8% 30.6%;
+--destructive-foreground: 0 0% 98%;
+--border: 240 3.7% 15.9%;
+--input: 240 3.7% 15.9%;
+--ring: 240 4.9% 83.9%;
+				}
+			}
+		</style>
+  </head>
+  <body class="dark">
+    <div class="flex items-center justify-center min-h-screen bg-background text-foreground">
+  <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
+    <h1 class="text-2xl font-bold mb-4 text-center text-primary">GDELT Data Dashboard</h1>
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-primary">Dashboard Overview</h2>
+      <p class="text-sm text-muted-foreground mb-2">
+        This dashboard is a self-hosted sample of GDELT, a massive data project that attempts to map global events and sentiment. Find the technical details of the dashboard below.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="border border-border rounded-lg overflow-hidden">
+        <iframe 
+          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=2&__feature.dashboardSceneSolo&theme=dark" 
+          width="100%" 
+          height="400" 
+          frameborder="0"
+          class="w-full"
+          title="GDELT Data Visualization 1"
+        ></iframe>
+      </div>
+      <div class="border border-border rounded-lg overflow-hidden">
+        <iframe 
+          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=5&__feature.dashboardSceneSolo&theme=dark" 
+          width="100%" 
+          height="400" 
+          frameborder="0"
+          class="w-full"
+          title="GDELT Data Visualization 2"
+        ></iframe>
+      </div>
+    </div>
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-primary">GDELT: Purpose vs. Reality</h2>
+      <p class="text-sm text-muted-foreground mb-2">
+        GDELT aims to classify events by country, actor type, and tone using automated sentiment analysis. While it does have some utility, GDELT's method often fails in accuracy and nuance. Hyper ideological sources, such as the Heritage Foundation or others, often have out-sized impacts when processed without context; just one example of the many flaws in sentiment analysis.      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="border border-border rounded-lg overflow-hidden">
+        <iframe 
+          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=6&__feature.dashboardSceneSolo&theme=dark" 
+          width="100%" 
+          height="200" 
+          frameborder="0"
+          class="w-full"
+          title="GDELT Data Visualization 3"
+        ></iframe>
+      </div>
+      <div class="border border-border rounded-lg overflow-hidden">
+        <iframe 
+          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=8&__feature.dashboardSceneSolo&theme=dark" 
+          width="100%" 
+          height="200" 
+          frameborder="0"
+          class="w-full"
+          title="GDELT Data Visualization 4"
+        ></iframe>
+      </div>
+    </div>
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-primary">Technical Approach</h2>
+      <p class="text-sm text-muted-foreground mb-2">
+        The self-hosted data pipeline for this project operates on a virtual machine running AlmaLinux within a Proxmox environment, leveraging Docker Compose to orchestrate services. Here’s an exhaustive breakdown of its configuration:
+      </p>
+      <p class="text-sm text-muted-foreground mb-2">
+        1. **Data Ingestion and Processing**:  
+        Every 15 minutes, the system ingests new GDELT data. This process is automated through a script (`fetch_gdelt_and_upload.py`) that:  
+        - Fetches GDELT data updates, downloads the relevant files, and extracts them in-memory.  
+        - Parses data into events and mentions, validating the format before loading it into PostgreSQL in batches.  
+        - Deletes existing rows in the database before loading fresh data, ensuring up-to-date entries.
+      </p>
+      <p class="text-sm text-muted-foreground mb-2">
+        2. **Database Setup (PostgreSQL)**:  
+        The PostgreSQL instance within Docker holds the core GDELT event data, managed by multiple tables as specified in individual table creation scripts. These tables store metadata about actors, event types, and other categorical data. Grafana reads from PostgreSQL for real-time queries, presenting insights and patterns directly from GDELT’s structured event data.
+      </p>
+      <p class="text-sm text-muted-foreground mb-2">
+        3. **Visualization and Web Interface**:  
+        - **Grafana** serves as the primary visualization layer. Configured with PostgreSQL as its data source, it visualizes real-time data, including detailed breakdowns of event types, police-related incidents, and country-level engagement. The dashboard configuration includes a variety of panels, such as bar charts, pie charts, and gauges, all tailored to GDELT's data types.  
+        - **Nginx** serves as a reverse proxy and web server, presenting an `index.html` file that acts as the public-facing entry point for the dashboard. This HTML file uses TailwindCSS and integrates Grafana visualizations as iframes, allowing smooth, embedded access.  
+        - **Cloudflare Tunnel** provides secure public access, encapsulating this local service within a Cloudflare-managed connection for protection and ease of access across networks.
+      </p>
+      <p class="text-sm text-muted-foreground mb-2">
+        4. **Network Isolation and PCIe Passthrough**:  
+        For efficiency, a dedicated PCIe-passed Ethernet port provides the VM’s network access. This isolated network ensures secure and stable data flow, with the Proxmox hypervisor managing the IOMMU groups necessary for passthrough configuration.
+      </p>
+      <p class="text-sm text-muted-foreground mb-2">
+        5. **Infrastructure Management**:  
+        - **Proxmox** acts as the hypervisor, hosting the AlmaLinux VM. Proxmox's IOMMU configuration enables PCIe passthrough for the network card, with each NIC port in a separate IOMMU group for isolated use in VMs.  
+        - **OPNsense Router** is implemented within Proxmox to manage firewall rules, network routing, and provide an additional security layer around the dashboard’s isolated network.
+      </p>
+      <p class="text-sm text-muted-foreground mb-2">
+        This setup ensures a robust, efficient pipeline with critical attention to network isolation, secure data ingestion, and real-time monitoring, all orchestrated on a self-hosted, fully open-source stack. This configuration not only highlights the capabilities of Docker, Grafana, and PostgreSQL but also emphasizes skills in advanced networking, hypervisor management, and secure data handling in a self-contained environment.
+      </p>
+    </div>
+        <div class="border border-border rounded-lg overflow-hidden mb-6">
+          <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730746444415&to=1730747344415&timezone=browser&orgId=1&panelId=9&__feature.dashboardSceneSolo" width="100%" height="200" frameborder="0"></iframe>    </div>
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2 text-primary">Planned Expansion: Exploring GDELT's Inaccuracy</h2>
+      <p class="text-sm text-muted-foreground mb-2">
+        My next planned expansion of this dashboard will assess GDELT's reliability. As may or may not be clear above (depending on the last 15 minutes), GDELT can seriously miss the mark. By sampling URLs and processing content via large language model, I will develop an automated accuracy grade for GDELT's classifications.      </p>
+    </div>
+  </div>
+</div>
+
+
+    <script type="text/javascript">
+      function refreshIframes() {
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+          const src = iframe.src;
+          iframe.src = '';
+          iframe.src = src;
+        });
+      }
+
+      // Refresh every 15 minutes (900,000 milliseconds)
+      setInterval(refreshIframes, 900000);
+    </script>
+  </body>
+</html>

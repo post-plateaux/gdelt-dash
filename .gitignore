@@ -1,0 +1,7 @@
+.aider*
+.env
+venv/
+GDELT_2.0_Events_Column_Labels_Header_Row_Sep2016.csv
+GDELT_2.0_eventMentions_Column_Labels_Header_Row_Sep2016.tsv
+GDELT_2.0_gdeltKnowledgeGraph_Column_Labels_Header_Row_Sep2016.tsv
+data/
