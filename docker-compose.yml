@@ -9,6 +9,7 @@ services:
       - ./html/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - grafana  # Start after Grafana to avoid any potential conflicts
+    restart: unless-stopped
     networks:
       - backend
 
