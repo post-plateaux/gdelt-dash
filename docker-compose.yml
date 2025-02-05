@@ -12,7 +12,8 @@ services:
     restart: unless-stopped
     networks:
       - backend
-      - postgis_network
+      - shared_net
+      - shared_net
 
 
   grafana:
@@ -94,6 +95,5 @@ volumes:
 networks:
   backend:
     driver: bridge
-  postgis_network:
+  shared_net:
     external: true
-    name: postgis_default
