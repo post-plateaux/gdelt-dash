@@ -6,6 +6,7 @@ import requests  # Added
 import io        # Added
 import zipfile   # Added
 import time      # Added
+from datetime import datetime, timedelta
 
 # Retrieve database connection details
 db_user = os.getenv('POSTGIS_USER')
@@ -23,37 +24,44 @@ batch_size = 2000  # Number of rows to insert in a single batch
 
 def fetch_and_download_gdelt_data():
     """Fetch and download GDELT data from both English and Translation sources"""
+    print("\n" + "="*50)
+    print(f"🛜 DOWNLOADING DATA FROM GDELT SOURCES [{datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}]")
     sources = [
-        "http://data.gdeltproject.org/gdeltv2/lastupdate.txt",
-        "http://data.gdeltproject.org/gdeltv2/lastupdate-translation.txt"
+        ("MAIN", "http://data.gdeltproject.org/gdeltv2/lastupdate.txt"),
+        ("TRANSLATION", "http://data.gdeltproject.org/gdeltv2/lastupdate-translation.txt")
     ]
     zip_files = []
-    for url in sources:
+    for source_type, url in sources:
         try:
+            print(f"\n🔎 CHECKING {source_type} SOURCE")
             response = requests.get(url)
             response.raise_for_status()
             data = response.text
-            # Get URLs for both export and mentions, ignore gkg
             urls = [line.split()[-1] for line in data.splitlines() 
                    if any(x in line for x in ['export', 'mentions'])]
+            
+            print(f"📥 FOUND {len(urls)} FILES IN {source_type} SOURCE")
             for file_url in urls:
                 with requests.get(file_url, stream=True) as r:
                     r.raise_for_status()
                     zip_files.append(io.BytesIO(r.content))
                 filename = file_url.split('/')[-1]
-                print(f"DOWNLOAD SUCCESS: {filename.upper()}")
+                print(f"✅ DOWNLOAD SUCCESS: {filename.upper()}")
         except requests.exceptions.RequestException as e:
             print(f"Error downloading from {url}: {e}")
     return zip_files
 
 def extract_files(zip_files):
     """Extract files from in-memory ZIP files and return their contents."""
+    print("\n" + "📦"*20)
+    print(f"🧹 EXTRACTING FILES FROM {len(zip_files)} ARCHIVES")
     extracted_files = {}
-    for zip_file in zip_files:
+    for i, zip_file in enumerate(zip_files, 1):
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             for file_name in zip_ref.namelist():
                 extracted_files[file_name] = zip_ref.read(file_name)
-                print(f"EXTRACTION COMPLETE: {file_name.upper()}")
+                print(f"📄 EXTRACTED: {file_name.upper()}")
+    print(f"🚀 TOTAL EXTRACTED FILES: {len(extracted_files)}")
     return extracted_files
 
 def validate_and_parse_row(row, expected_columns):
@@ -164,9 +172,13 @@ import time
 interval_minutes = 15  # Change this to your desired interval
 
 if __name__ == "__main__":
+    print("\n🔵 GDELT CONNECT SERVICE INITIALIZED 🔵\n")
+    
     while True:
+        cycle_start = datetime.utcnow()
         try:
-            print("\nSTARTING NEW PROCESSING CYCLE...")
+            print("\n" + "="*50)
+            print(f"🚀 STARTING PROCESSING CYCLE AT {cycle_start.strftime('%Y-%m-%d %H:%M:%S UTC')}")
             
             # Step 1: Fetch and download the GDELT data
             zip_files = fetch_and_download_gdelt_data()
@@ -229,15 +241,25 @@ if __name__ == "__main__":
 
             connection.close()
             print("Connection closed.")
-            print("PROCESSING CYCLE COMPLETED SUCCESSFULLY")
+            
+            print("\n" + "✅"*20)
+            print(f"💾 SUCCESSFULLY LOADED {len(extracted_files)} DATASETS:")
+            print(f"  - Events (EN):       {'✅' if any('export' in f and 'translation' not in f for f in extracted_files) else '❌'}")
+            print(f"  - Events (Translated): {'✅' if any('translation.export' in f for f in extracted_files) else '❌'}")
+            print(f"  - Mentions (EN):    {'✅' if any('mentions' in f and 'translation' not in f for f in extracted_files) else '❌'}")
+            print(f"  - Mentions (Translated): {'✅' if any('translation.mentions' in f for f in extracted_files) else '❌'}")
+            
+            duration = (datetime.utcnow() - cycle_start).total_seconds()
+            print(f"\n⏱️  CYCLE COMPLETED IN {duration:.2f} SECONDS")
 
         except Exception as e:
-            print(f"CRITICAL ERROR IN PROCESSING: {str(e).upper()}")
+            print(f"\n❌ CRITICAL FAILURE: {str(e).upper()}")
             traceback.print_exc()
             
         finally:
-            # Sleep for the specified interval, regardless of success or failure
-            print(f"\nSLEEPING FOR {interval_minutes} MINUTES...")
+            next_run = datetime.utcnow() + timedelta(minutes=interval_minutes)
+            print(f"\n⏳ NEXT UPDATE AT {next_run.strftime('%H:%M:%S UTC')} ({interval_minutes} MINUTES FROM NOW)")
+            print("="*50 + "\n")
             time.sleep(interval_minutes * 60)
 
 
