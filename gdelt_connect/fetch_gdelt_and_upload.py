@@ -22,22 +22,28 @@ data_dir = "./data"
 batch_size = 2000  # Number of rows to insert in a single batch
 
 def fetch_and_download_gdelt_data():
-    """Fetch and download GDELT data, returning a list of in-memory ZIP files."""
-    url = "http://data.gdeltproject.org/gdeltv2/lastupdate.txt"
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.text
-        urls = [line.split()[-1] for line in data.splitlines() if "gkg" not in line]
-        zip_files = []
-        for url in urls:
-            with requests.get(url, stream=True) as r:
-                r.raise_for_status()
-                zip_files.append(io.BytesIO(r.content))
-            print(f"Downloaded {url.split('/')[-1]}")
-        return zip_files
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred while downloading data: {e}")
+    """Fetch and download GDELT data from both English and Translation sources"""
+    sources = [
+        "http://data.gdeltproject.org/gdeltv2/lastupdate.txt",
+        "http://data.gdeltproject.org/gdeltv2/lastupdate-translation.txt"
+    ]
+    zip_files = []
+    for url in sources:
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.text
+            # Get URLs for both export and mentions, ignore gkg
+            urls = [line.split()[-1] for line in data.splitlines() 
+                   if any(x in line for x in ['export', 'mentions'])]
+            for file_url in urls:
+                with requests.get(file_url, stream=True) as r:
+                    r.raise_for_status()
+                    zip_files.append(io.BytesIO(r.content))
+                print(f"Downloaded {file_url.split('/')[-1]}")
+        except requests.exceptions.RequestException as e:
+            print(f"Error downloading from {url}: {e}")
+    return zip_files
 
 def extract_files(zip_files):
     """Extract files from in-memory ZIP files and return their contents."""
@@ -200,9 +206,10 @@ if __name__ == "__main__":
             ]
             # Step 4: Load the extracted data into the database
             for file_name, file_content in extracted_files.items():
-                if "export" in file_name:
+                # Handle both original and translated files
+                if "export" in file_name or "translation.export" in file_name:
                     load_data_to_db("events", file_content, events_columns, delimiter=',')
-                elif "mentions" in file_name:
+                elif "mentions" in file_name or "translation.mentions" in file_name:
                     load_data_to_db("mentions", file_content, mentions_columns, delimiter='\t')
 
             connection.close()
