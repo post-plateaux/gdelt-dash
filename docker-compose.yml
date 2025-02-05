@@ -67,6 +67,7 @@ services:
       - completion_flags:/flags 
     networks:
       - backend
+      - shared_net
 
   gdelt_connect:
     build:
@@ -83,6 +84,7 @@ services:
       - completion_flags:/flags
     networks:
       - backend
+      - shared_net
 
 volumes:
   grafana-data:
