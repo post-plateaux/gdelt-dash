@@ -37,10 +37,10 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=
       - GF_DATABASE_TYPE=postgres
-      - GF_DATABASE_HOST=${POSTGRES_HOST}
-      - GF_DATABASE_NAME=${POSTGRES_DB}
-      - GF_DATABASE_USER=${POSTGRES_USER}
-      - GF_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - GF_DATABASE_HOST=${POSTGIS_HOST}
+      - GF_DATABASE_NAME=${POSTGIS_DB}
+      - GF_DATABASE_USER=${POSTGIS_USER}
+      - GF_DATABASE_PASSWORD=${POSTGIS_PASSWORD}
       - GF_DATABASE_SSL_MODE=disable
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
@@ -60,41 +60,18 @@ services:
     networks:
       - backend
 
-  db:
-    image: postgres:16-alpine
-    container_name: db
-    restart: always
-    ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - backend
 
   create_tables:
     build:
       context: ./create_tables  # Directory containing Dockerfile for create_tables.py
     container_name: create_tables
-    depends_on:
-      db:
-        condition: service_healthy  # Wait until db is healthy
     restart: "no"  # Do not restart after completion
     environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_PORT=5432
+      - POSTGIS_HOST=${POSTGIS_HOST}
+      - POSTGIS_DB=${POSTGIS_DB}
+      - POSTGIS_USER=${POSTGIS_USER}
+      - POSTGIS_PASSWORD=${POSTGIS_PASSWORD}
+      - POSTGIS_PORT=${POSTGIS_PORT}
     volumes:
       - completion_flags:/flags 
     networks:
@@ -104,16 +81,13 @@ services:
     build:
       context: ./gdelt_connect  # Directory containing Dockerfile for fetch_gdelt_and_upload.py
     container_name: gdelt_connect
-    depends_on:
-      db:
-        condition: service_healthy  # Wait until db is healthy
     restart: always  # Restart if it stops
     environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_PORT=5432
+      - POSTGIS_HOST=${POSTGIS_HOST}
+      - POSTGIS_DB=${POSTGIS_DB}
+      - POSTGIS_USER=${POSTGIS_USER}
+      - POSTGIS_PASSWORD=${POSTGIS_PASSWORD}
+      - POSTGIS_PORT=${POSTGIS_PORT}
     volumes:
       - completion_flags:/flags
     networks:
@@ -121,8 +95,6 @@ services:
 
 volumes:
   grafana-data:
-    driver: local
-  postgres_data:
     driver: local
   completion_flags:
     driver: local 
