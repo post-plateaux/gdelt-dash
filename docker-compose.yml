@@ -13,8 +13,6 @@ services:
     networks:
       - backend
       - shared_net
-      - shared_net
-
 
   grafana:
     container_name: grafana
@@ -52,7 +50,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGIS_PASSWORD}
     networks:
       - backend
-
+      - shared_net
 
   create_tables:
     build:
