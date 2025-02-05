@@ -11,7 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy your script files into the container.
 COPY . .
 
-# Copy entrypoint script and make it executable
+# Create flags directory and copy entrypoint script
+RUN mkdir -p /flags && chmod 777 /flags
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 

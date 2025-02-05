@@ -75,6 +75,11 @@ services:
       context: ./gdelt_connect  # Directory containing Dockerfile for fetch_gdelt_and_upload.py
     container_name: gdelt_connect
     restart: always  # Restart if it stops
+    healthcheck:
+      test: ["CMD-SHELL", "test -d /flags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       - POSTGIS_HOST=${POSTGIS_HOST}
       - POSTGIS_DB=${POSTGIS_DB}
