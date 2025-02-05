@@ -174,6 +174,15 @@ interval_minutes = 15  # Change this to your desired interval
 if __name__ == "__main__":
     print("\n🔵 GDELT CONNECT SERVICE INITIALIZED 🔵\n")
     
+    # Verify database connection first
+    try:
+        test_conn = psycopg2.connect(conn_string)
+        test_conn.close()
+        print("✅ DATABASE CONNECTION VERIFIED")
+    except Exception as e:
+        print(f"❌ DATABASE CONNECTION FAILED: {str(e).upper()}")
+        exit(1)
+    
     while True:
         cycle_start = datetime.utcnow()
         try:

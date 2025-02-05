@@ -15,5 +15,5 @@ COPY . .
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Set entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Set entrypoint with unbuffered output
+ENTRYPOINT ["python", "-u", "/app/fetch_gdelt_and_upload.py"]

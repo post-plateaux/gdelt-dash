@@ -65,7 +65,7 @@ services:
       - POSTGIS_PASSWORD=${POSTGIS_PASSWORD}
       - POSTGIS_PORT=${POSTGIS_PORT}
     volumes:
-      - completion_flags:/flags 
+      - ./flags:/flags
     networks:
       - backend
       - shared_net
@@ -82,7 +82,7 @@ services:
       - POSTGIS_PASSWORD=${POSTGIS_PASSWORD}
       - POSTGIS_PORT=${POSTGIS_PORT}
     volumes:
-      - completion_flags:/flags
+      - ./flags:/flags
     networks:
       - backend
       - shared_net
@@ -90,8 +90,6 @@ services:
 volumes:
   grafana-data:
     driver: local
-  completion_flags:
-    driver: local 
 
 networks:
   backend:
