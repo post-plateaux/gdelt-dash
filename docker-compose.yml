@@ -13,6 +13,7 @@ services:
     networks:
       - backend
       - shared_net
+      - shared_net
 
 
   grafana:
