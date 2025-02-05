@@ -206,10 +206,12 @@ if __name__ == "__main__":
             ]
             # Step 4: Load the extracted data into the database
             for file_name, file_content in extracted_files.items():
-                # Handle both original and translated files
-                if "export" in file_name or "translation.export" in file_name:
-                    load_data_to_db("events", file_content, events_columns, delimiter=',')
-                elif "mentions" in file_name or "translation.mentions" in file_name:
+                # Determine delimiter and table based on file type
+                if "export" in file_name:
+                    # All export files (both English and translated) use tab delimiter
+                    load_data_to_db("events", file_content, events_columns, delimiter='\t')
+                elif "mentions" in file_name:
+                    # All mentions files are tab-delimited regardless of language
                     load_data_to_db("mentions", file_content, mentions_columns, delimiter='\t')
 
             connection.close()
