@@ -3,11 +3,11 @@ import psycopg2
 import traceback
 
 # Retrieve database connection details
-db_user = os.getenv('POSTGRES_USER')
-db_password = os.getenv('POSTGRES_PASSWORD')
-db_name = os.getenv('POSTGRES_DB')
-db_host = os.getenv('POSTGRES_HOST')
-db_port = os.getenv('POSTGRES_PORT', '5432')  # Default to '5432' if not set
+db_user = os.getenv('POSTGIS_USER')
+db_password = os.getenv('POSTGIS_PASSWORD')
+db_name = os.getenv('POSTGIS_DB')
+db_host = os.getenv('POSTGIS_HOST')
+db_port = os.getenv('POSTGIS_PORT', '5432')  # Default to '5432' if not set
 
 # Create a connection string
 conn_string = f"dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' port='{db_port}'"
