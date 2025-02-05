@@ -165,19 +165,22 @@ interval_minutes = 15  # Change this to your desired interval
 
 if __name__ == "__main__":
     while True:
-        # Step 1: Fetch and download the GDELT data
-        zip_files = fetch_and_download_gdelt_data()
-        
-        # Step 2: Extract downloaded ZIP files
-        extracted_files = extract_files(zip_files)
-        
-        # Step 3: Connect to the database and delete all rows
         try:
+            print("\nSTARTING NEW PROCESSING CYCLE...")
+            
+            # Step 1: Fetch and download the GDELT data
+            zip_files = fetch_and_download_gdelt_data()
+            
+            # Step 2: Extract downloaded ZIP files
+            extracted_files = extract_files(zip_files)
+            
+            # Step 3: Connect to the database and delete all rows
             connection = psycopg2.connect(conn_string)
             print("Connection to the database was successful!")
             
             # Delete all rows from the events and mentions tables
             delete_all_rows(connection)
+            
             events_columns = [
                 "globaleventid", "sqldate", "monthyear", "year", "fractiondate", 
                 "actor1code", "actor1name", "actor1countrycode", "actor1knowngroupcode", 
@@ -205,6 +208,7 @@ if __name__ == "__main__":
                 "inrawtext", "confidence", "mentiondoclen", "mentiondoctone", 
                 "mentiondoctranslationinfo", "extras"
             ]
+            
             # Step 4: Load the extracted data into the database
             for file_name, file_content in extracted_files.items():
                 # Determine delimiter and table based on file type
@@ -225,11 +229,15 @@ if __name__ == "__main__":
 
             connection.close()
             print("Connection closed.")
-        except Exception as e:
-            print(f"Failed to connect to the database: {e}")
+            print("PROCESSING CYCLE COMPLETED SUCCESSFULLY")
 
-        # Sleep for the specified interval
-        print(f"Sleeping for {interval_minutes} minutes...")
-        time.sleep(interval_minutes * 60)
+        except Exception as e:
+            print(f"CRITICAL ERROR IN PROCESSING: {str(e).upper()}")
+            traceback.print_exc()
+            
+        finally:
+            # Sleep for the specified interval, regardless of success or failure
+            print(f"\nSLEEPING FOR {interval_minutes} MINUTES...")
+            time.sleep(interval_minutes * 60)
 
 
