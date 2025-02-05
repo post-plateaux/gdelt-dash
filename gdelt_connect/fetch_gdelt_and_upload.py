@@ -40,7 +40,8 @@ def fetch_and_download_gdelt_data():
                 with requests.get(file_url, stream=True) as r:
                     r.raise_for_status()
                     zip_files.append(io.BytesIO(r.content))
-                print(f"Downloaded {file_url.split('/')[-1]}")
+                filename = file_url.split('/')[-1]
+                print(f"DOWNLOAD SUCCESS: {filename.upper()}")
         except requests.exceptions.RequestException as e:
             print(f"Error downloading from {url}: {e}")
     return zip_files
@@ -52,7 +53,7 @@ def extract_files(zip_files):
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             for file_name in zip_ref.namelist():
                 extracted_files[file_name] = zip_ref.read(file_name)
-            print(f"Extracted files from ZIP")
+                print(f"EXTRACTION COMPLETE: {file_name.upper()}")
     return extracted_files
 
 def validate_and_parse_row(row, expected_columns):
@@ -210,9 +211,17 @@ if __name__ == "__main__":
                 if "export" in file_name:
                     # All export files (both English and translated) use tab delimiter
                     load_data_to_db("events", file_content, events_columns, delimiter='\t')
+                    if 'translation' in file_name:
+                        print("TRANSLATED EXPORT DATASET INSERTED SUCCESSFULLY")
+                    else:
+                        print("ENGLISH EXPORT DATASET INSERTED SUCCESSFULLY")
                 elif "mentions" in file_name:
                     # All mentions files are tab-delimited regardless of language
                     load_data_to_db("mentions", file_content, mentions_columns, delimiter='\t')
+                    if 'translation' in file_name:
+                        print("TRANSLATED MENTIONS DATASET INSERTED SUCCESSFULLY")
+                    else:
+                        print("ENGLISH MENTIONS DATASET INSERTED SUCCESSFULLY")
 
             connection.close()
             print("Connection closed.")
