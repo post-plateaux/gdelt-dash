@@ -16,7 +16,7 @@ services:
 
   web:
     image: nginx:alpine
-    container_name: web
+    container_name: gdelt_web
     ports:
       - "8081:80"  # Expose port 8081 on localhost
     volumes:
