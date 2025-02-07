@@ -117,4 +117,4 @@ networks:
   backend:
     driver: bridge
   shared_net:
-    external: true
+    driver: bridge
