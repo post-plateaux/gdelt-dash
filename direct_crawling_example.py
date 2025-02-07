@@ -4,7 +4,7 @@ import requests
 from dotenv import load_dotenv
 
 # Automatically load environment variables from sample.env
-load_dotenv("sample.env")
+load_dotenv(".env")
 
 BASE_URL = "http://localhost:11235"
 # Load the Crawl4AI API token from the environment (as defined in sample.env)
