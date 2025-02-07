@@ -1,0 +1,35 @@
+FROM python:3.10-slim
+
+# Install necessary system dependencies for Chromium/Playwright
+RUN apt-get update && apt-get install -y \
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libxkbcommon0 \
+    libgbm1 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxi6 \
+    libxrandr2 \
+    libxtst6 \
+    libpangocairo-1.0-0 \
+    libxss1 \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy the project files into the container
+COPY . /app
+
+# Install Python dependencies
+RUN pip install --no-cache-dir python-dotenv pydantic crawl4ai playwright
+
+# Download Chromium for Playwright
+RUN playwright install chromium
+
+# Run the direct crawling example
+CMD ["python", "direct_crawling_example.py"]

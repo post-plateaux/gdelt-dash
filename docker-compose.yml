@@ -138,6 +138,17 @@ services:
       - backend
       - shared_net
 
+  test-crawling:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - CRAWL4AI_API_TOKEN=${CRAWL4AI_API_TOKEN}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    networks:
+      - backend
+      - shared_net
+
 volumes:
   grafana-data:
     driver: local
