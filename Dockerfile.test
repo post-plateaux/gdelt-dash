@@ -28,6 +28,9 @@ COPY . /app
 # Install Python dependencies
 RUN pip install --no-cache-dir python-dotenv pydantic crawl4ai playwright
 
+# Install additional browser dependencies with Playwright
+RUN playwright install-deps
+
 # Download Chromium for Playwright
 RUN playwright install chromium
 
