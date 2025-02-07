@@ -172,7 +172,6 @@ builtin_role,org_id,6,bigint,NO,0
 cache_data,cache_key,1,character varying,NO,
 cache_data,data,2,bytea,NO,
 cache_data,expires,3,integer,NO,
-cache_data,created_at,4,integer,NO,
 cameo_actor_type,actor_type_code,1,character varying,NO,
 cameo_actor_type,actor_type_label,2,character varying,NO,
 cameo_country,country_code,1,character varying,NO,
