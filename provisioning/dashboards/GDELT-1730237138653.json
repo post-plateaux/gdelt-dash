@@ -100,13 +100,14 @@
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         },
         "xTickLabelRotation": 0,
         "xTickLabelSpacing": 0
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -116,7 +117,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    COALESCE(c.country_description, 'Unknown') AS instigator_country,\n    COUNT(*) AS event_count\nFROM \n    events e\nLEFT JOIN \n    cameo_country c \nON \n    e.actor1countrycode = c.country_code\nWHERE \n    e.eventcode IN ('19', '190', '191', '192', '193', '194', '195', '196', '20', '200', '201', '202', '203', '204', '2041', '18', '180', '181', '182', '1821', '1822', '1823', '183', '1831', '1832', '1833', '184', '185', '186')\n    AND e.actor1countrycode IS NOT NULL\nGROUP BY \n    c.country_description\nORDER BY \n    event_count DESC\nLIMIT 15;\n",
+          "rawSql": "SELECT \n    COALESCE(c.country_description, 'Unknown') AS instigator_country,\n    COUNT(*) AS event_count\nFROM (\n    SELECT actor1countrycode, eventcode FROM events\n    UNION ALL\n    SELECT actor1countrycode, eventcode FROM events_translated\n) AS combined_events\nLEFT JOIN cameo_country c \nON combined_events.actor1countrycode = c.country_code\nWHERE combined_events.eventcode IN (\n    '19', '190', '191', '192', '193', '194', '195', '196', \n    '20', '200', '201', '202', '203', '204', '2041', '18', \n    '180', '181', '182', '1821', '1822', '1823', '183', \n    '1831', '1832', '1833', '184', '185', '186'\n)\nAND combined_events.actor1countrycode IS NOT NULL\nGROUP BY c.country_description\nORDER BY event_count DESC\nLIMIT 15;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -184,11 +185,12 @@
           "values": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -198,7 +200,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    c.event_description,\n    COUNT(*) AS event_count\nFROM \n    events e\nJOIN \n    cameo_event_code c \nON \n    e.eventcode = c.event_code\nWHERE \n    e.eventcode IN ('19', '190', '191', '192', '193', '194', '195', '196', '20', '200', '201', '202', '203', '204', '2041', '18', '180', '181', '182', '1821', '1822', '1823', '183', '1831', '1832', '1833', '184', '185', '186')\nGROUP BY \n    c.event_description\nORDER BY \n    event_count DESC;\n",
+          "rawSql": "SELECT \n    c.event_description,\n    COUNT(*) AS event_count\nFROM (\n    SELECT eventcode FROM events\n    UNION ALL\n    SELECT eventcode FROM events_translated\n) AS combined_events\nJOIN cameo_event_code c \nON combined_events.eventcode = c.event_code\nWHERE combined_events.eventcode IN (\n    '19', '190', '191', '192', '193', '194', '195', '196', \n    '20', '200', '201', '202', '203', '204', '2041', '18', \n    '180', '181', '182', '1821', '1822', '1823', '183', \n    '1831', '1832', '1833', '184', '185', '186'\n)\nGROUP BY c.event_description\nORDER BY event_count DESC;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -275,7 +277,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -285,7 +287,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    e.globaleventid,\n    e.numsources,\n    e.numarticles,\n    c.event_description,\n    e.actor1name AS actor_1,\n    e.actor1countrycode AS actor_1_country,\n    e.actor2name AS actor_2,\n    e.actor2countrycode AS actor_2_country,\n    e.avgtone AS average_tone,\n    e.goldsteinscale AS goldstein_scale\nFROM \n    events e\nJOIN \n    cameo_event_code c \nON \n    e.eventcode = c.event_code\nORDER BY \n    e.numsources DESC\nLIMIT 5;\n",
+          "rawSql": "SELECT \n    combined_events.globaleventid,\n    combined_events.numsources,\n    combined_events.numarticles,\n    c.event_description,\n    combined_events.actor1name AS actor_1,\n    combined_events.actor1countrycode AS actor_1_country,\n    combined_events.actor2name AS actor_2,\n    combined_events.actor2countrycode AS actor_2_country,\n    combined_events.avgtone AS average_tone,\n    combined_events.goldsteinscale AS goldstein_scale\nFROM (\n    SELECT globaleventid, numsources, numarticles, eventcode, actor1name, actor1countrycode, \n           actor2name, actor2countrycode, avgtone, goldsteinscale \n    FROM events\n    UNION ALL\n    SELECT globaleventid, numsources, numarticles, eventcode, actor1name, actor1countrycode, \n           actor2name, actor2countrycode, avgtone, goldsteinscale \n    FROM events_translated\n) AS combined_events\nJOIN cameo_event_code c \nON combined_events.eventcode = c.event_code\nORDER BY combined_events.numsources DESC\nLIMIT 5;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -353,11 +355,12 @@
           "values": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -367,7 +370,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    c.event_description,\n    COUNT(*) AS event_count\nFROM \n    events e\nJOIN \n    cameo_event_code c \nON \n    e.eventcode = c.event_code\nWHERE \n    e.actor1type1code = 'COP'\nGROUP BY \n    c.event_description\nORDER BY \n    event_count DESC;\n",
+          "rawSql": "SELECT \n    c.event_description,\n    COUNT(*) AS event_count\nFROM (\n    SELECT eventcode, actor1type1code FROM events\n    UNION ALL\n    SELECT eventcode, actor1type1code FROM events_translated\n) AS combined_events\nJOIN cameo_event_code c \nON combined_events.eventcode = c.event_code\nWHERE combined_events.actor1type1code = 'COP'\nGROUP BY c.event_description\nORDER BY event_count DESC;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -445,7 +448,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -531,7 +534,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -541,7 +544,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    COUNT(*) AS total_police_actor1_events\nFROM \n    events\nWHERE \n    actor1type1code = 'COP';\n",
+          "rawSql": "SELECT \n    COUNT(*) AS total_police_actor1_events\nFROM (\n    SELECT actor1type1code FROM events\n    UNION ALL\n    SELECT actor1type1code FROM events_translated\n) AS combined_events\nWHERE combined_events.actor1type1code = 'COP';\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -620,7 +623,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -725,7 +728,7 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -735,7 +738,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT COUNT(*) AS total_mentions FROM mentions;\n",
+          "rawSql": "SELECT \n    COUNT(*) AS total_mentions\nFROM (\n    SELECT * FROM mentions\n    UNION ALL\n    SELECT * FROM mentions_translated\n) AS combined_mentions;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -836,11 +839,12 @@
           "values": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.3.0",
+      "pluginVersion": "11.5.1",
       "targets": [
         {
           "datasource": {
@@ -850,7 +854,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT cc.country_description AS country_name, \n       COUNT(*) AS event_count\nFROM (\n    SELECT DISTINCT globaleventid, actor1countrycode AS country_code\n    FROM events\n    WHERE actor1countrycode IS NOT NULL\n\n    UNION ALL\n\n    SELECT DISTINCT globaleventid, actor2countrycode AS country_code\n    FROM events\n    WHERE actor2countrycode IS NOT NULL\n      AND actor2countrycode <> actor1countrycode\n) AS combined_countries\nJOIN cameo_country cc ON combined_countries.country_code = cc.country_code\nGROUP BY cc.country_description\nORDER BY event_count DESC;\n",
+          "rawSql": "SELECT cc.country_description AS country_name, \n       COUNT(*) AS event_count\nFROM (\n    -- Actor 1 countries from both events tables\n    SELECT DISTINCT globaleventid, actor1countrycode AS country_code\n    FROM events\n    WHERE actor1countrycode IS NOT NULL\n\n    UNION ALL\n\n    SELECT DISTINCT globaleventid, actor1countrycode AS country_code\n    FROM events_translated\n    WHERE actor1countrycode IS NOT NULL\n\n    UNION ALL\n\n    -- Actor 2 countries from both events tables\n    SELECT DISTINCT globaleventid, actor2countrycode AS country_code\n    FROM events\n    WHERE actor2countrycode IS NOT NULL\n      AND actor2countrycode <> actor1countrycode\n\n    UNION ALL\n\n    SELECT DISTINCT globaleventid, actor2countrycode AS country_code\n    FROM events_translated\n    WHERE actor2countrycode IS NOT NULL\n      AND actor2countrycode <> actor1countrycode\n) AS combined_countries\nJOIN cameo_country cc ON combined_countries.country_code = cc.country_code\nGROUP BY cc.country_description\nORDER BY event_count DESC;\n",
           "refId": "A",
           "sql": {
             "columns": [
