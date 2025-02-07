@@ -326,18 +326,8 @@ data_source,basic_auth_user,12,character varying,YES,
 data_source,basic_auth_password,13,character varying,YES,
 data_source,is_default,14,boolean,NO,
 data_source,json_data,15,text,YES,
-data_source,created,16,timestamp without time zone,NO,
-data_source,updated,17,timestamp without time zone,NO,
-data_source,with_credentials,18,boolean,NO,false
-data_source,secure_json_data,19,text,YES,
-data_source,read_only,20,boolean,YES,
-data_source,uid,21,character varying,NO,0
-data_source,is_prunable,22,boolean,YES,false
-data_source,api_version,23,character varying,YES,
-entity_event,id,1,integer,NO,nextval('entity_event_id_seq'::regclass)
-entity_event,entity_id,2,character varying,NO,
-entity_event,event_type,3,character varying,NO,
-entity_event,created,4,bigint,NO,
+fips_country,country_code,1,character varying,NO,
+fips_country,country_name,2,character varying,NO,
 events,globaleventid,1,bigint,YES,
 events,sqldate,2,bigint,YES,
 events,monthyear,3,bigint,YES,
