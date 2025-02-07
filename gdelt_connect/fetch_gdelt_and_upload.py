@@ -67,6 +67,9 @@ def extract_files(zip_files):
 def validate_and_parse_row(row, expected_columns, delimiter):
     fields = row.strip().split(delimiter)
     fields = [None if field == "" else field for field in fields]
+    # If the row is missing exactly one field, append an empty string
+    if len(fields) == expected_columns - 1:
+        fields.append('')
     if len(fields) == expected_columns:
         return fields
     else:
