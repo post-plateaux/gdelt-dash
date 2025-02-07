@@ -8,7 +8,7 @@ from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from crawl4ai.extraction_strategy import LLMExtractionStrategy
 import requests
 
-# Automatically load environment variables from sample.env
+# Automatically load environment variables from .env
 load_dotenv(".env")
 
 # Define a data model for the extracted content
