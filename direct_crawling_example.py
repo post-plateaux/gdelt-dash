@@ -49,7 +49,7 @@ async def main():
 
     async with AsyncWebCrawler(config=browser_config) as crawler:
         # Specify the target URL to crawl. The LLM will process the fetched page.
-        url = "https://fifteen.postplateaux.com/"
+        url = "https://www.newyorker.com/news/letter-from-trumps-washington/elon-musks-revolutionary-terror"
         result = await crawler.arun(url=url, config=crawl_config)
 
         if result.success:
