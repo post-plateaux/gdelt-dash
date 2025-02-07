@@ -175,6 +175,12 @@ interval_minutes = 15  # Change this to your desired interval
 if __name__ == "__main__":
     print("\n🔵 GDELT CONNECT SERVICE INITIALIZED 🔵\n")
     
+    # Wait for tables to be created
+    flag_file = "/flags/tables_created"
+    while not os.path.isfile(flag_file):
+        print("Waiting for tables to be created... (checking /flags/tables_created)")
+        time.sleep(5)
+    
     # Verify database connection first
     try:
         test_conn = psycopg2.connect(conn_string)
