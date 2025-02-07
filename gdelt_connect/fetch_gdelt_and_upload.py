@@ -64,17 +64,9 @@ def extract_files(zip_files):
     print(f"🚀 TOTAL EXTRACTED FILES: {len(extracted_files)}")
     return extracted_files
 
-def validate_and_parse_row(row, expected_columns):
-    # Split the row into fields based on a delimiter
-    if isinstance(row, str):
-        fields = row.split('\t' if '\t' in row else ',')
-    else:
-        fields = list(row)
-
-    # Convert empty strings to None
+def validate_and_parse_row(row, expected_columns, delimiter):
+    fields = row.strip().split(delimiter)
     fields = [None if field == "" else field for field in fields]
-
-    # Ensure the number of fields matches the expected number of columns
     if len(fields) == expected_columns:
         return fields
     else:
@@ -93,7 +85,7 @@ def load_data_to_db(table_name, file_content, columns, delimiter=','):
         for line_number, row in enumerate(file, start=1):
                 try:
                     # Validate and parse the row
-                    parsed_row = validate_and_parse_row(row, len(columns))
+                    parsed_row = validate_and_parse_row(row, len(columns), delimiter)
                     batch.append(parsed_row)
 
                     # Insert batch if the batch size is reached
@@ -136,17 +128,26 @@ def load_data_to_db(table_name, file_content, columns, delimiter=','):
             connection.close()
 
 def insert_batch(cursor, table_name, columns, batch):
-    # Create insert query with the given column names
     columns_str = ', '.join(columns)
     values_placeholders = ', '.join(['%s'] * len(columns))
     insert_query = f"INSERT INTO {table_name} ({columns_str}) VALUES ({values_placeholders})"
-
     try:
-        # Execute batch insert
         cursor.executemany(insert_query, batch)
+        cursor.connection.commit()         # commit on successful batch insertion
         print(f"Inserted a batch of {len(batch)} rows into {table_name}")
     except Exception as e:
-        print(f"Error inserting batch: {e}")
+        print(f"Error inserting batch: {e}. Attempting row-by-row insertion.")
+        cursor.connection.rollback()     # roll back to clear error state
+        successful_inserts = 0
+        for r in batch:
+            try:
+                cursor.execute(insert_query, r)
+                cursor.connection.commit()
+                successful_inserts += 1
+            except Exception as single_e:
+                print(f"Failed to insert row {r}: {single_e}")
+                cursor.connection.rollback()  # clear error state before next row
+        print(f"Inserted {successful_inserts} out of {len(batch)} rows individually into {table_name}")
 
 def delete_all_rows(conn):
     """Delete all rows from the events and mentions tables."""
