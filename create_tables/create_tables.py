@@ -18,10 +18,12 @@ if __name__ == "__main__":
         'create_ethnic_code_table.py',
         'create_event_code_table.py',
         'create_events_table.py',
+        'create_events_translated_table.py',
         'create_fips_country_code_table.py',
         'create_goldstein_code_table.py',
         'create_known_group_code_table.py',
         'create_mentions_table.py',
+        'create_mentions_translated_table.py',
         'create_religion_code_table.py'
     ]
 
