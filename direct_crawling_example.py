@@ -54,12 +54,18 @@ async def main():
 
         if result.success:
             try:
-                # The extracted_content should be a JSON string per our LLMExtractionStrategy
+                # The extracted_content is expected to be a JSON list of article summaries
                 extracted_json = json.loads(result.extracted_content)
-                article = ArticleSummary.parse_obj(extracted_json)
-                print("Extracted Article Summary:")
-                print(f"Title: {article.title}")
-                print(f"Summary: {article.summary}")
+                # Use model_validate for Pydantic V2 and iterate over the list:
+                articles = [ArticleSummary.model_validate(item)
+                           for item in extracted_json if not item.get('error', False)]
+                if articles:
+                    for article in articles:
+                        print("Extracted Article Summary:")
+                        print(f"Title: {article.title}")
+                        print(f"Summary: {article.summary}")
+                else:
+                    print("No valid article summaries extracted.")
             except Exception as e:
                 print("Error parsing extraction result:", e)
                 print("Raw extracted content:")
