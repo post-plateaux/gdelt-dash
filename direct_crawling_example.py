@@ -13,7 +13,7 @@ HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
 def direct_crawl():
     url = f"{BASE_URL}/crawl_direct"
     payload = {
-        "urls": "https://example.com",   # URL(s) to crawl
+        "urls": "https://fifteen.postplateaux.com/",   # URL(s) to crawl
         "priority": 10                   # Optional: a higher priority speeds up processing
     }
     response = requests.post(url, json=payload, headers=HEADERS)
