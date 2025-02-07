@@ -1,0 +1,16 @@
+GLOBALEVENTID	INTEGER
+EventTimeDate	INTEGER
+MentionTimeDate	INTEGER
+MentionType	INTEGER
+MentionSourceName	STRING
+MentionIdentifier	STRING
+SentenceID	INTEGER
+Actor1CharOffset	INTEGER
+Actor2CharOffset	INTEGER
+ActionCharOffset	INTEGER
+InRawText	INTEGER
+Confidence	INTEGER
+MentionDocLen	INTEGER
+MentionDocTone	FLOAT
+MentionDocTranslationInfo	STRING
+Extras	STRING
