@@ -8,6 +8,18 @@ import zipfile   # Added
 import time      # Added
 from datetime import datetime, timedelta
 
+def wait_for_table(cursor, table_name, timeout=60):
+    """Wait for a table to exist in the database."""
+    start = time.time()
+    while time.time() - start < timeout:
+        cursor.execute("SELECT to_regclass(%s);", (table_name,))
+        result = cursor.fetchone()
+        if result and result[0]:
+            print(f"Table '{table_name}' exists.")
+            return
+        time.sleep(2)
+    raise Exception(f"Timeout waiting for table '{table_name}' to exist.")
+
 # Debug message limiting
 DEBUG_PADDING_MAX = 5
 DEBUG_PADDING_COUNT = 0
@@ -217,6 +229,13 @@ if __name__ == "__main__":
             # Step 3: Connect to the database and delete all rows
             connection = psycopg2.connect(conn_string)
             print("Connection to the database was successful!")
+            
+            # Check that all required tables exist
+            cursor = connection.cursor()
+            required_tables = ["events", "mentions", "events_translated", "mentions_translated"]
+            for tbl in required_tables:
+                wait_for_table(cursor, tbl)
+            cursor.close()
             
             # Delete all rows from the events and mentions tables
             delete_all_rows(connection)
