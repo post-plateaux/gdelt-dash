@@ -27,7 +27,7 @@ async def main():
     llm_strategy = LLMExtractionStrategy(
         provider="openrouter/google/gemini-2.0-flash-001",  # Use the OpenRouter provider with your chosen model
         api_token=api_token,
-        schema=ArticleSummary.schema_json(),  # Expect a JSON that fits the ArticleSummary model
+        schema=json.dumps(ArticleSummary.model_json_schema()),  # Expect a JSON that fits the ArticleSummary model
         extraction_type="schema",            # Instruct the LLM to produce structured output matching the schema
         instruction="Extract the main article title and provide a short summary of the content.",
         chunk_token_threshold=1000,           # Optional: split long content into chunks for processing
