@@ -1,4 +1,19 @@
 services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+      - shared_net
+
   web:
     image: nginx:alpine
     container_name: web
@@ -28,10 +43,10 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=
       - GF_DATABASE_TYPE=postgres
-      - GF_DATABASE_HOST=${POSTGIS_HOST}
-      - GF_DATABASE_NAME=${POSTGIS_DB}
-      - GF_DATABASE_USER=${POSTGIS_USER}
-      - GF_DATABASE_PASSWORD=${POSTGIS_PASSWORD}
+      - GF_DATABASE_HOST=${POSTGRES_HOST}
+      - GF_DATABASE_NAME=${POSTGRES_DB}
+      - GF_DATABASE_USER=${POSTGRES_USER}
+      - GF_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
       - GF_DATABASE_SSL_MODE=disable
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
@@ -45,10 +60,10 @@ services:
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_SECURITY_HEADERS_FRAME_DENY=false
-      - POSTGRES_HOST=${POSTGIS_HOST}
-      - POSTGRES_DB=${POSTGIS_DB}
-      - POSTGRES_USER=${POSTGIS_USER}
-      - POSTGRES_PASSWORD=${POSTGIS_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - backend
       - shared_net
@@ -59,11 +74,11 @@ services:
     container_name: create_tables
     restart: "no"  # Do not restart after completion
     environment:
-      - POSTGIS_HOST=${POSTGIS_HOST}
-      - POSTGIS_DB=${POSTGIS_DB}
-      - POSTGIS_USER=${POSTGIS_USER}
-      - POSTGIS_PASSWORD=${POSTGIS_PASSWORD}
-      - POSTGIS_PORT=${POSTGIS_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
       - ./flags:/flags
     networks:
@@ -81,11 +96,11 @@ services:
       timeout: 10s
       retries: 3
     environment:
-      - POSTGIS_HOST=${POSTGIS_HOST}
-      - POSTGIS_DB=${POSTGIS_DB}
-      - POSTGIS_USER=${POSTGIS_USER}
-      - POSTGIS_PASSWORD=${POSTGIS_PASSWORD}
-      - POSTGIS_PORT=${POSTGIS_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
       - ./flags:/flags
     networks:
@@ -94,6 +109,8 @@ services:
 
 volumes:
   grafana-data:
+    driver: local
+  postgres_data:
     driver: local
 
 networks:
