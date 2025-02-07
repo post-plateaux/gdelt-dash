@@ -80,42 +80,31 @@ def load_data_to_db(table_name, file_content, columns, delimiter=','):
         cursor = connection.cursor()
 
         print(f"Loading data for table '{table_name}'")
-        file = io.StringIO(file_content.decode('utf-8'))
-        batch = []
-        for line_number, row in enumerate(file, start=1):
-                try:
-                    # Validate and parse the row
-                    parsed_row = validate_and_parse_row(row, len(columns), delimiter)
-                    batch.append(parsed_row)
+        # Decode content and count total rows in file
+        decoded_content = file_content.decode('utf-8')
+        all_rows = decoded_content.strip().splitlines()
+        print(f"Total rows in file: {len(all_rows)}")
 
-                    # Insert batch if the batch size is reached
-                    if len(batch) >= batch_size:
-                        insert_batch(cursor, table_name, columns, batch)
-                        batch.clear()  # Clear the batch after insertion
+        # Validate rows and build a list of valid rows
+        valid_rows = []
+        failed_validation_count = 0
+        for line_number, row in enumerate(all_rows, start=1):
+            try:
+                parsed = validate_and_parse_row(row, len(columns), delimiter)
+                valid_rows.append(parsed)
+            except Exception as e:
+                print(f"Validation error on line {line_number}: {e}")
+                failed_validation_count += 1
+        total_valid = len(valid_rows)
+        print(f"Total valid rows: {total_valid} (skipped {failed_validation_count} invalid rows)")
 
-                except ValueError as ve:
-                    print(f"Validation error on line {line_number}: {ve}")
-                    # Optionally, write problematic lines to a separate file for manual review
-                    with open(f"{table_name}_error_rows.txt", 'a') as error_file:
-                        error_file.write(f"Line {line_number}: {row}")
+        successful_inserts_total = 0
+        for i in range(0, total_valid, batch_size):
+            batch = valid_rows[i:i+batch_size]
+            successful_inserts_total += insert_batch(cursor, table_name, columns, batch)
 
-                except psycopg2.DataError as de:
-                    print(f"Data error on line {line_number}: {de}")
-                    connection.rollback()
-                    # Optionally, write problematic lines to a separate file for manual review
-                    with open(f"{table_name}_error_rows.txt", 'a') as error_file:
-                        error_file.write(f"Line {line_number}: {row}")
-
-                except Exception as e:
-                    print(f"Error inserting row at line {line_number}: {e}")
-                    connection.rollback()
-                    # Optionally, write problematic lines to a separate file for manual review
-                    with open(f"{table_name}_error_rows.txt", 'a') as error_file:
-                        error_file.write(f"Line {line_number}: {row}")
-
-        # Insert any remaining rows in the last batch
-        if batch:
-            insert_batch(cursor, table_name, columns, batch)
+        failed_inserts = total_valid - successful_inserts_total
+        print(f"{successful_inserts_total} of {total_valid} valid rows successfully inserted; {failed_inserts} rows failed to insert")
 
         connection.commit()
         print(f"Data loaded into {table_name}")
@@ -133,11 +122,12 @@ def insert_batch(cursor, table_name, columns, batch):
     insert_query = f"INSERT INTO {table_name} ({columns_str}) VALUES ({values_placeholders})"
     try:
         cursor.executemany(insert_query, batch)
-        cursor.connection.commit()         # commit on successful batch insertion
+        cursor.connection.commit()  # commit on successful batch insertion
         print(f"Inserted a batch of {len(batch)} rows into {table_name}")
+        return len(batch)
     except Exception as e:
         print(f"Error inserting batch: {e}. Attempting row-by-row insertion.")
-        cursor.connection.rollback()     # roll back to clear error state
+        cursor.connection.rollback()  # roll back to clear error state
         successful_inserts = 0
         for r in batch:
             try:
@@ -148,6 +138,7 @@ def insert_batch(cursor, table_name, columns, batch):
                 print(f"Failed to insert row {r}: {single_e}")
                 cursor.connection.rollback()  # clear error state before next row
         print(f"Inserted {successful_inserts} out of {len(batch)} rows individually into {table_name}")
+        return successful_inserts
 
 def delete_all_rows(conn):
     """Delete all rows from the events and mentions tables."""
