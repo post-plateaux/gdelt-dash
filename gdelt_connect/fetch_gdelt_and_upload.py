@@ -147,7 +147,7 @@ def delete_all_rows(conn):
     """Delete all rows from the events and mentions tables."""
     cursor = conn.cursor()
     try:
-        tables_to_delete = ['events', 'mentions']
+        tables_to_delete = ['events', 'mentions', 'events_translated', 'mentions_translated']
         
         for table_name in tables_to_delete:
             print(f"Deleting all rows from table: {table_name}")
@@ -235,19 +235,13 @@ if __name__ == "__main__":
             for file_name, file_content in extracted_files.items():
                 # Determine delimiter and table based on file type
                 if "export" in file_name:
-                    # All export files (both English and translated) use tab delimiter
-                    load_data_to_db("events", file_content, events_columns, delimiter='\t')
-                    if 'translation' in file_name:
-                        print("TRANSLATED EXPORT DATASET INSERTED SUCCESSFULLY")
-                    else:
-                        print("ENGLISH EXPORT DATASET INSERTED SUCCESSFULLY")
+                    table_name = "events_translated" if "translation" in file_name else "events"
+                    load_data_to_db(table_name, file_content, events_columns, delimiter='\t')
+                    print(f"{'TRANSLATED' if 'translation' in file_name else 'ENGLISH'} EXPORT DATASET INSERTED SUCCESSFULLY")
                 elif "mentions" in file_name:
-                    # All mentions files are tab-delimited regardless of language
-                    load_data_to_db("mentions", file_content, mentions_columns, delimiter='\t')
-                    if 'translation' in file_name:
-                        print("TRANSLATED MENTIONS DATASET INSERTED SUCCESSFULLY")
-                    else:
-                        print("ENGLISH MENTIONS DATASET INSERTED SUCCESSFULLY")
+                    table_name = "mentions_translated" if "translation" in file_name else "mentions"
+                    load_data_to_db(table_name, file_content, mentions_columns, delimiter='\t')
+                    print(f"{'TRANSLATED' if 'translation' in file_name else 'ENGLISH'} MENTIONS DATASET INSERTED SUCCESSFULLY")
 
             connection.close()
             print("Connection closed.")
