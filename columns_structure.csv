@@ -538,7 +538,6 @@ mentions_translated,mentiondoclen,13,bigint,YES,
 mentions_translated,mentiondoctone,14,real,YES,
 mentions_translated,mentiondoctranslationinfo,15,text,YES,
 mentions_translated,extras,16,text,YES,
-migration_log,id,1,integer,NO,nextval('migration_log_id_seq'::regclass)
 migration_log,migration_id,2,character varying,NO,
 migration_log,sql,3,text,NO,
 migration_log,success,4,boolean,NO,
