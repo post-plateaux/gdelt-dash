@@ -118,9 +118,7 @@ services:
       - "8080:8080"
     environment:
       - CRAWL4AI_API_TOKEN=${CRAWL4AI_API_TOKEN:-}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - CLAUDE_API_KEY=${CLAUDE_API_KEY:-}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}   # Use OpenRouter exclusively
     volumes:
       - /dev/shm:/dev/shm
     restart: unless-stopped
