@@ -73,7 +73,7 @@ def validate_and_parse_row(row, expected_columns, delimiter):
     if len(fields) == expected_columns:
         return fields
     else:
-        raise ValueError(f"Row has {len(fields)} fields but expected {expected_columns}")
+        raise ValueError(f"Expected {expected_columns} fields but got {len(fields)}. Fields: {fields}. Raw row: {row}")
 
 def load_data_to_db(table_name, file_content, columns, delimiter=','):
     """Load data from in-memory file content into the database."""
@@ -91,13 +91,20 @@ def load_data_to_db(table_name, file_content, columns, delimiter=','):
         # Validate rows and build a list of valid rows
         valid_rows = []
         failed_validation_count = 0
+        max_printed_validation_errors = 5
+        printed_validation_errors = 0
         for line_number, row in enumerate(all_rows, start=1):
             try:
                 parsed = validate_and_parse_row(row, len(columns), delimiter)
                 valid_rows.append(parsed)
             except Exception as e:
-                print(f"Validation error on line {line_number}: {e}")
                 failed_validation_count += 1
+                if printed_validation_errors < max_printed_validation_errors:
+                    print(f"Validation error on line {line_number}: {e}")
+                    printed_validation_errors += 1
+                elif printed_validation_errors == max_printed_validation_errors:
+                    print("Further validation errors suppressed.")
+                    printed_validation_errors += 1
         total_valid = len(valid_rows)
         print(f"Total valid rows: {total_valid} (skipped {failed_validation_count} invalid rows)")
 
