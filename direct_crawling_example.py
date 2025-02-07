@@ -8,7 +8,7 @@ from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from crawl4ai.extraction_strategy import LLMExtractionStrategy
 
 # Automatically load environment variables from sample.env
-load_dotenv("sample.env")
+load_dotenv(".env")
 
 # Define a data model for the extracted content
 class ArticleSummary(BaseModel):
@@ -25,7 +25,7 @@ async def main():
     # Configure the LLM extraction strategy.
     # This tells Crawl4AI to use an LLM (via OpenRouter) to convert raw HTML into structured JSON.
     llm_strategy = LLMExtractionStrategy(
-        provider="openrouter/gpt-4",  # Use the OpenRouter provider with your chosen model
+        provider="openrouter/google/gemini-2.0-flash-001",  # Use the OpenRouter provider with your chosen model
         api_token=api_token,
         schema=ArticleSummary.schema_json(),  # Expect a JSON that fits the ArticleSummary model
         extraction_type="schema",            # Instruct the LLM to produce structured output matching the schema
@@ -49,7 +49,7 @@ async def main():
 
     async with AsyncWebCrawler(config=browser_config) as crawler:
         # Specify the target URL to crawl. The LLM will process the fetched page.
-        url = "https://example.com"
+        url = "https://fifteen.postplateaux.com/"
         result = await crawler.arun(url=url, config=crawl_config)
 
         if result.success:
