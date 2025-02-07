@@ -34,6 +34,10 @@ try:
     connection = psycopg2.connect(conn_string)
     cursor = connection.cursor()
 
+    # Drop existing table if it exists
+    cursor.execute("DROP TABLE IF EXISTS events;")
+    print("Dropped table events if it existed.")
+
     # Execute the table creation query
     cursor.execute(create_table_query)
     connection.commit()
