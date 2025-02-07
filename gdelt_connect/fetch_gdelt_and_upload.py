@@ -8,6 +8,10 @@ import zipfile   # Added
 import time      # Added
 from datetime import datetime, timedelta
 
+# Debug message limiting
+DEBUG_PADDING_MAX = 5
+DEBUG_PADDING_COUNT = 0
+
 # Retrieve database connection details
 db_user = os.getenv('POSTGRES_USER')
 db_password = os.getenv('POSTGRES_PASSWORD')
@@ -65,11 +69,17 @@ def extract_files(zip_files):
     return extracted_files
 
 def validate_and_parse_row(row, expected_columns, delimiter):
+    global DEBUG_PADDING_COUNT, DEBUG_PADDING_MAX
     fields = row.strip().split(delimiter)
     fields = [None if field == "" else field for field in fields]
     if len(fields) < expected_columns:
         missing = expected_columns - len(fields)
-        print(f"DEBUG: Padding row with {missing} empty field(s). Original fields: {fields}")
+        if DEBUG_PADDING_COUNT < DEBUG_PADDING_MAX:
+            print(f"DEBUG: Padding row with {missing} empty field(s). Original fields: {fields}")
+            DEBUG_PADDING_COUNT += 1
+        elif DEBUG_PADDING_COUNT == DEBUG_PADDING_MAX:
+            print("DEBUG: Further padding debug messages suppressed.")
+            DEBUG_PADDING_COUNT += 1
         fields.extend(['' for _ in range(missing)])
     if len(fields) == expected_columns:
         return fields
