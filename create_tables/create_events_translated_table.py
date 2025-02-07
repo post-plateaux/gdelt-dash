@@ -14,7 +14,7 @@ db_port = os.getenv('POSTGRES_PORT', '5432')  # Default to '5432' if not set
 conn_string = f"dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' port='{db_port}'"
 
 # Read the CSV file to get column names and data types
-file_path = 'Events.csv'  # Update this path as needed
+file_path = os.path.join(os.path.dirname(__file__), 'Events.csv')
 events_df = pd.read_csv(file_path, header=None)
 
 # Define a mapping for the data types to PostgreSQL-compatible types

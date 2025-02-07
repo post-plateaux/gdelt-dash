@@ -14,7 +14,7 @@ db_port = os.getenv('POSTGRES_PORT', '5432')  # Default to '5432' if not set
 conn_string = f"dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' port='{db_port}'"
 
 # Read the TSV file to get column names and data types
-file_path = './eventMentions.tsv'  # Relative path to the .tsv file
+file_path = os.path.join(os.path.dirname(__file__), 'eventMentions.tsv')
 mentions_df = pd.read_csv(file_path, sep='\t', header=None)
 
 # Define a mapping for the data types to PostgreSQL-compatible types
