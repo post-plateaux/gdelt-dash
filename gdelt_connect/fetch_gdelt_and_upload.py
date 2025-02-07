@@ -249,9 +249,9 @@ if __name__ == "__main__":
             print("\n" + "✅"*20)
             print(f"💾 SUCCESSFULLY LOADED {len(extracted_files)} DATASETS:")
             print(f"  - Events (EN):       {'✅' if any('export' in f and 'translation' not in f for f in extracted_files) else '❌'}")
-            print(f"  - Events (Translated): {'✅' if any('translation.export' in f for f in extracted_files) else '❌'}")
+            print(f"  - Events (Translated): {'✅' if any('translation' in f and 'export' in f for f in extracted_files) else '❌'}")
             print(f"  - Mentions (EN):    {'✅' if any('mentions' in f and 'translation' not in f for f in extracted_files) else '❌'}")
-            print(f"  - Mentions (Translated): {'✅' if any('translation.mentions' in f for f in extracted_files) else '❌'}")
+            print(f"  - Mentions (Translated): {'✅' if any('translation' in f and 'mentions' in f for f in extracted_files) else '❌'}")
             
             duration = (datetime.utcnow() - cycle_start).total_seconds()
             print(f"\n⏱️  CYCLE COMPLETED IN {duration:.2f} SECONDS")
