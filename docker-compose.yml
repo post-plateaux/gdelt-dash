@@ -111,7 +111,7 @@ services:
 
   test-crawling:
     build:
-      context: .
+      context: ./crawler
       dockerfile: Dockerfile.test
     environment: {}
     networks:
