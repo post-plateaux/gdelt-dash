@@ -26,7 +26,7 @@ def query_llm(html_text):
 {html_text}
 
 Please do the following:
-1. Convert the HTML content into a nicely formatted Markdown version, preserving the full content without altering it.
+1. Convert the HTML content into a nicely formatted Markdown version, preserving the full content without any abbreviation. DO NOT truncate the markdown output—do not use ellipses or any form of shortening.
 2. Generate a one paragraph summary of the content.
 
 Return your answer as a JSON object with two keys: "markdown" and "summary". Do not include any additional text.
@@ -34,7 +34,8 @@ Return your answer as a JSON object with two keys: "markdown" and "summary". Do 
     data = {
         "model": "gpt-3.5-turbo",
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7
+        "temperature": 0.7,
+        "max_tokens": 2048
     }
     try:
         response = requests.post(url, headers=headers, json=data)
