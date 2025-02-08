@@ -9,6 +9,7 @@ from readability import Document
 # Automatically load environment variables from .env
 load_dotenv(".env")
 
+
 def query_llm(html_text):
     openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
     if not openrouter_api_key:
@@ -55,6 +56,7 @@ Return your answer as a JSON object with two keys: "markdown" and "summary". Do 
         print("Exception during LLM query:", e)
         return {}
 
+
 def main():
     url = "https://www.newyorker.com/news/letter-from-trumps-washington/elon-musks-revolutionary-terror"
     try:
@@ -78,6 +80,7 @@ def main():
             print("Error fetching URL for Readability extraction:", readability_response.status_code)
     except Exception as e:
         print("Exception during Readability extraction:", e)
+
 
 if __name__ == "__main__":
     main()
