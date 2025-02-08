@@ -76,9 +76,6 @@ async def main():
             llm_strategy.show_usage()
         else:
             print("Crawl error:", result.error_message)
-        
-        # Run Mercury extraction to compare outputs
-        await run_mercury_extractor(crawler, url)
 
 if __name__ == "__main__":
     asyncio.run(main())
