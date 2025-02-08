@@ -14,7 +14,7 @@ load_dotenv(".env")
 
 
 def main():
-    url = "https://www.newyorker.com/news/letter-from-trumps-washington/elon-musks-revolutionary-terror"
+    url = "https://jacobin.com/2025/02/trump-musk-doge-protest-schumer"
     try:
         readability_response = requests.get(url)
         if readability_response.status_code == 200:
