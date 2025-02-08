@@ -5,6 +5,7 @@ import json
 from dotenv import load_dotenv
 import requests
 from readability import Document
+import subprocess
 import html2text
 
 # Automatically load environment variables from .env
@@ -35,6 +36,18 @@ def main():
             print("Error fetching URL for Readability extraction:", readability_response.status_code)
     except Exception as e:
         print("Exception during Readability extraction:", e)
+    
+    # New block: Run Postlight Parser for side-by-side comparison
+    try:
+        print("\n----- Running Postlight Parser CLI -----\n")
+        # Use npx to invoke Postlight Parser with markdown output
+        cmd = ["npx", "@postlight/parser", url, "--format=markdown"]
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        postlight_output = result.stdout.strip()
+        print("\n----- Postlight Parser Output -----\n")
+        print(postlight_output)
+    except Exception as e:
+        print("Exception during Postlight Parser execution:", e)
 
 if __name__ == "__main__":
     main()
