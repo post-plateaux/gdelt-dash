@@ -31,9 +31,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Install additional browser dependencies with Playwright
 RUN playwright install-deps
-
-# Download Chromium for Playwright
 RUN playwright install chromium
+RUN npm install -g @postlight/parser
 
 # Then copy the rest of the project code
 COPY . /app

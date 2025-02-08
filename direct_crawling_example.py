@@ -40,8 +40,8 @@ def main():
     # New block: Run Postlight Parser for side-by-side comparison
     try:
         print("\n----- Running Postlight Parser CLI -----\n")
-        # Use npx to invoke Postlight Parser with markdown output
-        cmd = ["npx", "@postlight/parser", url, "--format=markdown"]
+        # Use postlight-parser to invoke Postlight Parser with markdown output
+        cmd = ["postlight-parser", url, "--format=markdown"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         postlight_output = result.stdout.strip()
         print("\n----- Postlight Parser Output -----\n")
