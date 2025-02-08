@@ -113,7 +113,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
-    environment:
+    environment: {}
     networks:
       - backend
       - shared_net
