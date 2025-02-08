@@ -61,10 +61,19 @@ def main():
         readability_response = requests.get(url)
         if readability_response.status_code == 200:
             doc = Document(readability_response.text)
+            # Save raw extracted HTML from Readability
+            raw_html = doc.summary()
             print("\n\n----- Readability Extraction Output -----")
             print("Title:", doc.title())
             print("Extracted Content (HTML):")
-            print(doc.summary())
+            print(raw_html)
+
+            # Call the LLM to get Markdown and summary versions
+            llm_result = query_llm(raw_html)
+            print("\n----- LLM Markdown Output -----\n")
+            print(llm_result.get("markdown", "No markdown output"))
+            print("\n----- LLM Summary -----\n")
+            print(llm_result.get("summary", "No summary output"))
         else:
             print("Error fetching URL for Readability extraction:", readability_response.status_code)
     except Exception as e:
