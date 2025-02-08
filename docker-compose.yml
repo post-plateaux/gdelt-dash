@@ -109,42 +109,11 @@ services:
       - backend
       - shared_net
 
-  llm-scraper:
-    image: unclecode/crawl4ai:${VERSION:-all}-amd64
-    ports:
-      - "11235:11235"
-      - "8000:8000"
-      - "9222:9222"
-      - "8080:8080"
-    environment:
-      - CRAWL4AI_API_TOKEN=${CRAWL4AI_API_TOKEN:-}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}   # Use OpenRouter exclusively
-    volumes:
-      - /dev/shm:/dev/shm
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-        reservations:
-          memory: 1G
-    networks:
-      - backend
-      - shared_net
-
   test-crawling:
     build:
       context: .
       dockerfile: Dockerfile.test
     environment:
-      - CRAWL4AI_API_TOKEN=${CRAWL4AI_API_TOKEN}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
     networks:
       - backend
       - shared_net
