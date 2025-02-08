@@ -80,30 +80,5 @@ async def main():
         # Run Mercury extraction to compare outputs
         await run_mercury_extractor(crawler, url)
 
-async def run_mercury_extractor(crawler, url):
-    """
-    Run the Mercury extractor by first fetching the raw HTML and then calling the Mercury Parser API.
-    """
-    # Fetch raw HTML using the crawler
-    html_result = await crawler.fetch(url=url)
-    if html_result.success:
-        raw_html = html_result.content  # assuming the raw HTML is in html_result.content
-        # Retrieve Mercury configuration from the environment
-        mercury_api = os.getenv("MERCURY_API_URL", "https://mercury.postlight.com/parser")
-        mercury_headers = {"x-api-key": os.getenv("MERCURY_API_KEY", "")}
-        params = {"url": url}
-        # Use asyncio.to_thread to run the blocking requests.get call
-        response = await asyncio.to_thread(requests.get, mercury_api, headers=mercury_headers, params=params)
-        if response.ok:
-            mercury_data = response.json()
-            print("Mercury Extractor Result:")
-            print("Title:", mercury_data.get("title"))
-            # Print first 500 characters of the extracted content for brevity
-            print("Content:", mercury_data.get("content", "")[:500], "...")
-        else:
-            print("Mercury extraction failed:", response.text)
-    else:
-        print("Failed to fetch raw HTML for Mercury extraction.")
-
 if __name__ == "__main__":
     asyncio.run(main())
