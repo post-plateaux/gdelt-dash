@@ -29,14 +29,14 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Then copy the rest of the project code
-COPY . /app
-
 # Install additional browser dependencies with Playwright
 RUN playwright install-deps
 
 # Download Chromium for Playwright
 RUN playwright install chromium
+
+# Then copy the rest of the project code
+COPY . /app
 
 # Copy and prepare start.sh
 COPY start.sh /app/start.sh
