@@ -25,11 +25,12 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy the project files into the container
-COPY . /app
+# Copy dependency definitions first (to leverage layer caching)
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir python-dotenv pydantic crawl4ai playwright readability-lxml "lxml[html_clean]"
+# Then copy the rest of the project code
+COPY . /app
 
 # Install additional browser dependencies with Playwright
 RUN playwright install-deps

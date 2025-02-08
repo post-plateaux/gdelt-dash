@@ -1,0 +1,6 @@
+python-dotenv
+pydantic
+crawl4ai
+playwright
+readability-lxml
+lxml_html_clean
