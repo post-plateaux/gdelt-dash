@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from crawl4ai.extraction_strategy import LLMExtractionStrategy
 import requests
+from readability import Document
 
 # Automatically load environment variables from .env
 load_dotenv(".env")
@@ -76,6 +77,20 @@ async def main():
             llm_strategy.show_usage()
         else:
             print("Crawl error:", result.error_message)
+
+    try:
+        # Use the same URL as defined earlier
+        readability_response = requests.get(url)
+        if readability_response.status_code == 200:
+            doc = Document(readability_response.text)
+            print("\n\n----- Readability Extraction Output -----")
+            print("Title:", doc.title())
+            print("Extracted Content (HTML):")
+            print(doc.summary())
+        else:
+            print("Error fetching URL for Readability extraction:", readability_response.status_code)
+    except Exception as e:
+        print("Exception during Readability extraction:", e)
 
 if __name__ == "__main__":
     asyncio.run(main())
