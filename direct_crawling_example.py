@@ -32,10 +32,10 @@ Please do the following:
 Return your answer as a JSON object with two keys: "markdown" and "summary". Do not include any additional text.
 """
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "google/gemini-2.0-flash-001",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.7,
-        "max_tokens": 2048
+        "max_tokens": 25000
     }
     try:
         response = requests.post(url, headers=headers, json=data)
