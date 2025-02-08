@@ -29,7 +29,7 @@ WORKDIR /app
 COPY . /app
 
 # Install Python dependencies
-RUN pip install --no-cache-dir python-dotenv pydantic crawl4ai playwright readability-lxml
+RUN pip install --no-cache-dir python-dotenv pydantic crawl4ai playwright readability-lxml "lxml[html_clean]"
 
 # Install additional browser dependencies with Playwright
 RUN playwright install-deps
