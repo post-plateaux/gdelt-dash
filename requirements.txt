@@ -3,3 +3,4 @@ playwright
 readability-lxml
 lxml_html_clean
 requests
+html2text
