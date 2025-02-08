@@ -109,7 +109,7 @@ services:
       - backend
       - shared_net
 
-  test-crawling:
+  crawler:
     build:
       context: ./crawler
       dockerfile: Dockerfile.test
