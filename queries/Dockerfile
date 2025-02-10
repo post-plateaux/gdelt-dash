@@ -7,5 +7,8 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+# Install PostgreSQL driver
+RUN pip install psycopg2-binary
+
 # Run the placeholder Python script
 CMD ["python", "queries.py"]

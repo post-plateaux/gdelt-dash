@@ -148,8 +148,10 @@ services:
       context: ./queries
       dockerfile: Dockerfile
     container_name: queries
+    env_file:
+      - .env
     environment:
-      # (Add any environment variables if needed later)
+      # (Add any additional environment variables if needed later)
     networks:
       - backend
       - shared_net
