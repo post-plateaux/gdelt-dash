@@ -98,13 +98,9 @@ services:
       context: ./gdelt_connect  # Directory containing Dockerfile for fetch_gdelt_and_upload.py
     container_name: gdelt_connect
     depends_on:
-      - create_tables
+      postgres:
+        condition: service_healthy
     restart: always  # Restart if it stops
-    healthcheck:
-      test: ["CMD-SHELL", "test -f /flags/tables_created || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_DB=${POSTGRES_DB}
