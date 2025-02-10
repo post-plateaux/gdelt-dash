@@ -125,15 +125,23 @@ def main():
             print("SQL Query Results:")
             print(json.dumps(results, indent=2))
 
-            # For each row, spawn a crawler container if the "mentionidentifier" exists.
-            for row in results:
-                url_arg = row.get("mentionidentifier")
-                if url_arg:
-                    print(f"Spawning crawler for URL: {url_arg}")
-                    subprocess.Popen([
-                        "docker", "compose", "run", "--rm", "crawler",
-                        "python", "crawler.py", url_arg
-                    ])
+            # For each row, concurrently call the crawler's HTTP endpoint for the "mentionidentifier"
+            import concurrent.futures
+            def call_crawler(url_arg):
+                print(f"Calling crawler for URL: {url_arg}")
+                try:
+                    # Call the crawler endpoint; internal Docker networking lets us reference it via hostname "crawler"
+                    response = requests.post("http://crawler:5000/crawl", json={"url": url_arg}, timeout=30)
+                    print(f"Crawler response for {url_arg}:")
+                    print(response.text)
+                except Exception as err:
+                    print(f"Error calling crawler for URL {url_arg}: {err}")
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = [
+                    executor.submit(call_crawler, row.get("mentionidentifier"))
+                    for row in results if row.get("mentionidentifier")
+                ]
+                concurrent.futures.wait(futures)
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
