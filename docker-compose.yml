@@ -150,8 +150,6 @@ services:
     container_name: queries
     env_file:
       - .env
-    environment:
-      # (Add any additional environment variables if needed later)
     networks:
       - backend
       - shared_net
