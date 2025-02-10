@@ -160,7 +160,8 @@ def main():
                                     print(f"Detected language for {url_arg}: {detected_language}")
                                     if detected_language != "en":
                                         try:
-                                            translate_response = requests.post(
+                                            # Translate content
+                                            translate_content_response = requests.post(
                                                 "http://libretranslate:5000/translate",
                                                 data={
                                                     "q": raw_content,
@@ -169,12 +170,36 @@ def main():
                                                 },
                                                 timeout=30
                                             )
-                                            translate_data = translate_response.json()
-                                            translated_text = translate_data.get("translatedText", "[TRANSLATION FAILED]")
-                                            print(f"Translated content for {url_arg}:")
-                                            print(json.dumps({"translatedText": translated_text}, indent=2))
+                                            translate_content_data = translate_content_response.json()
+                                            translated_content = translate_content_data.get("translatedText", "[TRANSLATION FAILED]")
                                         except Exception as e:
-                                            print(f"Error calling /translate for URL {url_arg}: {e}")
+                                            print(f"Error calling /translate for URL {url_arg} (content): {e}")
+                                            translated_content = "[TRANSLATION FAILED]"
+                                        # Translate title if available
+                                        translated_title = None
+                                        if raw_title:
+                                            try:
+                                                translate_title_response = requests.post(
+                                                    "http://libretranslate:5000/translate",
+                                                    data={
+                                                        "q": raw_title,
+                                                        "source": detected_language,
+                                                        "target": "en"
+                                                    },
+                                                    timeout=30
+                                                )
+                                                translate_title_data = translate_title_response.json()
+                                                translated_title = translate_title_data.get("translatedText", "[TRANSLATION FAILED]")
+                                            except Exception as e:
+                                                print(f"Error calling /translate for URL {url_arg} (title): {e}")
+                                                translated_title = "[TRANSLATION FAILED]"
+                                        translation_result = {
+                                            "translatedTitle": translated_title if translated_title is not None else "[NO TITLE]",
+                                            "translatedContent": translated_content,
+                                            "translatedFrom": detected_language
+                                        }
+                                        print("Translation result:")
+                                        print(json.dumps(translation_result, indent=2))
                                 else:
                                     print(f"Could not detect language for {url_arg}: {detect_data}")
                             except Exception as e:
