@@ -143,6 +143,17 @@ services:
       - backend
       - shared_net
 
+  queries:
+    build:
+      context: ./queries
+      dockerfile: Dockerfile
+    container_name: queries
+    environment:
+      # (Add any environment variables if needed later)
+    networks:
+      - backend
+      - shared_net
+
 volumes:
   grafana-data:
     driver: local
