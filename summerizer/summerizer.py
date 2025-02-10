@@ -9,50 +9,36 @@ import psycopg2.extras
 from kafka import KafkaConsumer
 from config import ACTOR_CODE
 
-# def get_summary(text):
-#     api_key = os.environ.get("OPENROUTER_API_KEY")
-#     model = os.environ.get("OPENROUTER_MODEL")
-#     if not model:
-#         raise ValueError("OPENROUTER_MODEL not set")
-#     if not api_key:
-#         raise ValueError("OPENROUTER_API_KEY not set")
-#
-#     # Use the OpenRouter endpoint based on the model specified in the environment variable
-#     url = f"https://openrouter.ai/api/v1/{model}"
-#     headers = {
-#         "Authorization": f"Bearer {api_key}",
-#         "Content-Type": "application/json"
-#     }
-#
-#     prompt_text = (f"Please analyze the following content and provide a structured response "
-#                    f"indicating if the content is on topic, a short summary (if applicable), "
-#                    f"whether it has been translated, and the source language. Content: {text}")
-#
-#     response_schema = {
-#         "type": "object",
-#         "properties": {
-#             "on_topic": {"type": "boolean"},
-#             "summary": {"type": ["string", "null"]},
-#             "translated": {"type": "boolean"},
-#             "source_language": {"type": "string"}
-#         },
-#         "required": ["on_topic", "translated", "source_language"]
-#     }
-#
-#     payload = {
-#         "model": model,
-#         "prompt": prompt_text,
-#         "temperature": 0.7,
-#         "max_tokens": 200,
-#         "response_mime_type": "application/json",
-#         "response_schema": response_schema
-#     }
-#
-#     response = requests.post(url, headers=headers, json=payload)
-#     if response.status_code != 200:
-#         raise Exception(f"API request failed with status {response.status_code}: {response.text}")
-#
-#     return response.json()
+def get_summary(text):
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    model = os.environ.get("OPENROUTER_MODEL")
+    if not model:
+        raise ValueError("OPENROUTER_MODEL not set")
+    if not api_key:
+        raise ValueError("OPENROUTER_API_KEY not set")
+
+    # Use the OpenRouter endpoint based on the model specified in the environment variable
+    url = f"https://openrouter.ai/api/v1/{model}"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    prompt_text = f"Provide a one sentence summary for the following content: {text}"
+
+    payload = {
+        "model": model,
+        "prompt": prompt_text,
+        "temperature": 0.7,
+        "max_tokens": 60,
+        "response_mime_type": "application/json"
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code != 200:
+        raise Exception(f"API request failed with status {response.status_code}: {response.text}")
+
+    return response.json()
 
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
@@ -207,6 +193,14 @@ def main():
                                     print(f"Could not detect language for {url_arg}: {detect_data}")
                             except Exception as e:
                                 print(f"Error calling libretranslate /detect for URL {url_arg}: {e}")
+                            if raw_content:
+                                summary_input = raw_content if detected_language == "en" else translated_content
+                                try:
+                                    summary_result = get_summary(summary_input)
+                                    print("LLM Summary:")
+                                    print(json.dumps({"summary": summary_result.get("summary", "[NO SUMMARY]")}, indent=2))
+                                except Exception as e:
+                                    print(f"Error calling LLM summerizer for URL {url_arg}: {e}")
                     except Exception as e:
                         print("Error parsing crawler response:", response.text)
                 except Exception as err:
