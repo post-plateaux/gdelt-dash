@@ -166,7 +166,8 @@ def main():
                                             )
                                             translate_data = translate_response.json()
                                             translated_text = translate_data.get("translatedText", "[TRANSLATION FAILED]")
-                                            print(f"Translated content for {url_arg}: {translated_text}")
+                                            print(f"Translated content for {url_arg}:")
+                                            print(json.dumps({"translatedText": translated_text}, indent=2))
                                         except Exception as e:
                                             print(f"Error calling /translate for URL {url_arg}: {e}")
                                 else:
