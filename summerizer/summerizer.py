@@ -6,7 +6,9 @@ import requests
 
 def get_summary(text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
-    model = os.environ.get("OPENROUTER_MODEL", "gpt-3.5-turbo")
+    model = os.environ.get("OPENROUTER_MODEL")
+    if not model:
+        raise ValueError("OPENROUTER_MODEL not set")
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY not set")
 
