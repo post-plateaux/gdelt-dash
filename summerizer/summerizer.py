@@ -8,6 +8,7 @@ import psycopg2
 import psycopg2.extras
 from kafka import KafkaConsumer
 from config import ACTOR_CODE
+from openai import OpenAI
 
 def get_summary(text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -16,27 +17,23 @@ def get_summary(text):
         raise ValueError("OPENROUTER_MODEL not set")
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY not set")
-
-    base_url = "https://openrouter.ai/api/v1"
-    url = f"{base_url}/{model}"
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    prompt_text = f"Provide a one sentence summary for the following content: {text}"
-    payload = {
-        "model": model,
-        "messages": [
-            {"role": "user", "content": prompt_text}
-        ],
-        "temperature": 0.7,
-        "max_tokens": 60,
-        "response_mime_type": "application/json"
-    }
-    response = requests.post(url, headers=headers, json=payload)
-    if response.status_code != 200:
-        raise Exception(f"API request failed with status {response.status_code}: {response.text}")
-    return response.json()
+    
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+    )
+    
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
+            "X-Title": os.environ.get("SITE_NAME", "My Site")
+        },
+        model=model,
+        messages=[
+            {"role": "user", "content": f"Provide a one sentence summary for the following content: {text}"}
+        ]
+    )
+    return {"summary": completion.choices[0].message.content}
 
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
