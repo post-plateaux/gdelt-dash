@@ -169,7 +169,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      - CLUSTER_ID=7e6f4a32-8f8a-471f-9e68-2d818699f9d5
+      - CLUSTER_ID=4f9795cd-a549-4d52-8688-c9abef71f6be
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 9092"]
       interval: 10s
