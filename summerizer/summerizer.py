@@ -135,14 +135,18 @@ def main():
                     print(f"Crawler response for {url_arg}:")
                     try:
                         data = response.json()
-                        # Save original result content before hiding it
+                        # Save original result content before hiding only the main content chunk
                         original_result = None
                         if "result" in data:
                             try:
                                 original_result = json.loads(data["result"])
                             except Exception:
                                 original_result = None
-                            data["result"] = "[CONTENT HIDDEN]"
+                            if original_result and isinstance(original_result, dict) and "content" in original_result:
+                                original_result["content"] = "[CONTENT HIDDEN]"
+                                data["result"] = json.dumps(original_result)
+                            else:
+                                data["result"] = "[CONTENT HIDDEN]"
                         print(json.dumps(data, indent=2))
                         # If the original result contains content, call the /detect endpoint of libretranslate
                         if original_result and "content" in original_result:
