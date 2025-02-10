@@ -81,6 +81,9 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
     volumes:
       - ./flags:/flags
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - backend
       - shared_net
