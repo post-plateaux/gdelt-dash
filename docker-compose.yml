@@ -118,6 +118,21 @@ services:
       - backend
       - shared_net
 
+  libretranslate:
+    container_name: libretranslate
+    image: libretranslate/libretranslate:latest
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - LT_UPDATE_MODELS=true
+    volumes:
+      - libretranslate_models:/home/libretranslate/.local:rw
+    environment: {}
+    networks:
+      - backend
+      - shared_net
+
 volumes:
   grafana-data:
     driver: local
