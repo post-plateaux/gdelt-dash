@@ -1,4 +1,5 @@
 import subprocess
+from kafka import KafkaProducer
 
 def run_script(script_path):
     """Run a Python script located at script_path."""
@@ -35,11 +36,15 @@ if __name__ == "__main__":
             print("Failed to create tables, stopping execution.")
             exit(1)
 
-    # Write flag file after all scripts are successfully executed
+    # Publish 'database_prepared' message to Kafka instead of creating a flag file
     try:
-        with open('/flags/tables_created', 'w') as f:
-            f.write('Tables created successfully.\n')
-        print("Flag file created to indicate successful table creation.")
+        producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
+        # Send the message 'database_prepared' as a byte string to the 'database_status' topic
+        producer.send('database_status', b'database_prepared').get(timeout=10)
+        print("Kafka message sent: 'database_prepared'")
     except Exception as e:
-        print(f"Error creating flag file: {e}")
+        print(f"Error sending Kafka message: {e}")
         exit(1)
+    finally:
+        if 'producer' in locals():
+            producer.close()
