@@ -6,6 +6,6 @@ WORKDIR /app
 COPY summerizer.py .
 
 # Install dependencies
-RUN pip install requests kafka-python
+RUN pip install requests kafka-python psycopg2-binary
 
 CMD ["python", "-u", "summerizer.py"]
