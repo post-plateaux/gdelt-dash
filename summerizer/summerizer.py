@@ -50,22 +50,25 @@ def get_summary(text):
     return response.json()
 
 def main():
-    try:
-        raw_input = sys.stdin.read()
-        if not raw_input.strip():
-            raise ValueError("No input provided. Expecting JSON with a 'text' key.")
-        input_data = json.loads(raw_input)
-        text = input_data.get("text")
-        if not text:
-            raise ValueError("JSON must contain a 'text' key.")
-
-        # Get the structured JSON output directly from the API call
-        response_data = get_summary(text)
-        print(json.dumps(response_data, indent=2))
-    except Exception as e:
-        error = {"error": str(e)}
-        print(json.dumps(error), file=sys.stderr)
-        sys.exit(1)
+    from kafka import KafkaConsumer
+    print("Summerizer is waiting for 'database populated' messages from Kafka...")
+    consumer = KafkaConsumer(
+        'database_status',
+        bootstrap_servers=["kafka:9092"],
+        auto_offset_reset="earliest",
+        group_id="summerizer_group"
+    )
+    for message in consumer:
+        msg = message.value.decode('utf-8')
+        if msg == "database populated":
+            print("Received 'database populated' message from Kafka!")
+            text = "The database has been updated with new data."
+            try:
+                response_data = get_summary(text)
+                print(json.dumps(response_data, indent=2))
+            except Exception as e:
+                error = {"error": str(e)}
+                print(json.dumps(error), file=sys.stderr)
 
 if __name__ == "__main__":
     main()
