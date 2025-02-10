@@ -153,6 +153,22 @@ def main():
                                 if isinstance(detect_data, list) and len(detect_data) > 0:
                                     detected_language = detect_data[0].get("language", "unknown")
                                     print(f"Detected language for {url_arg}: {detected_language}")
+                                    if detected_language != "en":
+                                        try:
+                                            translate_response = requests.post(
+                                                "http://libretranslate:5000/translate",
+                                                data={
+                                                    "q": content_text,
+                                                    "source": detected_language,
+                                                    "target": "en"
+                                                },
+                                                timeout=30
+                                            )
+                                            translate_data = translate_response.json()
+                                            translated_text = translate_data.get("translatedText", "[TRANSLATION FAILED]")
+                                            print(f"Translated content for {url_arg}: {translated_text}")
+                                        except Exception as e:
+                                            print(f"Error calling /translate for URL {url_arg}: {e}")
                                 else:
                                     print(f"Could not detect language for {url_arg}: {detect_data}")
                             except Exception as e:
