@@ -12,8 +12,8 @@ def get_summary(text):
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY not set")
 
-    # Use the OpenRouter Gemini endpoint (adjust if needed)
-    url = "https://openrouter.ai/api/v1/gemini-2.0-flash"
+    # Use the OpenRouter endpoint based on the model specified in the environment variable
+    url = f"https://openrouter.ai/api/v1/{model}"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
