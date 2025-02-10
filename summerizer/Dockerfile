@@ -6,6 +6,6 @@ WORKDIR /app
 COPY summerizer.py .
 
 # Install dependencies
-RUN pip install requests
+RUN pip install requests kafka-python
 
 CMD ["python", "summerizer.py"]
