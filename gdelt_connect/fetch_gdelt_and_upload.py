@@ -7,7 +7,7 @@ import io        # Added
 import zipfile   # Added
 import time      # Added
 from datetime import datetime, timedelta
-from kafka import KafkaConsumer
+from kafka import KafkaConsumer, KafkaProducer
 
 def wait_for_table(cursor, table_name, timeout=60):
     """Wait for a table to exist in the database."""
@@ -290,6 +290,17 @@ if __name__ == "__main__":
 
             connection.close()
             print("Connection closed.")
+
+            # Send Kafka message "database populated" after data insertion cycle
+            try:
+                producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
+                producer.send('database_status', b'database populated').get(timeout=10)
+                print("Kafka message sent: 'database populated'")
+            except Exception as e:
+                print(f"Error sending Kafka message: {e}")
+            finally:
+                if 'producer' in locals():
+                    producer.close()
             
             print("\n" + "✅"*20)
             print(f"💾 SUCCESSFULLY LOADED {len(extracted_files)} DATASETS:")
