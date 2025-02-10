@@ -133,7 +133,13 @@ def main():
                     # Call the crawler endpoint; internal Docker networking lets us reference it via hostname "crawler"
                     response = requests.post("http://crawler:5000/crawl", json={"url": url_arg}, timeout=30)
                     print(f"Crawler response for {url_arg}:")
-                    print(response.text)
+                    try:
+                        data = response.json()
+                        if "result" in data:
+                            data["result"] = "[CONTENT HIDDEN]"
+                        print(json.dumps(data, indent=2))
+                    except Exception as e:
+                        print("Error parsing crawler response:", response.text)
                 except Exception as err:
                     print(f"Error calling crawler for URL {url_arg}: {err}")
             with concurrent.futures.ThreadPoolExecutor() as executor:
