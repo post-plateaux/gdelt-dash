@@ -153,7 +153,7 @@ services:
     env_file:
       - .env
     depends_on:
-      gdelt_connect:
+      kafka:
         condition: service_healthy
     networks:
       - backend
