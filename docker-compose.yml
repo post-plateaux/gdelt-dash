@@ -184,19 +184,6 @@ services:
       - backend
       - shared_net
 
-  # queries:
-  #   build:
-  #     context: ./queries
-  #     dockerfile: Dockerfile
-  #   container_name: queries
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     gdelt_connect:
-  #       condition: service_healthy
-  #   networks:
-  #     - backend
-  #     - shared_net
 
 volumes:
   grafana-data:
