@@ -55,7 +55,7 @@ def main():
     consumer = KafkaConsumer(
         'database_status',
         bootstrap_servers=["kafka:9092"],
-        auto_offset_reset="earliest",
+        auto_offset_reset="latest",
         group_id="summerizer_group"
     )
     for message in consumer:
