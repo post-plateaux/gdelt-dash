@@ -8,4 +8,4 @@ COPY summerizer.py .
 # Install dependencies
 RUN pip install requests kafka-python
 
-CMD ["python", "summerizer.py"]
+CMD ["python", "-u", "summerizer.py"]
