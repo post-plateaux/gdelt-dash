@@ -64,6 +64,7 @@ def main():
             print("Received 'database populated' message from Kafka!")
             # Summarization functionality is temporarily disabled.
             print("Operation: Kafka update processed. (Summarization functionality commented out.)")
+        # Continue waiting for additional messages
 
 if __name__ == "__main__":
     main()
