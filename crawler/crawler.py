@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import requests
 from readability import Document
 import subprocess
+import sys
 import html2text
 
 # Automatically load environment variables from .env
@@ -15,7 +16,10 @@ load_dotenv(".env")
 
 
 def main():
-    url = "https://jacobin.com/2025/02/trump-musk-doge-protest-schumer"
+    if len(sys.argv) < 2:
+        print("Usage: python crawler.py <URL>")
+        sys.exit(1)
+    url = sys.argv[1]
     parser_success = False
 
     # Attempt to use Postlight Parser first (it scrapes and processes its own HTML)
