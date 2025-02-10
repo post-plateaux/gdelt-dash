@@ -7,6 +7,7 @@ import io        # Added
 import zipfile   # Added
 import time      # Added
 from datetime import datetime, timedelta
+from kafka import KafkaConsumer
 
 def wait_for_table(cursor, table_name, timeout=60):
     """Wait for a table to exist in the database."""
@@ -197,13 +198,21 @@ interval_minutes = 15  # Change this to your desired interval
 
 if __name__ == "__main__":
     print("\n🔵 GDELT CONNECT SERVICE INITIALIZED 🔵\n")
-    
-    # Wait for tables to be created
-    flag_file = "/flags/tables_created"
-    while not os.path.isfile(flag_file):
-        print("Waiting for tables to be created... (checking /flags/tables_created)")
-        time.sleep(5)
-    
+
+    # Wait for the 'database_prepared' message from Kafka before proceeding
+    consumer = KafkaConsumer(
+        'database_status',
+        bootstrap_servers=['kafka:9092'],
+        auto_offset_reset='earliest',
+        group_id='gdelt_connect_group'
+    )
+    print("Waiting for 'database_prepared' message from Kafka...")
+    for message in consumer:
+        if message.value.decode('utf-8') == 'database_prepared':
+            print("Received 'database_prepared' message from Kafka!")
+            break
+    consumer.close()
+
     # Verify database connection first
     try:
         test_conn = psycopg2.connect(conn_string)
