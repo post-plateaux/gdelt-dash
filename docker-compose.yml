@@ -47,6 +47,7 @@ services:
       - ./provisioning:/etc/grafana/provisioning
     environment:
       - GF_INSTALL_PLUGINS=
+      - GF_LOG_LEVEL=error
       - GF_DATABASE_TYPE=postgres
       - GF_DATABASE_HOST=${POSTGRES_HOST}
       - GF_DATABASE_NAME=${POSTGRES_DB}
