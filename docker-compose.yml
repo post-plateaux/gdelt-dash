@@ -132,6 +132,17 @@ services:
       - backend
       - shared_net
 
+  summerizer:
+    build:
+      context: ./summerizer
+      dockerfile: Dockerfile
+    container_name: summerizer
+    env_file:
+      - .env
+    networks:
+      - backend
+      - shared_net
+
 volumes:
   grafana-data:
     driver: local
