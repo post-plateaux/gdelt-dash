@@ -114,6 +114,9 @@ services:
       context: ./crawler
       dockerfile: Dockerfile
     environment: {}
+    depends_on:
+      gdelt_connect:
+        condition: service_healthy
     networks:
       - backend
       - shared_net
@@ -139,6 +142,9 @@ services:
     container_name: summerizer
     env_file:
       - .env
+    depends_on:
+      gdelt_connect:
+        condition: service_healthy
     networks:
       - backend
       - shared_net
@@ -150,6 +156,9 @@ services:
     container_name: queries
     env_file:
       - .env
+    depends_on:
+      gdelt_connect:
+        condition: service_healthy
     networks:
       - backend
       - shared_net
