@@ -1,5 +1,6 @@
 import os
 import json
+import subprocess
 import psycopg2
 import psycopg2.extras
 
@@ -63,6 +64,16 @@ ORDER BY globaleventid, mentionidentifier;
 """
     results = run_sql_query(SQL_QUERY)
     print(json.dumps(results, indent=2))
+
+    # For each JSON object returned, spawn a crawler container with the mentionidentifier as argument.
+    for row in results:
+        url_arg = row.get("mentionidentifier")
+        if url_arg:
+            print(f"Spawning crawler for URL: {url_arg}")
+            subprocess.Popen([
+                "docker", "compose", "run", "--rm", "crawler",
+                "python", "crawler.py", url_arg
+            ])
 
 if __name__ == "__main__":
     main()
