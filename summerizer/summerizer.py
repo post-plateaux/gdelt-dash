@@ -149,9 +149,9 @@ def main():
                                 data["result"] = json.dumps(original_result)
                             else:
                                 data["result"] = "[CONTENT HIDDEN]"
-    raw_title = None
-    if original_result and isinstance(original_result, dict) and "title" in original_result:
-        raw_title = original_result["title"]
+                        raw_title = None
+                        if original_result and isinstance(original_result, dict) and "title" in original_result:
+                            raw_title = original_result["title"]
                         print(json.dumps(data, indent=2))
                         # If raw content is available, call the /detect endpoint of libretranslate
                         if raw_content:
