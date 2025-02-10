@@ -17,27 +17,25 @@ def get_summary(text):
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY not set")
 
-    # Use the OpenRouter endpoint based on the model specified in the environment variable
-    url = f"https://openrouter.ai/api/v1/{model}"
+    base_url = "https://openrouter.ai/api/v1"
+    url = f"{base_url}/{model}"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
-
     prompt_text = f"Provide a one sentence summary for the following content: {text}"
-
     payload = {
         "model": model,
-        "prompt": prompt_text,
+        "messages": [
+            {"role": "user", "content": prompt_text}
+        ],
         "temperature": 0.7,
         "max_tokens": 60,
         "response_mime_type": "application/json"
     }
-
     response = requests.post(url, headers=headers, json=payload)
     if response.status_code != 200:
         raise Exception(f"API request failed with status {response.status_code}: {response.text}")
-
     return response.json()
 
 def main():
