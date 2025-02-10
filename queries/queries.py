@@ -3,6 +3,8 @@ import json
 import psycopg2
 import psycopg2.extras
 
+from config import ACTOR_CODE
+
 def run_sql_query(query):
     host = os.environ.get("POSTGRES_HOST", "postgres")
     dbname = os.environ.get("POSTGRES_DB")
@@ -19,25 +21,25 @@ def run_sql_query(query):
     return result
 
 def main():
-    SQL_QUERY = """
+    SQL_QUERY = f"""
 WITH ref_actor_events AS (
   SELECT globaleventid
   FROM events
-  WHERE actor1type1code = 'REF'
-        OR actor1type2code = 'REF'
-        OR actor1type3code = 'REF'
-        OR actor2type1code = 'REF'
-        OR actor2type2code = 'REF'
-        OR actor2type3code = 'REF'
+  WHERE actor1type1code = '{ACTOR_CODE}'
+        OR actor1type2code = '{ACTOR_CODE}'
+        OR actor1type3code = '{ACTOR_CODE}'
+        OR actor2type1code = '{ACTOR_CODE}'
+        OR actor2type2code = '{ACTOR_CODE}'
+        OR actor2type3code = '{ACTOR_CODE}'
   UNION
   SELECT globaleventid
   FROM events_translated
-  WHERE actor1type1code = 'REF'
-        OR actor1type2code = 'REF'
-        OR actor1type3code = 'REF'
-        OR actor2type1code = 'REF'
-        OR actor2type2code = 'REF'
-        OR actor2type3code = 'REF'
+  WHERE actor1type1code = '{ACTOR_CODE}'
+        OR actor1type2code = '{ACTOR_CODE}'
+        OR actor1type3code = '{ACTOR_CODE}'
+        OR actor2type1code = '{ACTOR_CODE}'
+        OR actor2type2code = '{ACTOR_CODE}'
+        OR actor2type3code = '{ACTOR_CODE}'
 ),
 combined_mentions AS (
   SELECT *
