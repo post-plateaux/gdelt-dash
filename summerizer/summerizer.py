@@ -135,9 +135,28 @@ def main():
                     print(f"Crawler response for {url_arg}:")
                     try:
                         data = response.json()
+                        # Save original result content before hiding it
+                        original_result = None
                         if "result" in data:
+                            try:
+                                original_result = json.loads(data["result"])
+                            except Exception:
+                                original_result = None
                             data["result"] = "[CONTENT HIDDEN]"
                         print(json.dumps(data, indent=2))
+                        # If the original result contains content, call the /detect endpoint of libretranslate
+                        if original_result and "content" in original_result:
+                            content_text = original_result["content"]
+                            try:
+                                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": content_text}, timeout=30)
+                                detect_data = detect_response.json()
+                                if isinstance(detect_data, list) and len(detect_data) > 0:
+                                    detected_language = detect_data[0].get("language", "unknown")
+                                    print(f"Detected language for {url_arg}: {detected_language}")
+                                else:
+                                    print(f"Could not detect language for {url_arg}: {detect_data}")
+                            except Exception as e:
+                                print(f"Error calling libretranslate /detect for URL {url_arg}: {e}")
                     except Exception as e:
                         print("Error parsing crawler response:", response.text)
                 except Exception as err:
