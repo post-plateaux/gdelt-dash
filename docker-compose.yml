@@ -173,6 +173,7 @@ services:
       CLUSTER_ID: "SzGQD1rJSuyHwBbT99EPOA"
       KAFKA_NODE_ID: "1"
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_LOG4J_OPTS: "-Dlog4j.rootLogger=ERROR,CONSOLE"
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 9092"]
       interval: 10s
