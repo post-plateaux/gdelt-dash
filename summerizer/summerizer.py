@@ -109,7 +109,6 @@ def main():
             # For each row, concurrently call the crawler's HTTP endpoint for the "mentionidentifier"
             import concurrent.futures
             def call_crawler(url_arg):
-                print(f"Calling crawler for URL: {url_arg}")
                 try:
                     # Call the crawler endpoint; internal Docker networking lets us reference it via hostname "crawler"
                     response = requests.post("http://crawler:5000/crawl", json={"url": url_arg}, timeout=30)
