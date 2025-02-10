@@ -4,3 +4,5 @@ readability-lxml
 lxml_html_clean
 requests
 html2text
+fastapi==0.95.1
+uvicorn==0.22.0
