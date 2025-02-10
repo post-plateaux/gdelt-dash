@@ -1,0 +1,11 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Copy summerizer.py into the container
+COPY summerizer.py .
+
+# Install dependencies
+RUN pip install requests
+
+CMD ["python", "summerizer.py"]
