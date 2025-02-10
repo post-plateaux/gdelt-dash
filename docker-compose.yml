@@ -84,8 +84,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=${POSTGRES_PORT}
-    volumes:
-      - ./flags:/flags
     depends_on:
       postgres:
         condition: service_healthy
@@ -112,8 +110,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=${POSTGRES_PORT}
-    volumes:
-      - ./flags:/flags
     networks:
       - backend
       - shared_net
