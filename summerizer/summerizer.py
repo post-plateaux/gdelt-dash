@@ -137,22 +137,23 @@ def main():
                         data = response.json()
                         # Save original result content before hiding only the main content chunk
                         original_result = None
+                        raw_content = None
                         if "result" in data:
                             try:
                                 original_result = json.loads(data["result"])
                             except Exception:
                                 original_result = None
                             if original_result and isinstance(original_result, dict) and "content" in original_result:
+                                raw_content = original_result["content"]
                                 original_result["content"] = "[CONTENT HIDDEN]"
                                 data["result"] = json.dumps(original_result)
                             else:
                                 data["result"] = "[CONTENT HIDDEN]"
                         print(json.dumps(data, indent=2))
-                        # If the original result contains content, call the /detect endpoint of libretranslate
-                        if original_result and "content" in original_result:
-                            content_text = original_result["content"]
+                        # If raw content is available, call the /detect endpoint of libretranslate
+                        if raw_content:
                             try:
-                                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": content_text}, timeout=30)
+                                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": raw_content}, timeout=30)
                                 detect_data = detect_response.json()
                                 if isinstance(detect_data, list) and len(detect_data) > 0:
                                     detected_language = detect_data[0].get("language", "unknown")
@@ -162,7 +163,7 @@ def main():
                                             translate_response = requests.post(
                                                 "http://libretranslate:5000/translate",
                                                 data={
-                                                    "q": content_text,
+                                                    "q": raw_content,
                                                     "source": detected_language,
                                                     "target": "en"
                                                 },
