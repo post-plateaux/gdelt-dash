@@ -125,7 +125,7 @@ services:
       dockerfile: Dockerfile
     environment: {}
     depends_on:
-      gdelt_connect:
+      postgres:
         condition: service_healthy
     networks:
       - backend
