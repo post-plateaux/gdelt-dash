@@ -137,6 +137,8 @@ volumes:
     driver: local
   postgres_data:
     driver: local
+  libretranslate_models:
+    driver: local
 
 networks:
   backend:
