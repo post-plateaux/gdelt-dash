@@ -19,7 +19,46 @@ def run_sql_query(query):
     return result
 
 def main():
-    SQL_QUERY = "SELECT * FROM some_table;"  # Replace with your actual SQL query
+    SQL_QUERY = """
+WITH ref_actor_events AS (
+  SELECT globaleventid
+  FROM events
+  WHERE actor1type1code = 'REF'
+        OR actor1type2code = 'REF'
+        OR actor1type3code = 'REF'
+        OR actor2type1code = 'REF'
+        OR actor2type2code = 'REF'
+        OR actor2type3code = 'REF'
+  UNION
+  SELECT globaleventid
+  FROM events_translated
+  WHERE actor1type1code = 'REF'
+        OR actor1type2code = 'REF'
+        OR actor1type3code = 'REF'
+        OR actor2type1code = 'REF'
+        OR actor2type2code = 'REF'
+        OR actor2type3code = 'REF'
+),
+combined_mentions AS (
+  SELECT *
+  FROM mentions
+  WHERE globaleventid IN (SELECT globaleventid FROM ref_actor_events)
+    AND confidence >= 70
+  UNION ALL
+  SELECT *
+  FROM mentions_translated
+  WHERE globaleventid IN (SELECT globaleventid FROM ref_actor_events)
+    AND confidence >= 70
+),
+unique_mentions AS (
+  SELECT DISTINCT ON (mentionidentifier) *
+  FROM combined_mentions
+  ORDER BY mentionidentifier, globaleventid
+)
+SELECT DISTINCT ON (globaleventid) *
+FROM unique_mentions
+ORDER BY globaleventid, mentionidentifier;
+"""
     results = run_sql_query(SQL_QUERY)
     print(json.dumps(results, indent=2))
 
