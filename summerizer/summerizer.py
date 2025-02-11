@@ -9,6 +9,7 @@ import psycopg2.extras
 from kafka import KafkaConsumer
 from config import ACTOR_CODE
 from openai import OpenAI
+import concurrent.futures
 
 def get_summary(text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -119,7 +120,6 @@ def main():
                         original_result = None
                         raw_content = None
                         if "result" in data:
-                        if "result" in                             
                             try:
                                 original_result = json.loads(data["result"])
                             except Exception:
