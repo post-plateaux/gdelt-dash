@@ -16,6 +16,17 @@ from openai import OpenAI
 import concurrent.futures
 
 app = FastAPI()
+
+def is_allowed(url):
+    blocked = os.environ.get("BLOCKED_DOMAINS", "")
+    if blocked:
+        domains = [d.strip() for d in blocked.split(",") if d.strip()]
+        for domain in domains:
+            if domain in url:
+                return False
+        return True
+    return True
+
 latest_article_text = ""
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -281,7 +292,7 @@ def main():
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
                     executor.submit(call_crawler, row.get("mentionidentifier"))
-                    for row in results if row.get("mentionidentifier")
+                    for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
                 ]
             all_results = [f.result() for f in futures]
             # Filter only the successful URL_COMPLETED objects (those that include both "LLM_summary" and "source")
