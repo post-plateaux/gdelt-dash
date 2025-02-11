@@ -30,7 +30,7 @@ def get_summary(text):
         },
         model=model,
         messages=[
-            {"role": "user", "content": f"Provide a one sentence summary for the following content: {text}"}
+            {"role": "user", "content": f"Provide a detailed breakdown that covers who, what, when, where, why, and how for the following content: {text}"}
         ]
     )
     return {"summary": completion.choices[0].message.content}
