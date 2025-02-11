@@ -7,6 +7,8 @@ import subprocess
 import psycopg2
 import psycopg2.extras
 from kafka import KafkaConsumer
+import logging
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE
 from openai import OpenAI
 import concurrent.futures
@@ -239,9 +241,11 @@ def main():
                     final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
                     return final_result
                 if raw_content:
+                if raw_content:
                     final_result["article_source"] = summary_input  # save the translated or original content
                 if raw_title:
                     final_result["original_title"] = raw_title
+                logging.debug("Final crawler result for URL %s: %s", url_arg, json.dumps(final_result, indent=2))
                 return final_result
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -256,9 +260,26 @@ def main():
                 # Only include events that produced content for the aggregated article.
                 if res.get("article_source"):
                     aggregated_input += f"URL: {res.get('mentionidentifier', 'N/A')}\n"
+            all_results = [f.result() for f in futures]
+            aggregated_input = ""
+            for res in all_results:
+                # Only include events that produced content for the aggregated article.
+                if res.get("article_source"):
+                    aggregated_input += f"URL: {res.get('mentionidentifier', 'N/A')}\n"
                     aggregated_input += f"Title: {res.get('original_title', 'N/A')}\n"
                     aggregated_input += f"Summary: {res.get('LLM_summary', 'N/A')}\n"
                     aggregated_input += f"Content: {res.get('article_source', 'N/A')}\n\n"
+            if not aggregated_input.strip():
+                logging.warning("Aggregated input is empty; skipping article generation.")
+            else:
+                logging.debug("Aggregated input for article generation (%d characters):\n%s", len(aggregated_input), aggregated_input)
+                try:
+                    article_result = get_article(aggregated_input)
+                    logging.info("Aggregated Article Overview generated successfully:")
+                    print("Aggregated Article Overview:")
+                    print(json.dumps(article_result, indent=2))
+                except Exception as e:
+                    logging.error("Error calling aggregated article LLM: %s", e)
             try:
                 article_result = get_article(aggregated_input)
                 print("Aggregated Article Overview:")
