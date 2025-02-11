@@ -287,4 +287,8 @@ def main():
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
+    import threading
+    fastapi_thread = threading.Thread(target=run_fastapi)
+    fastapi_thread.daemon = True
+    fastapi_thread.start()
     main()
