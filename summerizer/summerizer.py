@@ -7,8 +7,7 @@ import subprocess
 import psycopg2
 import psycopg2.extras
 from kafka import KafkaConsumer
-import logging
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+import logginglogging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE
 from openai import OpenAI
 import concurrent.futures
