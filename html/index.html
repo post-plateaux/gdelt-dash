@@ -305,3 +305,38 @@
     </script>
   </body>
 </html>
+<script type="text/javascript">
+  // NEW: Global variable to hold the current article content.
+  var currentArticleContent = "";
+
+  function fetchLatestArticle() {
+    fetch("http://summerizer:5000/latest_article")
+      .then(response => response.json())
+      .then(data => {
+        if (data.article) {
+          // Check if the new article is different from the current one.
+          if (data.article.trim() !== currentArticleContent.trim()) {
+            currentArticleContent = data.article;
+            // Swap the main content with the new article.
+            document.getElementById("article-container").innerHTML = data.article;
+            document.getElementById("article-section").style.display = "block";
+            // Optionally hide the existing content.
+            document.getElementById("written-content-group").style.display = "none";
+            document.getElementById("visualizations-group").style.display = "none";
+            // After a short delay, refresh the entire webpage
+            setTimeout(function() {
+              window.location.reload();
+            }, 1000);
+          }
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching latest article:", err);
+      });
+  }
+
+  // Poll every 15 minutes (900,000 ms) and also load on page load.
+  setInterval(fetchLatestArticle, 900000);
+  fetchLatestArticle();
+
+  // ... (other functions, e.g., toggleVisibility, remain unchanged)
