@@ -229,18 +229,6 @@ def main():
                             final_result.setdefault("errors", []).append(f"Error processing raw content for URL {url_arg}: {e}")
                     print(json.dumps(final_result, indent=2))
                 except Exception as err:
-                    final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}                    
-                    print(json.dumps(final_result, indent=2))
-
-                    if raw_content:
-                        final_result["article_source"] = summary_input  # save the translated or original content
-                    if raw_title:
-                        final_result["original_title"] = raw_title
-                    return final_result
-                except Exception as err:
-                    final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
-                    return final_result
-                if raw_content:
                 if raw_content:
                     final_result["article_source"] = summary_input  # save the translated or original content
                 if raw_title:
