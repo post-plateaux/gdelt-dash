@@ -7,11 +7,24 @@ import subprocess
 import psycopg2
 import psycopg2.extras
 from kafka import KafkaConsumer
+from fastapi import FastAPI
+import uvicorn
+from fastapi.responses import JSONResponse
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE
 from openai import OpenAI
 import concurrent.futures
+
+@app.get("/latest_article")
+def latest_article_endpoint():
+    if latest_article_text:
+        return {"article": latest_article_text}
+    else:
+        return {"article": "No article available yet."}
+
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=5000)
 
 def get_summary(text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -265,6 +278,8 @@ def main():
                     logging.info("Aggregated Article Overview generated successfully:")
                     print("Aggregated Article Overview:")
                     print(json.dumps(article_result, indent=2))
+                    global latest_article_text
+                    latest_article_text = article_result.get("article", "")
                 except Exception as e:
                     logging.error("Error calling aggregated article LLM: %s", e)
         # Continue waiting for additional messages
