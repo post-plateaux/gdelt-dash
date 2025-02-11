@@ -114,13 +114,12 @@ def main():
                     final_result = {"mentionidentifier": url_arg, "status": []}
                     final_result["status"].append(f"Crawl request sent for URL {url_arg}.")
                     try:
-                        data = response.json()
+                        data = response.json()                        
                         # Process crawler response without printing raw details
                         original_result = None
                         raw_content = None
                         if "result" in data:
-                        raw_content = None
-                        if "result" in 
+                        if "result" in                             
                             try:
                                 original_result = json.loads(data["result"])
                             except Exception:
