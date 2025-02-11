@@ -30,7 +30,7 @@ def get_summary(text):
         },
         model=model,
         messages=[
-            {"role": "user", "content": f"Provide a detailed breakdown that covers who, what, when, where, why, and how for the following content: {text}"}
+            {"role": "user", "content": f"Provide a single sentence summary for the following content: {text}"}
         ]
     )
     return {"summary": completion.choices[0].message.content}
@@ -105,20 +105,21 @@ def main():
             results = run_sql_query(SQL_QUERY)
             print("SQL Query Results:")
             print(json.dumps(results, indent=2))
+            print(f"Dispatching {len(results)} crawler requests...\n")
 
             # For each row, concurrently call the crawler's HTTP endpoint for the "mentionidentifier"
-            import concurrent.futures
             def call_crawler(url_arg):
                 try:
-                    # Call the crawler endpoint; internal Docker networking lets us reference it via hostname "crawler"
                     response = requests.post("http://crawler:5000/crawl", json={"url": url_arg}, timeout=30)
-                    print(f"Crawler response for {url_arg}:")
+                    final_result = {"mentionidentifier": url_arg, "status": []}
+                    final_result["status"].append(f"Crawl request sent for URL {url_arg}.")
                     try:
                         data = response.json()
-                        # Save original result content before hiding only the main content chunk
+                        # Process crawler response without printing raw details
                         original_result = None
                         raw_content = None
                         if "result" in data:
+                        if "result" in 
                             try:
                                 original_result = json.loads(data["result"])
                             except Exception:
@@ -133,72 +134,75 @@ def main():
                         if original_result and isinstance(original_result, dict) and "title" in original_result:
                             raw_title = original_result["title"]
                         print(json.dumps(data, indent=2))
-                        # If raw content is available, call the /detect endpoint of libretranslate
-                        if raw_content:
-                            try:
-                                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": raw_content}, timeout=30)
-                                detect_data = detect_response.json()
-                                if isinstance(detect_data, list) and len(detect_data) > 0:
-                                    detected_language = detect_data[0].get("language", "unknown")
-                                    print(f"Detected language for {url_arg}: {detected_language}")
-                                    if detected_language != "en":
+                        final_result["crawler_response"] = data
+                    except Exception as e:
+                        final_result["error"] = f"Error parsing crawler response: {response.text}"
+                        print(json.dumps(final_result, indent=2))
+                        return
+                    if raw_content:
+                        try:
+                            detect_response = requests.post("http://libretranslate:5000/detect", data={"q": raw_content}, timeout=30)
+                            detect_data = detect_response.json()
+                            if isinstance(detect_data, list) and len(detect_data) > 0:
+                                detected_language = detect_data[0].get("language", "unknown")
+                                final_result["status"].append(f"Detected language for URL {url_arg}: {detected_language}.")
+                                if detected_language != "en":
+                                    final_result["status"].append(f"Non-English content detected; initiating translation for URL {url_arg}.")
+                                    try:
+                                        translate_content_response = requests.post(
+                                            "http://libretranslate:5000/translate",
+                                            data={
+                                                "q": raw_content,
+                                                "source": detected_language,
+                                                "target": "en"
+                                            },
+                                            timeout=30
+                                        )
+                                        translate_content_data = translate_content_response.json()
+                                        translated_content = translate_content_data.get("translatedText", "[TRANSLATION FAILED]")
+                                    except Exception as e:
+                                        final_result["error"] = f"Error calling /translate for URL {url_arg} (content): {e}"
+                                        translated_content = "[TRANSLATION FAILED]"
+                                    translated_title = None
+                                    if raw_title:
                                         try:
-                                            # Translate content
-                                            translate_content_response = requests.post(
+                                            translate_title_response = requests.post(
                                                 "http://libretranslate:5000/translate",
                                                 data={
-                                                    "q": raw_content,
+                                                    "q": raw_title,
                                                     "source": detected_language,
                                                     "target": "en"
                                                 },
                                                 timeout=30
                                             )
-                                            translate_content_data = translate_content_response.json()
-                                            translated_content = translate_content_data.get("translatedText", "[TRANSLATION FAILED]")
+                                            translate_title_data = translate_title_response.json()
+                                            translated_title = translate_title_data.get("translatedText", "[TRANSLATION FAILED]")
                                         except Exception as e:
-                                            print(f"Error calling /translate for URL {url_arg} (content): {e}")
-                                            translated_content = "[TRANSLATION FAILED]"
-                                        # Translate title if available
-                                        translated_title = None
-                                        if raw_title:
-                                            try:
-                                                translate_title_response = requests.post(
-                                                    "http://libretranslate:5000/translate",
-                                                    data={
-                                                        "q": raw_title,
-                                                        "source": detected_language,
-                                                        "target": "en"
-                                                    },
-                                                    timeout=30
-                                                )
-                                                translate_title_data = translate_title_response.json()
-                                                translated_title = translate_title_data.get("translatedText", "[TRANSLATION FAILED]")
-                                            except Exception as e:
-                                                print(f"Error calling /translate for URL {url_arg} (title): {e}")
-                                                translated_title = "[TRANSLATION FAILED]"
-                                        translation_result = {
-                                            "translatedTitle": translated_title if translated_title is not None else "[NO TITLE]",
-                                            "translatedContent": translated_content,
-                                            "translatedFrom": detected_language
-                                        }
-                                        print("Translation result:")
-                                        print(json.dumps(translation_result, indent=2))
+                                            final_result.setdefault("errors", []).append(f"Error calling /translate for URL {url_arg} (title): {e}")
+                                            translated_title = "[TRANSLATION FAILED]"
+                                    final_result["translation_result"] = {
+                                        "translatedTitle": translated_title if translated_title is not None else "[NO TITLE]",
+                                        "translatedContent": translated_content,
+                                        "translatedFrom": detected_language
+                                    }
+                                    summary_input = translated_content
                                 else:
                                     print(f"Could not detect language for {url_arg}: {detect_data}")
                             except Exception as e:
                                 print(f"Error calling libretranslate /detect for URL {url_arg}: {e}")
                             if raw_content:
                                 summary_input = raw_content if detected_language == "en" else translated_content
+                                    final_result["status"].append(f"Content is in English; initiating summarization for URL {url_arg}.")
+                                    summary_input = raw_content
                                 try:
                                     summary_result = get_summary(summary_input)
-                                    print("LLM Summary:")
-                                    print(json.dumps({"summary": summary_result.get("summary", "[NO SUMMARY]")}, indent=2))
+                                    final_result["LLM_summary"] = summary_result.get("summary", "[NO SUMMARY]")
                                 except Exception as e:
-                                    print(f"Error calling LLM summerizer for URL {url_arg}: {e}")
-                    except Exception as e:
-                        print("Error parsing crawler response:", response.text)
+                                    final_result.setdefault("errors", []).append(f"Error calling LLM summerizer for URL {url_arg}: {e}")
+                    print(json.dumps(final_result, indent=2))
                 except Exception as err:
-                    print(f"Error calling crawler for URL {url_arg}: {err}")
+                    final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
+                    print(json.dumps(final_result, indent=2))
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
                     executor.submit(call_crawler, row.get("mentionidentifier"))
