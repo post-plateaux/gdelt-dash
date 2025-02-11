@@ -38,6 +38,9 @@ def latest_article_endpoint():
 def run_fastapi():
     uvicorn.run(app, host="0.0.0.0", port=5000)
 
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
 def get_summary(text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
     model = os.environ.get("OPENROUTER_MODEL")

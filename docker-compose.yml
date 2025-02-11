@@ -155,6 +155,8 @@ services:
       kafka:
         condition: service_healthy
     restart: always
+    ports:
+      - "8000:8000"
     networks:
       - backend
       - shared_net
