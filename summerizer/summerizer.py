@@ -230,9 +230,17 @@ def main():
                     print(json.dumps(final_result, indent=2))
                     if raw_content:
                         final_result["article_source"] = summary_input  # save the translated or original content
-                    if raw_title:
-                        final_result["original_title"] = raw_title
-                    return final_result
+                    print(json.dumps(final_result, indent=2))
+                    if raw_content:
+                        url_completed = {
+                            "source": url_arg,
+                            "title": raw_title if raw_title else "N/A",
+                            "content": summary_input,
+                            "LLM_summary": final_result.get("LLM_summary", "[NO SUMMARY]")
+                        }
+                        return url_completed
+                    else:
+                        return {"error": f"No content available for URL {url_arg}"}
                 except Exception as err:
                     final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
                     logging.debug("Final crawler result for URL %s: %s", url_arg, json.dumps(final_result, indent=2))
@@ -243,34 +251,22 @@ def main():
                     executor.submit(call_crawler, row.get("mentionidentifier"))
                     for row in results if row.get("mentionidentifier")
                 ]
-                concurrent.futures.wait(futures)
             all_results = [f.result() for f in futures]
-            all_results = [f.result() for f in futures]
-            aggregated_input = ""
-            for res in all_results:
-                # Only include events that produced an LLM summary.
-                if res.get("LLM_summary"):
-                    aggregated_input += f"URL: {res.get('mentionidentifier', 'N/A')}\n"
-                    aggregated_input += f"Title: {res.get('original_title', 'N/A')}\n"
-                    aggregated_input += f"Summary: {res.get('LLM_summary', 'N/A')}\n"
-                    aggregated_input += f"Content: {res.get('article_source', 'N/A')}\n\n"
-            if not aggregated_input.strip():
-                logging.warning("Aggregated input is empty; skipping article generation.")
+            # Filter only the successful URL_COMPLETED objects (those that include both "LLM_summary" and "source")
+            url_completed_list = [res for res in all_results if res.get("LLM_summary") and res.get("source")]
+            if not url_completed_list:
+                logging.warning("No successful crawler results returned; skipping article generation.")
             else:
-                logging.debug("Aggregated input for article generation (%d characters):\n%s", len(aggregated_input), aggregated_input)
+                # Convert the list of URL_COMPLETED objects to a JSON-formatted string
+                aggregated_payload = json.dumps(url_completed_list, indent=2)
+                logging.debug("Aggregated URL_COMPLETED payload for article generation:\n%s", aggregated_payload)
                 try:
-                    article_result = get_article(aggregated_input)
+                    article_result = get_article(aggregated_payload)
                     logging.info("Aggregated Article Overview generated successfully:")
                     print("Aggregated Article Overview:")
                     print(json.dumps(article_result, indent=2))
                 except Exception as e:
                     logging.error("Error calling aggregated article LLM: %s", e)
-            try:
-                article_result = get_article(aggregated_input)
-                print("Aggregated Article Overview:")
-                print(json.dumps(article_result, indent=2))
-            except Exception as e:
-                print(f"Error calling aggregated article LLM: {e}")
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
