@@ -36,6 +36,36 @@ def get_summary(text):
     )
     return {"summary": completion.choices[0].message.content}
 
+def get_article(aggregated_text):
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    model = os.environ.get("OPENROUTER_MODEL")
+    if not model:
+        raise ValueError("OPENROUTER_MODEL not set")
+    if not api_key:
+        raise ValueError("OPENROUTER_API_KEY not set")
+
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+    )
+
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
+            "X-Title": os.environ.get("SITE_NAME", "My Site")
+        },
+        model=model,
+        messages=[
+            {"role": "user", "content": (
+                f"Using the following aggregated \n{aggregated_text}\n\n"
+                "Please write a comprehensive article overviewing the events of the last 15 minutes. "
+                "The article should integrate each entry's event content (or its translated version), "
+                "the individual LLM summary, along with the source URL and the original title."
+            )}
+        ]
+    )
+    return {"article": completion.choices[0].message.content}
+
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
     consumer = KafkaConsumer(
@@ -199,12 +229,37 @@ def main():
                 except Exception as err:
                     final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
                     print(json.dumps(final_result, indent=2))
+
+                    if raw_content:
+                        final_result["article_source"] = summary_input  # save the translated or original content
+                    if raw_title:
+                        final_result["original_title"] = raw_title
+                    return final_result
+                except Exception as err:
+                    final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
+                    return final_result
+
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
                     executor.submit(call_crawler, row.get("mentionidentifier"))
                     for row in results if row.get("mentionidentifier")
                 ]
                 concurrent.futures.wait(futures)
+            all_results = [f.result() for f in futures]
+            aggregated_input = ""
+            for res in all_results:
+                # Only include events that produced content for the aggregated article.
+                if res.get("article_source"):
+                    aggregated_input += f"URL: {res.get('mentionidentifier', 'N/A')}\n"
+                    aggregated_input += f"Title: {res.get('original_title', 'N/A')}\n"
+                    aggregated_input += f"Summary: {res.get('LLM_summary', 'N/A')}\n"
+                    aggregated_input += f"Content: {res.get('article_source', 'N/A')}\n\n"
+            try:
+                article_result = get_article(aggregated_input)
+                print("Aggregated Article Overview:")
+                print(json.dumps(article_result, indent=2))
+            except Exception as e:
+                print(f"Error calling aggregated article LLM: {e}")
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
