@@ -49,7 +49,25 @@
 					}
 				}
 			}
-		</script>
+    </script>
+    <script type="text/javascript">
+      function fetchLatestArticle() {
+        fetch("http://summerizer:5000/latest_article")
+          .then(response => response.json())
+          .then(data => {
+            if (data.article) {
+              document.getElementById("article-container").innerHTML = data.article;
+            }
+          })
+          .catch(err => {
+            console.error("Error fetching latest article:", err);
+          });
+      }
+
+      // Poll every 15 minutes (900,000 ms) and also load on page load.
+      setInterval(fetchLatestArticle, 900000);
+      fetchLatestArticle();
+    </script>
     <style>
       body {
         font-family: 'Modern Typewriter', monospace;
@@ -260,3 +278,13 @@
           </div>
         </div>
 </div>
+      <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
+        <!-- Replace existing content inside the main container with: -->
+        <div id="article-section">
+          <h1 class="text-2xl font-bold mb-4 text-center text-primary">Latest Article</h1>
+          <div id="article-container" class="prose max-w-none"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
