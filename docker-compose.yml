@@ -135,7 +135,9 @@ services:
     image: libretranslate/libretranslate:latest
     restart: always
     ports:
-      - "5000:5000"
+      # - "5000:5000" # commenting out published port to allow scaling
+    expose:
+      - "5000"
     environment:
       - LT_UPDATE_MODELS=true
     volumes:
