@@ -245,16 +245,11 @@ def main():
                 ]
                 concurrent.futures.wait(futures)
             all_results = [f.result() for f in futures]
-            aggregated_input = ""
-            for res in all_results:
-                # Only include events that produced content for the aggregated article.
-                if res.get("article_source"):
-                    aggregated_input += f"URL: {res.get('mentionidentifier', 'N/A')}\n"
             all_results = [f.result() for f in futures]
             aggregated_input = ""
             for res in all_results:
-                # Only include events that produced content for the aggregated article.
-                if res.get("article_source"):
+                # Only include events that produced an LLM summary.
+                if res.get("LLM_summary"):
                     aggregated_input += f"URL: {res.get('mentionidentifier', 'N/A')}\n"
                     aggregated_input += f"Title: {res.get('original_title', 'N/A')}\n"
                     aggregated_input += f"Summary: {res.get('LLM_summary', 'N/A')}\n"
