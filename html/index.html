@@ -124,167 +124,28 @@
   <body class="dark">
     <div class="flex items-center justify-center min-h-screen bg-background text-foreground">
       <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
-        <!-- NEW: Article Section -->
-        <div id="article-section" style="display: none;">
-          <h1 class="text-2xl font-bold mb-4 text-center text-primary">Latest Article</h1>
-          <div id="article-container" class="prose max-w-none"></div>
-        </div>
-        <button id="toggleWrittenBtn" onclick="toggleVisibility('written-content-group')" class="mb-4 p-2 bg-primary text-white rounded">Toggle Written Content</button>
-        <button id="toggleVisualBtn" onclick="toggleVisibility('visualizations-group')" class="mb-4 p-2 bg-primary text-white rounded">Toggle Visualizations</button>
-        <div id="written-content-group">
-          <h1 class="text-2xl font-bold mb-4 text-center text-primary">GDELT Data Dashboard</h1>
-          <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-2 text-primary">Dashboard Overview</h2>
-            <p class="text-sm text-muted-foreground mb-2">
-              This dashboard is a self-hosted sample of GDELT, a massive data project that attempts to map global events and sentiment. The data is live, refreshing with the latest from GDELT, every 15 minutes. Find the technical details of the dashboard below, find the code on GitHub, <a href="https://github.com/post-plateaux/gdelt-dash" target="_blank" style="text-decoration: underline;">here</a>.
-            </p>
-          </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div class="border border-border rounded-lg overflow-hidden">
-        <iframe 
-          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=2&__feature.dashboardSceneSolo&theme=dark" 
-          width="100%" 
-          height="400" 
-          style="border:0;" 
-          class="w-full"
-          title="GDELT Data Visualization 1"
-        ></iframe>
-      </div>
-      <div class="border border-border rounded-lg overflow-hidden">
-        <iframe 
-          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=5&__feature.dashboardSceneSolo&theme=dark" 
-          width="100%" 
-          height="400" 
-          style="border:0;" 
-          class="w-full"
-          title="GDELT Data Visualization 2"
-        ></iframe>
-      </div>
-          <div class="mb-6">
-      <h2 class="text-xl font-semibold mb-2 text-primary">GDELT: Purpose vs. Reality</h2>
-      <p class="text-sm text-muted-foreground mb-2">
-        GDELT aims to classify events by country, actor type, and tone using automated sentiment analysis. While it does have some utility, GDELT's method often fails in accuracy and nuance. Hyper ideological sources, such as the Heritage Foundation or others, often have out-sized impacts when processed without context; just one example of the many flaws in sentiment analysis.      </p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div class="border border-border rounded-lg overflow-hidden">
-        <iframe 
-          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=6&__feature.dashboardSceneSolo&theme=dark" 
-          width="100%" 
-          height="200" 
-          style="border:0;" 
-          class="w-full"
-          title="GDELT Data Visualization 3"
-        ></iframe>
-      </div>
-      <div class="border border-border rounded-lg overflow-hidden">
-        <iframe 
-          src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=8&__feature.dashboardSceneSolo&theme=dark" 
-          width="100%" 
-          height="200" 
-          style="border:0;" 
-          class="w-full"
-          title="GDELT Data Visualization 4"
-        ></iframe>
-      </div>
-          <div class="mb-6">
-      <h2 class="text-xl font-semibold mb-2 text-primary">Technical Approach</h2>
-      <p class="text-sm text-muted-foreground mb-2">
-        The self-hosted data pipeline for this project operates on a virtual machine running AlmaLinux within a Proxmox environment, leveraging Docker Compose to orchestrate services. Here’s an exhaustive breakdown of its configuration:
-      </p>
-      <p class="text-sm text-muted-foreground mb-2">
-        1. <strong>Data Ingestion and Processing:</strong><br>
-        Every 15 minutes, the system ingests new GDELT data. This process is automated through a script (<code>fetch_gdelt_and_upload.py</code>) that:<br>
-        - Fetches GDELT data updates, downloads the relevant files, and extracts them in-memory.<br>
-        - Parses data into events and mentions, validating the format before loading it into PostgreSQL in batches.<br>
-        - Deletes existing rows in the database before loading fresh data, ensuring up-to-date entries.
-      </p>
-      <p class="text-sm text-muted-foreground mb-2">
-        2. <strong>Database Setup (PostgreSQL):</strong><br>
-        The PostgreSQL instance within Docker holds the core GDELT event data, managed by multiple tables as specified in individual table creation scripts. These tables store metadata about actors, event types, and other categorical data. Grafana reads from PostgreSQL for real-time queries, presenting insights and patterns directly from GDELT’s structured event data.
-      </p>
-      <p class="text-sm text-muted-foreground mb-2">
-        3. <strong>Visualization and Web Interface:</strong><br>
-        - <strong>Grafana</strong> serves as the primary visualization layer. Configured with PostgreSQL as its data source, it visualizes real-time data, including detailed breakdowns of event types, police-related incidents, and country-level engagement. The dashboard configuration includes a variety of panels, such as bar charts, pie charts, and gauges, all tailored to GDELT's data types.<br>
-        - <strong>Nginx</strong> serves as a reverse proxy and web server, presenting an <code>index.html</code> file that acts as the public-facing entry point for the dashboard. This HTML file uses TailwindCSS and integrates Grafana visualizations as iframes, allowing smooth, embedded access.<br>
-        - <strong>Cloudflare Tunnel</strong> provides secure public access, encapsulating this local service within a Cloudflare-managed connection for protection and ease of access across networks.
-      </p>
-      <p class="text-sm text-muted-foreground mb-2">
-        4. <strong>Network Isolation and PCIe Passthrough:</strong><br>
-        For efficiency, a dedicated PCIe-passed Ethernet port provides the VM’s network access. This isolated network ensures secure and stable data flow, with the Proxmox hypervisor managing the IOMMU groups necessary for passthrough configuration.
-      </p>
-      <p class="text-sm text-muted-foreground mb-2">
-        5. <strong>Infrastructure Management:</strong><br>
-        - <strong>Proxmox</strong> acts as the hypervisor, hosting the AlmaLinux VM. Proxmox's IOMMU configuration enables PCIe passthrough for the network card, with each NIC port in a separate IOMMU group for isolated use in VMs.<br>
-        - <strong>OPNsense Router</strong> is implemented within Proxmox to manage firewall rules, network routing, and provide an additional security layer around the dashboard’s isolated network.
-      </p>
-      <p class="text-sm text-muted-foreground mb-2">
-        This setup ensures a robust, efficient pipeline with critical attention to network isolation, secure data ingestion, and real-time monitoring, all orchestrated on a self-hosted, fully open-source stack. This configuration not only highlights the capabilities of Docker, Grafana, and PostgreSQL but also emphasizes skills in advanced networking, hypervisor management, and secure data handling in a self-contained environment.
-      </p>
-          <div class="border border-border rounded-lg overflow-hidden mb-6">
-          <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730746444415&to=1730747344415&timezone=browser&orgId=1&panelId=9&__feature.dashboardSceneSolo" width="100%" height="200" frameborder="0"></iframe>    </div>
-    <div class="mb-6">
-      <h2 class="text-xl font-semibold mb-2 text-primary">Planned Expansion: Exploring GDELT's Inaccuracy</h2>
-      <p class="text-sm text-muted-foreground mb-2">
-        My next planned expansion of this dashboard will assess GDELT's reliability. As may or may not be clear above (depending on the last 15 minutes), GDELT can seriously miss the mark. By sampling URLs and processing content via large language model, I will develop an automated accuracy grade for GDELT's classifications.      </p>
-    </div>
-  </div>
-        <div id="visualizations-group">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="border border-border rounded-lg overflow-hidden">
-              <iframe 
-                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=2&__feature.dashboardSceneSolo&theme=dark" 
-                width="100%" 
-                height="400" 
-                frameborder="0"
-                class="w-full"
-                title="GDELT Data Visualization 1"
-              ></iframe>
-            </div>
-            <div class="border border-border rounded-lg overflow-hidden">
-              <iframe 
-                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=5&__feature.dashboardSceneSolo&theme=dark" 
-                width="100%" 
-                height="400" 
-                frameborder="0"
-                class="w-full"
-                title="GDELT Data Visualization 2"
-              ></iframe>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="border border-border rounded-lg overflow-hidden">
-              <iframe 
-                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=6&__feature.dashboardSceneSolo&theme=dark" 
-                width="100%" 
-                height="200" 
-                frameborder="0"
-                class="w-full"
-                title="GDELT Data Visualization 3"
-              ></iframe>
-            </div>
-            <div class="border border-border rounded-lg overflow-hidden">
-              <iframe 
-                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=8&__feature.dashboardSceneSolo&theme=dark" 
-                width="100%" 
-                height="200" 
-                frameborder="0"
-                class="w-full"
-                title="GDELT Data Visualization 4"
-              ></iframe>
-            </div>
-          </div>
-          <div class="border border-border rounded-lg overflow-hidden mb-6">
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730746444415&to=1730747344415&timezone=browser&orgId=1&panelId=9&__feature.dashboardSceneSolo" width="100%" height="200" style="border:0;"></iframe>
-          </div>
-        </div>
-</div>
-      <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
-        <!-- Replace existing content inside the main container with: -->
         <div id="article-section">
           <h1 class="text-2xl font-bold mb-4 text-center text-primary">Latest Article</h1>
           <div id="article-container" class="prose max-w-none"></div>
         </div>
       </div>
     </div>
+    <script type="text/javascript">
+      function fetchLatestArticle() {
+        fetch("http://summerizer:5000/latest_article")
+          .then(response => response.json())
+          .then(data => {
+            if (data.article) {
+              document.getElementById("article-container").innerHTML = data.article;
+            }
+          })
+          .catch(err => {
+            console.error("Error fetching latest article:", err);
+          });
+      }
+      // Poll every 15 minutes (900,000 ms) and also load on page load.
+      setInterval(fetchLatestArticle, 900000);
+      fetchLatestArticle();
+    </script>
   </body>
 </html>
