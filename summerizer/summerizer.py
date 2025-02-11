@@ -119,6 +119,7 @@ def main():
                         original_result = None
                         raw_content = None
                         if "result" in data:
+                        raw_content = None
                         if "result" in 
                             try:
                                 original_result = json.loads(data["result"])
@@ -133,7 +134,6 @@ def main():
                         raw_title = None
                         if original_result and isinstance(original_result, dict) and "title" in original_result:
                             raw_title = original_result["title"]
-                        print(json.dumps(data, indent=2))
                         final_result["crawler_response"] = data
                     except Exception as e:
                         final_result["error"] = f"Error parsing crawler response: {response.text}"
@@ -187,11 +187,6 @@ def main():
                                     }
                                     summary_input = translated_content
                                 else:
-                                    print(f"Could not detect language for {url_arg}: {detect_data}")
-                            except Exception as e:
-                                print(f"Error calling libretranslate /detect for URL {url_arg}: {e}")
-                            if raw_content:
-                                summary_input = raw_content if detected_language == "en" else translated_content
                                     final_result["status"].append(f"Content is in English; initiating summarization for URL {url_arg}.")
                                     summary_input = raw_content
                                 try:
