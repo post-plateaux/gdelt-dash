@@ -103,14 +103,17 @@
   </head>
   <body class="dark">
     <div class="flex items-center justify-center min-h-screen bg-background text-foreground">
-  <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
-    <h1 class="text-2xl font-bold mb-4 text-center text-primary">GDELT Data Dashboard</h1>
-    <div class="mb-6">
-      <h2 class="text-xl font-semibold mb-2 text-primary">Dashboard Overview</h2>
-      <p class="text-sm text-muted-foreground mb-2">
-        This dashboard is a self-hosted sample of GDELT, a massive data project that attempts to map global events and sentiment. The data is live, refreshing with the latest from GDELT, every 15 minutes. Find the technical details of the dashboard below, find the code on GitHub, <a href="https://github.com/post-plateaux/gdelt-dash" target="_blank" style="text-decoration: underline;">here</a>.
-      </p>
-                </div>
+      <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
+        <button id="toggleWrittenBtn" onclick="toggleVisibility('written-content-group')" class="mb-4 p-2 bg-primary text-white rounded">Toggle Written Content</button>
+        <button id="toggleVisualBtn" onclick="toggleVisibility('visualizations-group')" class="mb-4 p-2 bg-primary text-white rounded">Toggle Visualizations</button>
+        <div id="written-content-group">
+          <h1 class="text-2xl font-bold mb-4 text-center text-primary">GDELT Data Dashboard</h1>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2 text-primary">Dashboard Overview</h2>
+            <p class="text-sm text-muted-foreground mb-2">
+              This dashboard is a self-hosted sample of GDELT, a massive data project that attempts to map global events and sentiment. The data is live, refreshing with the latest from GDELT, every 15 minutes. Find the technical details of the dashboard below, find the code on GitHub, <a href="https://github.com/post-plateaux/gdelt-dash" target="_blank" style="text-decoration: underline;">here</a>.
+            </p>
+          </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <div class="border border-border rounded-lg overflow-hidden">
         <iframe 
@@ -132,8 +135,7 @@
           title="GDELT Data Visualization 2"
         ></iframe>
       </div>
-    </div>
-    <div class="mb-6">
+          <div class="mb-6">
       <h2 class="text-xl font-semibold mb-2 text-primary">GDELT: Purpose vs. Reality</h2>
       <p class="text-sm text-muted-foreground mb-2">
         GDELT aims to classify events by country, actor type, and tone using automated sentiment analysis. While it does have some utility, GDELT's method often fails in accuracy and nuance. Hyper ideological sources, such as the Heritage Foundation or others, often have out-sized impacts when processed without context; just one example of the many flaws in sentiment analysis.      </p>
@@ -159,8 +161,7 @@
           title="GDELT Data Visualization 4"
         ></iframe>
       </div>
-    </div>
-    <div class="mb-6">
+          <div class="mb-6">
       <h2 class="text-xl font-semibold mb-2 text-primary">Technical Approach</h2>
       <p class="text-sm text-muted-foreground mb-2">
         The self-hosted data pipeline for this project operates on a virtual machine running AlmaLinux within a Proxmox environment, leveraging Docker Compose to orchestrate services. Here’s an exhaustive breakdown of its configuration:
@@ -194,8 +195,7 @@
       <p class="text-sm text-muted-foreground mb-2">
         This setup ensures a robust, efficient pipeline with critical attention to network isolation, secure data ingestion, and real-time monitoring, all orchestrated on a self-hosted, fully open-source stack. This configuration not only highlights the capabilities of Docker, Grafana, and PostgreSQL but also emphasizes skills in advanced networking, hypervisor management, and secure data handling in a self-contained environment.
       </p>
-    </div>
-            <div class="border border-border rounded-lg overflow-hidden mb-6">
+          <div class="border border-border rounded-lg overflow-hidden mb-6">
           <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730746444415&to=1730747344415&timezone=browser&orgId=1&panelId=9&__feature.dashboardSceneSolo" width="100%" height="200" frameborder="0"></iframe>    </div>
     <div class="mb-6">
       <h2 class="text-xl font-semibold mb-2 text-primary">Planned Expansion: Exploring GDELT's Inaccuracy</h2>
@@ -203,12 +203,69 @@
         My next planned expansion of this dashboard will assess GDELT's reliability. As may or may not be clear above (depending on the last 15 minutes), GDELT can seriously miss the mark. By sampling URLs and processing content via large language model, I will develop an automated accuracy grade for GDELT's classifications.      </p>
     </div>
   </div>
+        <div id="visualizations-group">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="border border-border rounded-lg overflow-hidden">
+              <iframe 
+                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=2&__feature.dashboardSceneSolo&theme=dark" 
+                width="100%" 
+                height="400" 
+                frameborder="0"
+                class="w-full"
+                title="GDELT Data Visualization 1"
+              ></iframe>
+            </div>
+            <div class="border border-border rounded-lg overflow-hidden">
+              <iframe 
+                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=5&__feature.dashboardSceneSolo&theme=dark" 
+                width="100%" 
+                height="400" 
+                frameborder="0"
+                class="w-full"
+                title="GDELT Data Visualization 2"
+              ></iframe>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="border border-border rounded-lg overflow-hidden">
+              <iframe 
+                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=6&__feature.dashboardSceneSolo&theme=dark" 
+                width="100%" 
+                height="200" 
+                frameborder="0"
+                class="w-full"
+                title="GDELT Data Visualization 3"
+              ></iframe>
+            </div>
+            <div class="border border-border rounded-lg overflow-hidden">
+              <iframe 
+                src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730306184585&to=1730307084585&timezone=browser&orgId=1&panelId=8&__feature.dashboardSceneSolo&theme=dark" 
+                width="100%" 
+                height="200" 
+                frameborder="0"
+                class="w-full"
+                title="GDELT Data Visualization 4"
+              ></iframe>
+            </div>
+          </div>
+          <div class="border border-border rounded-lg overflow-hidden mb-6">
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?from=1730746444415&to=1730747344415&timezone=browser&orgId=1&panelId=9&__feature.dashboardSceneSolo" width="100%" height="200" frameborder="0"></iframe>
+          </div>
+        </div>
 </div>
 
 
     <script type="text/javascript">
       function refreshIframes() {
         const iframes = document.querySelectorAll('iframe');
+<script type="text/javascript">
+  function toggleVisibility(id) {
+    var element = document.getElementById(id);
+    // If element.style.display is empty, assume it is currently visible (block)
+    if (element.style.display === "none") {
+      element.style.display = "block";
+    } else {
+      element.style.display = "none";
         iframes.forEach(iframe => {
           const src = iframe.src;
           iframe.src = '';
