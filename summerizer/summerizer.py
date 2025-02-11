@@ -88,9 +88,13 @@ def get_article(aggregated_text):
         messages=[
             {"role": "user", "content": (
                 f"Using the following aggregated \n{aggregated_text}\n\n"
-                "Please write a comprehensive article overviewing the events of the last 15 minutes. "
-                "The article should integrate each entry's event content (or its translated version), "
-                "the individual LLM summary, along with the source URL and the original title."
+                "Please write a comprehensive article overviewing the events of the last 15 minutes, "
+                "and format the output as a complete, well-structured HTML document. "
+                "Include a clearly styled header (<h1>) for the article title, use <p> tags for paragraphs, "
+                "and arrange the content in a visually pleasing manner. "
+                "Integrate each entry's event content (or its translated version), the individual LLM summary, "
+                "the source URL, and the original title. "
+                "Return only valid HTML (do not include any extraneous text)."
             )}
         ]
     )
