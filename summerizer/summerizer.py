@@ -193,6 +193,8 @@ def main():
                                     final_result["LLM_summary"] = summary_result.get("summary", "[NO SUMMARY]")
                                 except Exception as e:
                                     final_result.setdefault("errors", []).append(f"Error calling LLM summerizer for URL {url_arg}: {e}")
+                        except Exception as e:
+                            final_result.setdefault("errors", []).append(f"Error processing raw content for URL {url_arg}: {e}")
                     print(json.dumps(final_result, indent=2))
                 except Exception as err:
                     final_result = {"mentionidentifier": url_arg, "error": f"Error calling crawler for URL {url_arg}: {err}"}
