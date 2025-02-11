@@ -132,7 +132,6 @@ services:
       - shared_net
 
   libretranslate:
-    container_name: libretranslate
     image: libretranslate/libretranslate:latest
     restart: always
     ports:
