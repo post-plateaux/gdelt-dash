@@ -133,7 +133,7 @@ def main():
                         raw_title = None
                         if original_result and isinstance(original_result, dict) and "title" in original_result:
                             raw_title = original_result["title"]
-                        final_result["crawler_response"] = data
+                        final_result["status"].append("Crawler returned successfully.")
                     except Exception as e:
                         final_result["error"] = f"Error parsing crawler response: {response.text}"
                         print(json.dumps(final_result, indent=2))
