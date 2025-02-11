@@ -229,12 +229,12 @@ def main():
                             final_result.setdefault("errors", []).append(f"Error processing raw content for URL {url_arg}: {e}")
                     print(json.dumps(final_result, indent=2))
                 except Exception as err:
-                if raw_content:
-                    final_result["article_source"] = summary_input  # save the translated or original content
-                if raw_title:
-                    final_result["original_title"] = raw_title
-                logging.debug("Final crawler result for URL %s: %s", url_arg, json.dumps(final_result, indent=2))
-                return final_result
+                    if raw_content:
+                        final_result["article_source"] = summary_input  # save the translated or original content
+                    if raw_title:
+                        final_result["original_title"] = raw_title
+                    logging.debug("Final crawler result for URL %s: %s", url_arg, json.dumps(final_result, indent=2))
+                    return final_result
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
