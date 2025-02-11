@@ -282,8 +282,6 @@ def main():
                     print(json.dumps(article_result, indent=2))
                     global latest_article_text
                     latest_article_text = article_result.get("article", "")
-                    global latest_article_text
-                    latest_article_text = article_result.get("article", "")
                 except Exception as e:
                     logging.error("Error calling aggregated article LLM: %s", e)
         # Continue waiting for additional messages
