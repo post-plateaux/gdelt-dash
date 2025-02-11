@@ -104,6 +104,11 @@
   <body class="dark">
     <div class="flex items-center justify-center min-h-screen bg-background text-foreground">
       <div class="w-full max-w-6xl p-6 rounded-lg shadow-lg bg-card">
+        <!-- NEW: Article Section -->
+        <div id="article-section" style="display: none;">
+          <h1 class="text-2xl font-bold mb-4 text-center text-primary">Latest Article</h1>
+          <div id="article-container" class="prose max-w-none"></div>
+        </div>
         <button id="toggleWrittenBtn" onclick="toggleVisibility('written-content-group')" class="mb-4 p-2 bg-primary text-white rounded">Toggle Written Content</button>
         <button id="toggleVisualBtn" onclick="toggleVisibility('visualizations-group')" class="mb-4 p-2 bg-primary text-white rounded">Toggle Visualizations</button>
         <div id="written-content-group">
@@ -259,6 +264,28 @@
       function refreshIframes() {
         const iframes = document.querySelectorAll('iframe');
 <script type="text/javascript">
+  // NEW: Function to fetch the latest article from the summerizer endpoint.
+  function fetchLatestArticle() {
+    fetch("http://summerizer:5000/latest_article")
+      .then(response => response.json())
+      .then(data => {
+        if (data.article) {
+          // Swap the main content with the new article.
+          document.getElementById("article-container").innerHTML = data.article;
+          document.getElementById("article-section").style.display = "block";
+          // Optionally hide the existing content:
+          document.getElementById("written-content-group").style.display = "none";
+          document.getElementById("visualizations-group").style.display = "none";
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching latest article:", err);
+      });
+  }
+
+  // Poll every 15 minutes (900,000 ms) and also load on page load.
+  setInterval(fetchLatestArticle, 900000);
+  fetchLatestArticle();
   function toggleVisibility(id) {
     var element = document.getElementById(id);
     // If element.style.display is empty, assume it is currently visible (block)
