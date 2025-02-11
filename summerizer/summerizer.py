@@ -9,12 +9,14 @@ import psycopg2.extras
 from kafka import KafkaConsumer
 from fastapi import FastAPI
 import uvicorn
-from fastapi.responses import JSONResponse
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE
 from openai import OpenAI
 import concurrent.futures
+
+app = FastAPI()
+latest_article_text = ""
 
 @app.get("/latest_article")
 def latest_article_endpoint():
@@ -278,6 +280,8 @@ def main():
                     logging.info("Aggregated Article Overview generated successfully:")
                     print("Aggregated Article Overview:")
                     print(json.dumps(article_result, indent=2))
+                    global latest_article_text
+                    latest_article_text = article_result.get("article", "")
                     global latest_article_text
                     latest_article_text = article_result.get("article", "")
                 except Exception as e:
