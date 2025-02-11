@@ -18,6 +18,16 @@ import concurrent.futures
 app = FastAPI()
 latest_article_text = ""
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/latest_article")
 def latest_article_endpoint():
     if latest_article_text:

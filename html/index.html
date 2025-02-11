@@ -52,7 +52,7 @@
     </script>
     <script type="text/javascript">
       function fetchLatestArticle() {
-        fetch("http://summerizer:5000/latest_article")
+        fetch("http://localhost:5000/latest_article")
           .then(response => response.json())
           .then(data => {
             if (data.article) {
@@ -132,7 +132,7 @@
     </div>
     <script type="text/javascript">
       function fetchLatestArticle() {
-        fetch("http://summerizer:5000/latest_article")
+        fetch("http://localhost:5000/latest_article")
           .then(response => response.json())
           .then(data => {
             if (data.article) {
