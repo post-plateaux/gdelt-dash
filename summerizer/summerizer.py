@@ -323,9 +323,9 @@ def main():
                                     final_result.setdefault("errors", []).append(f"Error calling LLM summerizer for URL {url_arg}: {e}")
                         except Exception as e:
                             final_result.setdefault("errors", []).append(f"Error processing raw content for URL {url_arg}: {e}")
-                    print(json.dumps(final_result, indent=2))
                     if raw_content:
                         final_result["article_source"] = summary_input  # save the translated or original content
+                    print(f"[Crawler] URL: {url_arg} - Final result:")
                     print(json.dumps(final_result, indent=2))
                     if raw_content:
                         url_completed = {
