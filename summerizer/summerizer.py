@@ -74,7 +74,7 @@ def get_summary(text):
         response_format={
             "type": "json_schema",
             "json_schema": {
-                "name": "refugee_summarization",
+                "name": "refugee_summarization_extended",
                 "strict": True,
                 "schema": {
                     "type": "object",
@@ -83,9 +83,29 @@ def get_summary(text):
                             "type": "boolean",
                             "description": "True if the content is about refugees globally; otherwise false."
                         },
-                        "summary": {
+                        "who": {
                             "type": "string",
-                            "description": "If is_relevent is true, provide a concise summary with two sentences each for who, what, when, where, why, and how regarding refugees. Omit this field if content is not relevant."
+                            "description": "If is_relevent is true, provide two sentences describing who is involved."
+                        },
+                        "what": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing what is happening."
+                        },
+                        "when": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing when the events occurred."
+                        },
+                        "where": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing where the events occurred."
+                        },
+                        "why": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing why the events occurred."
+                        },
+                        "how": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing how the events occurred."
                         }
                     },
                     "required": ["is_relevent"],
@@ -94,7 +114,7 @@ def get_summary(text):
             }
         },
         messages=[
-            {"role": "user", "content": f"Evaluate the following content for its relevance to global refugee issues. If the content is closely related to refugees, return a JSON object with 'is_relevent' set to true and include a summary with two sentences each for who, what, when, where, why, and how regarding refugees. If the content is not directly about refugees, return 'is_relevent' as false without any summary. Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"}
+            {"role": "user", "content": f"Evaluate the following content for its relevance to global refugee issues. If the content is closely related to refugees, return a JSON object with 'is_relevent' set to true and include separate entries for 'who', 'what', 'when', 'where', 'why', and 'how' each containing two sentences that summarize that aspect of the refugee-related content. If the content is not directly about refugees, return 'is_relevent' as false without any additional fields. Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"}
         ]
     )
     try:
