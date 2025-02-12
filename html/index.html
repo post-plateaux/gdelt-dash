@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GDELT Data Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Modern+Typewriter&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer></script>
 		<script type="text/javascript">
@@ -57,7 +58,7 @@
           .then(response => response.json())
           .then(data => {
             if (data.article) {
-              document.getElementById("article-container").innerHTML = data.article;
+              document.getElementById("article-container").innerHTML = marked.parse(data.article);
             }
           })
           .catch(err => {
@@ -138,7 +139,7 @@
           .then(response => response.json())
           .then(data => {
             if (data.article) {
-              document.getElementById("article-container").innerHTML = data.article;
+              document.getElementById("article-container").innerHTML = marked.parse(data.article);
             }
           })
           .catch(err => {
