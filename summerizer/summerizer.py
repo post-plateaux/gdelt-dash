@@ -222,9 +222,9 @@ def main():
                 return result
 
             results = run_sql_query(SQL_QUERY)
-            print("SQL Query Results:")
+            print("[SQL] Query Results:")
             print(json.dumps(results, indent=2))
-            print(f"Dispatching {len(results)} crawler requests...\n")
+            print(f"[Dispatch] Dispatching {len(results)} crawler requests...\n")
 
             # For each row, concurrently call the crawler's HTTP endpoint for the "mentionidentifier"
             def call_crawler(url_arg):
