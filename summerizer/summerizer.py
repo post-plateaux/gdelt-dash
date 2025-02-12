@@ -74,27 +74,27 @@ def get_summary(text):
         response_format={
             "type": "json_schema",
             "json_schema": {
-                "name": "summarization",
+                "name": "refugee_summarization",
                 "strict": True,
                 "schema": {
                     "type": "object",
                     "properties": {
-                        "summary": {
-                            "type": "string",
-                            "description": "A single sentence summary"
-                        },
                         "is_relevent": {
                             "type": "boolean",
-                            "description": "Indicates if the content is relevant"
+                            "description": "True if the content is about refugees globally; otherwise false."
+                        },
+                        "summary": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide a concise summary with two sentences each for who, what, when, where, why, and how regarding refugees. Omit this field if content is not relevant."
                         }
                     },
-                    "required": ["summary", "is_relevent"],
+                    "required": ["is_relevent"],
                     "additionalProperties": False
                 }
             }
         },
         messages=[
-            {"role": "user", "content": f"Return a JSON object that strictly adheres to the provided JSON schema without any additional text. Use the following content to generate a summary: {text}"}
+            {"role": "user", "content": f"Evaluate the following content for its relevance to global refugee issues. If the content is closely related to refugees, return a JSON object with 'is_relevent' set to true and include a summary with two sentences each for who, what, when, where, why, and how regarding refugees. If the content is not directly about refugees, return 'is_relevent' as false without any summary. Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"}
         ]
     )
     try:
