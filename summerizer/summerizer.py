@@ -307,6 +307,13 @@ def main():
                     print(json.dumps(article_result, indent=2))
                     global latest_article_text
                     latest_article_text = article_result.get("article", "")
+                    # Write the generated markdown article to the shared file
+                    try:
+                        with open("content/article.md", "w", encoding="utf-8") as md_file:
+                            md_file.write(latest_article_text)
+                        logging.info("Article successfully written to content/article.md")
+                    except Exception as e:
+                        logging.error("Failed to write article to content/article.md: %s", e)
                 except Exception as e:
                     logging.error("Error calling aggregated article LLM: %s", e)
         # Continue waiting for additional messages
