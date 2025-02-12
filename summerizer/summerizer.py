@@ -71,11 +71,26 @@ def get_summary(text):
             "X-Title": os.environ.get("SITE_NAME", "My Site")
         },
         model=model,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "summary": {"type": "string"},
+                    "is_relevent": {"type": "boolean"}
+                },
+                "required": ["summary", "is_relevent"]
+            }
+        },
         messages=[
-            {"role": "user", "content": f"Provide a single sentence summary for the following content: {text}"}
+            {"role": "user", "content": f"Return a JSON object with the keys 'summary' (a single sentence summary) and 'is_relevent' (a boolean) for the following content: {text}. Do not include any additional text."}
         ]
     )
-    return {"summary": completion.choices[0].message.content}
+    try:
+        response_json = json.loads(completion.choices[0].message.content)
+    except Exception as e:
+        raise ValueError(f"LLM did not return valid JSON: {e}")
+    return response_json
 
 def get_article(aggregated_text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
