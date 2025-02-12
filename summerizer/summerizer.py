@@ -74,16 +74,27 @@ def get_summary(text):
         response_format={
             "type": "json_schema",
             "json_schema": {
-                "type": "object",
-                "properties": {
-                    "summary": {"type": "string"},
-                    "is_relevent": {"type": "boolean"}
-                },
-                "required": ["summary", "is_relevent"]
+                "name": "summarization",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {
+                            "type": "string",
+                            "description": "A single sentence summary"
+                        },
+                        "is_relevent": {
+                            "type": "boolean",
+                            "description": "Indicates if the content is relevant"
+                        }
+                    },
+                    "required": ["summary", "is_relevent"],
+                    "additionalProperties": False
+                }
             }
         },
         messages=[
-            {"role": "user", "content": f"Return a JSON object with the keys 'summary' (a single sentence summary) and 'is_relevent' (a boolean) for the following content: {text}. Do not include any additional text."}
+            {"role": "user", "content": f"Return a JSON object that strictly adheres to the provided JSON schema without any additional text. Use the following content to generate a summary: {text}"}
         ]
     )
     try:
