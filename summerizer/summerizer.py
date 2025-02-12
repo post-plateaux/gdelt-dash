@@ -307,7 +307,27 @@ def main():
                     print(json.dumps(article_result, indent=2))
                     global latest_article_text
                     latest_article_text = article_result.get("article", "")
-                    # Write the generated markdown article to the shared file
+                    # Archive the current article from article.md to ancients.md if it exists
+                    try:
+                        with open("content/article.md", "r", encoding="utf-8") as ad_file:
+                            old_article = ad_file.read()
+                    except FileNotFoundError:
+                        old_article = ""
+                    if old_article.strip():
+                        archive_block = "<details>\n<summary>Previous Article</summary>\n\n" + old_article + "\n\n</details>\n\n"
+                        try:
+                            try:
+                                with open("content/ancients.md", "r", encoding="utf-8") as an_file:
+                                    used_ancients = an_file.read()
+                            except FileNotFoundError:
+                                used_ancients = ""
+                            new_ancients = archive_block + used_ancients
+                            with open("content/ancients.md", "w", encoding="utf-8") as an_file:
+                                an_file.write(new_ancients)
+                            logging.info("Previous article archived to content/ancients.md")
+                        except Exception as e:
+                            logging.error("Failed to archive previous article: %s", e)
+                    # Write the new generated markdown article to the shared article.md file
                     try:
                         with open("content/article.md", "w", encoding="utf-8") as md_file:
                             md_file.write(latest_article_text)
