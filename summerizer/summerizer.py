@@ -337,9 +337,12 @@ def main():
                     executor.submit(call_crawler, row.get("mentionidentifier"))
                     for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
                 ]
-            all_results = [f.result() for f in futures]
-            # Filter only the successful URL_COMPLETED objects (those that include both "LLM_summary" and "source")
-            url_completed_list = [res for res in all_results if res.get("LLM_summary") and res.get("source")]
+            url_completed_list = [
+                res for res in all_results 
+                if res.get("LLM_summary") 
+                and res.get("source") 
+                and res["LLM_summary"].get("is_relevent", False)
+            ]
             if not url_completed_list:
                 logging.warning("No successful crawler results returned; skipping article generation.")
             else:
