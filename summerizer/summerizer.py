@@ -314,7 +314,9 @@ def main():
             print(f"[Dispatch] Dispatching {len(results)} crawler requests...\n")
 
             # For each row, concurrently call the crawler's HTTP endpoint for the "mentionidentifier"
-            def call_crawler(url_arg):
+            def call_crawler(row):
+                url_arg = row.get("mentionidentifier")
+                mention_source = row.get("mentionsourcename")
                 try:
                     response = requests.post("http://crawler:5000/crawl", json={"url": url_arg}, timeout=30)
                     final_result = {"mentionidentifier": url_arg, "status": []}
