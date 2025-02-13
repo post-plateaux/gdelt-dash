@@ -53,7 +53,7 @@ def run_fastapi():
 def run_fastapi():
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
-def get_summary(text):
+def get_summary(text, mentionsourcename=None):
     api_key = os.environ.get("OPENROUTER_API_KEY")
     model = os.environ.get("OPENROUTER_MODEL")
     if not model:
@@ -125,6 +125,8 @@ def get_summary(text):
             "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
         )
     final_summary_prompt = summary_prompt.format(text=text)
+    if mentionsourcename:
+        final_summary_prompt += f"\nMention Source: {mentionsourcename}"
 
     completion = client.chat.completions.create(
         extra_headers={
@@ -392,7 +394,7 @@ def main():
                                     final_result["status"].append(f"Content is in English; initiating summarization for URL {url_arg}.")
                                     summary_input = raw_content
                                 try:
-                                    summary_result = get_summary(summary_input)
+                                    summary_result = get_summary(summary_input, mention_source)
                                     final_summary = {"is_relevent": summary_result.get("is_relevent", False)}
                                     if final_summary["is_relevent"]:
                                         final_summary.update({
@@ -429,7 +431,7 @@ def main():
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
-                    executor.submit(call_crawler, row.get("mentionidentifier"))
+                    executor.submit(call_crawler, row)
                     for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
                 ]
             all_results = [f.result() for f in futures]
