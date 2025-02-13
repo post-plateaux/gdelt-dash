@@ -137,33 +137,28 @@ def get_article(aggregated_text):
         api_key=api_key,
     )
 
+    article_prompt = os.environ.get("ARTICLE_PROMPT")
+    if not article_prompt:
+        # Fallback text if ARTICLE_PROMPT is not set
+        article_prompt = (
+            "Please write a comprehensive article overviewing the events of the last 15 minutes. "
+            "Format your output in Markdown using a clear main title (with '#' prefix), appropriate subheadings (with '##'), "
+            "and bullet point lists where relevant. Ensure the markdown is well-structured with no extraneous text. "
+            "Return only valid markdown."
+        )
+    final_prompt = f"Using the following aggregated text:\n{aggregated_text}\n\n{article_prompt}"
+
     completion = client.chat.completions.create(
         extra_headers={
             "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
             "X-Title": os.environ.get("SITE_NAME", "My Site")
         },
-        article_prompt = os.environ.get("ARTICLE_PROMPT")
-        if not article_prompt:
-            # Fallback text if ARTICLE_PROMPT is not set
-            article_prompt = (
-                "Please write a comprehensive article overviewing the events of the last 15 minutes. "
-                "Format your output in Markdown using a clear main title (with '#' prefix), appropriate subheadings (with '##'), "
-                "and bullet point lists where relevant. Ensure the markdown is well-structured with no extraneous text. "
-                "Return only valid markdown."
-            )
-        final_prompt = f"Using the following aggregated text:\n{aggregated_text}\n\n{article_prompt}"
-
-        completion = client.chat.completions.create(
-            extra_headers={
-                "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
-                "X-Title": os.environ.get("SITE_NAME", "My Site")
-            },
-            model=model,
-            messages=[
-                {"role": "user", "content": final_prompt}
-            ]
-        )
-        return {"article": completion.choices[0].message.content}
+        model=model,
+        messages=[
+            {"role": "user", "content": final_prompt}
+        ]
+    )
+    return {"article": completion.choices[0].message.content}
 
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
