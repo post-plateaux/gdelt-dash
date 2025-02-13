@@ -154,11 +154,30 @@ def get_article(aggregated_text):
             "X-Title": os.environ.get("SITE_NAME", "My Site")
         },
         model=model,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "article_json",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "article": {"type": "string"}
+                    },
+                    "required": ["article"],
+                    "additionalProperties": False
+                }
+            }
+        },
         messages=[
             {"role": "user", "content": final_prompt}
         ]
     )
-    return {"article": completion.choices[0].message.content}
+    try:
+        article_object = json.loads(completion.choices[0].message.content)
+    except Exception as e:
+        raise ValueError(f"LLM did not return valid JSON: {e}")
+    return article_object
 
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
