@@ -276,6 +276,7 @@ def main():
                         print(json.dumps(final_result, indent=2))
                         return
                     if raw_content:
+                        detected_language = "unknown"
                         try:
                             detect_response = requests.post("http://libretranslate:5000/detect", data={"q": raw_content}, timeout=30)
                             detect_data = detect_response.json()
@@ -351,7 +352,8 @@ def main():
                             "source": url_arg,
                             "title": raw_title if raw_title else "N/A",
                             "content": summary_input,
-                            "LLM_summary": final_result.get("LLM_summary", {})
+                            "LLM_summary": final_result.get("LLM_summary", {}),
+                            "language": detected_language
                         }
                         return url_completed
                     else:
