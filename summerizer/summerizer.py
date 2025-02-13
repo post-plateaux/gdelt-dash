@@ -166,7 +166,12 @@ def get_article(aggregated_text):
         raise ValueError("ARTICLE_PROMPT environment variable not set")
     final_prompt = f"Using the following aggregated text:\n{aggregated_text}\n\n{article_prompt}"
 
-    completion = client.chat.completions.create(
+    tokens_str = os.environ.get("ARTICLE_MAX_TOKENS")
+    temperature_str = os.environ.get("ARTICLE_TEMPERATURE")
+    max_tokens = int(tokens_str) if tokens_str else None
+    temperature = float(temperature_str) if temperature_str else None
+
+    completion_args = dict(
         extra_headers={
             "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
             "X-Title": os.environ.get("SITE_NAME", "My Site")
@@ -176,6 +181,12 @@ def get_article(aggregated_text):
             {"role": "user", "content": final_prompt}
         ]
     )
+    if max_tokens is not None:
+        completion_args["max_tokens"] = max_tokens
+    if temperature is not None:
+        completion_args["temperature"] = temperature
+
+    completion = client.chat.completions.create(**completion_args)
     return {"article": completion.choices[0].message.content}
 
 def main():
