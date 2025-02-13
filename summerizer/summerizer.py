@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 from config import ACTOR_CODE
 from openai import OpenAI
 import concurrent.futures
+from datetime import datetime
 
 app = FastAPI()
 
@@ -374,9 +375,10 @@ def main():
                     except FileNotFoundError:
                         old_article = ""
                     if old_article.strip():
-                        archive_block = "<details>\n<summary>Previous Article</summary>\n\n" + old_article + "\n\n</details>\n\n"
+                        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        archive_block = f"<details>\n<summary>Article archived on {timestamp}</summary>\n\n{old_article}\n\n</details>\n\n"
                         try:
-                            try:
+                            
                                 with open("content/ancients.md", "r", encoding="utf-8") as an_file:
                                     used_ancients = an_file.read()
                             except FileNotFoundError:
