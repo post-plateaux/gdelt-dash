@@ -361,7 +361,7 @@ def main():
                             "source": url_arg,
                             "title": raw_title if raw_title else "N/A",
                             "content": summary_input,
-                            "LLM_summary": final_result.get("LLM_summary", "[NO SUMMARY]")
+                            "LLM_summary": final_result.get("LLM_summary", {})
                         }
                         return url_completed
                     else:
