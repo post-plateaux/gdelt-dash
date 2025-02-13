@@ -42,10 +42,17 @@ app.add_middleware(
 
 @app.get("/latest_article")
 def latest_article_endpoint():
-    if latest_article_text:
-        return {"article": latest_article_text}
-    else:
-        return {"article": "No article available yet."}
+    global latest_article_text
+    # If latest_article_text is empty, attempt to load the article from the file.
+    if not latest_article_text:
+        try:
+            with open("content/article.md", "r", encoding="utf-8") as f:
+                file_article = f.read().strip()
+            if file_article:
+                return {"article": file_article}
+        except Exception:
+            pass
+    return {"article": latest_article_text if latest_article_text else "No article available yet."}
 
 def run_fastapi():
     uvicorn.run(app, host="0.0.0.0", port=5000)
