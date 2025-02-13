@@ -114,8 +114,66 @@ def get_summary(text):
                 }
             }
         },
+    summary_prompt = os.environ.get("SUMMARY_PROMPT")
+    if not summary_prompt:
+        summary_prompt = (
+            "Evaluate the following content for its relevance to global refugee issues. "
+            "If the content is closely related to refugees, return a JSON object with 'is_relevent' set to true and include separate entries for 'who', 'what', 'when', 'where', 'why', and 'how' each containing two sentences that summarize that aspect of the refugee-related content. "
+            "If the content is not directly about refugees, return 'is_relevent' as false without any additional fields. "
+            "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
+        )
+    final_summary_prompt = summary_prompt.format(text=text)
+
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
+            "X-Title": os.environ.get("SITE_NAME", "My Site")
+        },
+        model=model,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "refugee_summarization_extended",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "is_relevent": {
+                            "type": "boolean",
+                            "description": "True if the content is about refugees globally; otherwise false."
+                        },
+                        "who": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing who is involved."
+                        },
+                        "what": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing what is happening."
+                        },
+                        "when": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing when the events occurred."
+                        },
+                        "where": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing where the events occurred."
+                        },
+                        "why": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing why the events occurred."
+                        },
+                        "how": {
+                            "type": "string",
+                            "description": "If is_relevent is true, provide two sentences describing how the events occurred."
+                        }
+                    },
+                    "required": ["is_relevent"],
+                    "additionalProperties": False
+                }
+            }
+        },
         messages=[
-            {"role": "user", "content": f"Evaluate the following content for its relevance to global refugee issues. If the content is closely related to refugees, return a JSON object with 'is_relevent' set to true and include separate entries for 'who', 'what', 'when', 'where', 'why', and 'how' each containing two sentences that summarize that aspect of the refugee-related content. If the content is not directly about refugees, return 'is_relevent' as false without any additional fields. Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"}
+            {"role": "user", "content": final_summary_prompt}
         ]
     )
     try:
