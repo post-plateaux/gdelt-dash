@@ -196,13 +196,7 @@ def get_article(aggregated_text):
 
     article_prompt = os.environ.get("ARTICLE_PROMPT")
     if not article_prompt:
-        # Fallback text if ARTICLE_PROMPT is not set
-        article_prompt = (
-            "Please write a comprehensive article overviewing the events of the last 15 minutes. "
-            "Format your output in Markdown using a clear main title (with '#' prefix), appropriate subheadings (with '##'), "
-            "and bullet point lists where relevant. Ensure the markdown is well-structured with no extraneous text. "
-            "Return only valid markdown."
-        )
+        raise ValueError("ARTICLE_PROMPT environment variable not set")
     final_prompt = f"Using the following aggregated text:\n{aggregated_text}\n\n{article_prompt}"
 
     completion = client.chat.completions.create(
