@@ -118,13 +118,7 @@ def get_summary(text, mentionsourcename=None):
 
     summary_prompt = os.environ.get("SUMMARY_PROMPT")
     if not summary_prompt:
-        summary_prompt = (
-            "Evaluate the following content for its relevance to global refugee issues. "
-            "If a mention source is provided, use it as additional context when determining the content's relevance. "
-            "If the content is closely related to refugees, return a JSON object with 'is_relevent' set to true and include separate entries for 'who', 'what', 'when', 'where', 'why', and 'how' each containing two sentences that summarize that aspect of the refugee-related content. "
-            "If the content is not directly about refugees, return 'is_relevent' as false without any additional fields. "
-            "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
-        )
+        raise ValueError("SUMMARY_PROMPT environment variable is not set")
     final_summary_prompt = summary_prompt.format(text=text)
     if mentionsourcename:
         final_summary_prompt += f"\nMention Source: {mentionsourcename}"
