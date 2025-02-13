@@ -376,7 +376,7 @@ def main():
                         old_article = ""
                     if old_article.strip():
                         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        archive_block = f"<details>\n<summary>Article archived on {timestamp}</summary>\n\n{old_article}\n\n</details>\n\n"
+                        archive_block = f"<details>\n<summary>{timestamp}</summary>\n\n{old_article}\n\n</details>\n\n"
                         try:
                             with open("content/ancients.md", "r", encoding="utf-8") as an_file:
                                 used_ancients = an_file.read()
