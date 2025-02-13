@@ -113,7 +113,9 @@ def get_summary(text):
                     "additionalProperties": False
                 }
             }
-        },
+        }
+    )
+
     summary_prompt = os.environ.get("SUMMARY_PROMPT")
     if not summary_prompt:
         summary_prompt = (
@@ -130,6 +132,9 @@ def get_summary(text):
             "X-Title": os.environ.get("SITE_NAME", "My Site")
         },
         model=model,
+        messages=[
+            {"role": "user", "content": final_summary_prompt}
+        ],
         response_format={
             "type": "json_schema",
             "json_schema": {
@@ -171,10 +176,7 @@ def get_summary(text):
                     "additionalProperties": False
                 }
             }
-        },
-        messages=[
-            {"role": "user", "content": final_summary_prompt}
-        ]
+        }
     )
     try:
         response_json = json.loads(completion.choices[0].message.content)
