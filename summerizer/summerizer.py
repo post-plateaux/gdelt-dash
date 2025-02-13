@@ -126,11 +126,11 @@ def get_summary(text):
 
 def get_article(aggregated_text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
-    model = os.environ.get("OPENROUTER_MODEL")
-    if not model:
-        raise ValueError("OPENROUTER_MODEL not set")
+    model = os.environ.get("OPENROUTER_ARTICLE_MODEL") or os.environ.get("OPENROUTER_MODEL")
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY not set")
+    if not model:
+        raise ValueError("Neither OPENROUTER_ARTICLE_MODEL nor OPENROUTER_MODEL is set")
 
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
