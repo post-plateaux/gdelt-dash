@@ -386,8 +386,8 @@ def main():
                         with open("content/ancients.md", "w", encoding="utf-8") as an_file:
                             an_file.write(new_ancients)
                         logging.info("Previous article archived to content/ancients.md")
-                    except Exception as e:
-                        logging.error("Failed to archive previous article: %s", e)
+                except Exception as e:
+                    logging.error("Failed to archive previous article: %s", e)
                     # Write the new generated markdown article to the shared article.md file
                     try:
                         with open("content/article.md", "w", encoding="utf-8") as md_file:
