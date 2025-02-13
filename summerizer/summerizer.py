@@ -378,17 +378,16 @@ def main():
                         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         archive_block = f"<details>\n<summary>Article archived on {timestamp}</summary>\n\n{old_article}\n\n</details>\n\n"
                         try:
-                            
-                                with open("content/ancients.md", "r", encoding="utf-8") as an_file:
-                                    used_ancients = an_file.read()
-                            except FileNotFoundError:
-                                used_ancients = ""
-                            new_ancients = archive_block + used_ancients
-                            with open("content/ancients.md", "w", encoding="utf-8") as an_file:
-                                an_file.write(new_ancients)
-                            logging.info("Previous article archived to content/ancients.md")
-                        except Exception as e:
-                            logging.error("Failed to archive previous article: %s", e)
+                            with open("content/ancients.md", "r", encoding="utf-8") as an_file:
+                                used_ancients = an_file.read()
+                        except FileNotFoundError:
+                            used_ancients = ""
+                        new_ancients = archive_block + used_ancients
+                        with open("content/ancients.md", "w", encoding="utf-8") as an_file:
+                            an_file.write(new_ancients)
+                        logging.info("Previous article archived to content/ancients.md")
+                    except Exception as e:
+                        logging.error("Failed to archive previous article: %s", e)
                     # Write the new generated markdown article to the shared article.md file
                     try:
                         with open("content/article.md", "w", encoding="utf-8") as md_file:
