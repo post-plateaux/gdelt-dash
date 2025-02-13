@@ -386,6 +386,10 @@ def main():
                     print(json.dumps(article_result, indent=2))
                     global latest_article_text
                     latest_article_text = article_result.get("article", "")
+                except Exception as e:
+                    logging.error("Error calling aggregated article LLM: %s", e)
+                    
+                try:
                     # Archive the current article from article.md to ancients.md if it exists
                     try:
                         with open("content/article.md", "r", encoding="utf-8") as ad_file:
@@ -406,15 +410,13 @@ def main():
                         logging.info("Previous article archived to content/ancients.md")
                 except Exception as e:
                     logging.error("Failed to archive previous article: %s", e)
-                    # Write the new generated markdown article to the shared article.md file
-                    try:
-                        with open("content/article.md", "w", encoding="utf-8") as md_file:
-                            md_file.write(latest_article_text)
-                        logging.info("Article successfully written to content/article.md")
-                    except Exception as e:
-                        logging.error("Failed to write article to content/article.md: %s", e)
+                    
+                try:
+                    with open("content/article.md", "w", encoding="utf-8") as md_file:
+                        md_file.write(latest_article_text)
+                    logging.info("Article successfully written to content/article.md")
                 except Exception as e:
-                    logging.error("Error calling aggregated article LLM: %s", e)
+                    logging.error("Failed to write article to content/article.md: %s", e)
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
