@@ -63,7 +63,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
       - GF_SERVER_ALLOW_EMBEDDING=true
-      - GF_SERVER_ROOT_URL=http://${GRAFANA_HOST:-localhost}/grafana/
+      - GF_SERVER_ROOT_URL=http://localhost:8081/grafana/
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_SECURITY_HEADERS_FRAME_DENY=false
