@@ -1,0 +1,11 @@
+{
+  "name": "gdelt-data-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^4.2.0"
+  }
+}
