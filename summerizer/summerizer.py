@@ -129,7 +129,16 @@ def get_summary(text, mentionsourcename=None):
     try:
         response_json = json.loads(completion.choices[0].message.content)
     except Exception as e:
-        raise ValueError(f"LLM did not return valid JSON: {e}")
+        logging.error(f"LLM did not return valid JSON, fallback triggered: {e}")
+        response_json = {
+            "is_relevent": False,
+            "who": "",
+            "what": "",
+            "when": "",
+            "where": "",
+            "why": "",
+            "how": ""
+        }
     return response_json
 
 def get_article(aggregated_text):
