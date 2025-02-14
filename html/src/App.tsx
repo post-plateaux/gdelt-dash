@@ -218,10 +218,18 @@ const App: React.FC = () => {
             ></iframe>
           </div>
         </section>
+        {/* Divider with a visual element */}
+        <div className="my-8 flex items-center">
+          <hr className="flex-grow border-t border-gray-700" />
+          <div className="mx-4">
+            <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+          </div>
+          <hr className="flex-grow border-t border-gray-700" />
+        </div>
         {/* Old Articles Section */}
         <section className="mt-8">
           <h2 className="text-2xl font-bold mb-4 text-center text-blue-400">
-            Old Articles
+            Rpevious Entries
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {oldArticles.map((article, index) => (
