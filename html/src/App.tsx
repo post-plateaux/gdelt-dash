@@ -192,6 +192,13 @@ const App: React.FC = () => {
             dangerouslySetInnerHTML={{ __html: marked.parse(overviewContent) }}
           />
         </section>
+        {/* Additional Visualizations Section */}
+        <section className="mt-4">
+          <div className="flex justify-center space-x-8">
+            <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+            <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          </div>
+        </section>
         {/* Divider with a visual element */}
         <div className="my-8 flex items-center">
           <hr className="flex-grow border-t border-gray-700" />
