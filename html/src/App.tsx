@@ -179,11 +179,7 @@ const App: React.FC = () => {
         </div>
         {/* Top Banner */}
         <div className="mb-8 flex justify-center">
-          <iframe
-            src="http://localhost/gdelt/d-solo/ee25sajexuupsc/gdelt?orgId=1&amp;timezone=browser&amp;panelId=9&amp;__feature.dashboardSceneSolo"
-            frameBorder="0"
-            className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-lg shadow-lg"
-          ></iframe>
+          <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=9&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
         </div>
         {/* Overview Section */}
         <section className="mt-8">
