@@ -189,11 +189,11 @@ const App: React.FC = () => {
         </div>
         {/* Overview Section */}
         <section className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-400">
+          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700 dark:text-blue-400">
             Overview of the Last 15
           </h2>
           <div
-            className="prose prose-invert max-w-none"
+            className="prose dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: marked.parse(overviewContent) }}
           />
         </section>
@@ -235,10 +235,10 @@ const App: React.FC = () => {
                   setShowArticleModal(true);
                 }}
               >
-                <h3 className="text-lg font-bold text-blue-300">
+                <h3 className="text-lg font-bold text-blue-700 dark:text-blue-300">
                   {extractArticleTitle(article)}
                 </h3>
-                <p className="text-sm text-gray-300 line-clamp-3">
+                <p className="text-sm text-gray-800 dark:text-gray-300 line-clamp-3">
                   {extractArticleBody(article).substring(0, 150)}...
                 </p>
               </div>
@@ -265,7 +265,7 @@ const App: React.FC = () => {
                 &times;
               </button>
               <div
-                className="prose prose-invert max-w-none"
+                className="prose dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: marked.parse(modalContent) }}
               />
               <div className="mt-6 flex justify-between items-center">
@@ -304,11 +304,11 @@ const App: React.FC = () => {
               >
                 &times;
               </button>
-              <h2 className="text-2xl font-bold mb-4 text-blue-400">
+              <h2 className="text-2xl font-bold mb-4 text-blue-700 dark:text-blue-400">
                 {extractArticleTitle(selectedArticle)}
               </h2>
               <div
-                className="prose prose-invert max-w-none"
+                className="prose dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{
                   __html: marked.parse(processArticleContent(selectedArticle)),
                 }}
