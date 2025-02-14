@@ -157,10 +157,8 @@ const App: React.FC = () => {
         <div className="mb-8 flex justify-center">
           <iframe
             src="http://localhost/gdelt/d-solo/ee25sajexuupsc/gdelt?orgId=1&amp;timezone=browser&amp;panelId=9&amp;__feature.dashboardSceneSolo"
-            width="450"
-            height="200"
             frameBorder="0"
-            className="rounded-lg shadow-lg"
+            className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-lg shadow-lg"
           ></iframe>
         </div>
         {/* Overview Section */}
@@ -186,17 +184,13 @@ const App: React.FC = () => {
           <div className="flex flex-col md:flex-row md:space-x-8">
             <iframe
               src="http://localhost/gdelt/d-solo/ee25sajexuupsc/gdelt?orgId=1&amp;timezone=browser&amp;panelId=2&amp;__feature.dashboardSceneSolo"
-              width="450"
-              height="200"
               frameBorder="0"
-              className="rounded-lg shadow-lg mb-4 md:mb-0"
+              className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-lg shadow-lg mb-4 md:mb-0"
             ></iframe>
             <iframe
               src="http://localhost/gdelt/d-solo/ee25sajexuupsc/gdelt?orgId=1&amp;timezone=browser&amp;panelId=1&amp;__feature.dashboardSceneSolo"
-              width="450"
-              height="200"
               frameBorder="0"
-              className="rounded-lg shadow-lg"
+              className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-lg shadow-lg"
             ></iframe>
           </div>
         </section>
