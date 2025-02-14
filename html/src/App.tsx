@@ -182,12 +182,12 @@ const App: React.FC = () => {
           />
         </section>
         {/* Divider with a visual element */}
-        <div className="my-8">
-          <hr className="border-t border-gray-700" />
-          <div className="flex justify-center mt-4">
-            <span className="text-gray-400 text-2xl">★ ☆ ★</span>
+        <div className="my-8 flex items-center">
+          <hr className="flex-grow border-t border-gray-700" />
+          <div className="mx-4">
+            <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
           </div>
-          <hr className="border-t border-gray-700 mt-4" />
+          <hr className="flex-grow border-t border-gray-700" />
         </div>
         {/* Visualizations Section */}
         <section className="mt-4">
