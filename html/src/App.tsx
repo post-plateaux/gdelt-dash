@@ -20,6 +20,23 @@ marked.setOptions({
 });
 
 const App: React.FC = () => {
+  // Initialize darkMode based on system preference
+  const [darkMode, setDarkMode] = useState<boolean>(
+    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+
+  // Apply or remove the dark class on the html element
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
+  // Toggle dark mode state
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+
   const [latestArticle, setLatestArticle] = useState<string>("");
   const [oldArticles, setOldArticles] = useState<string[]>([]);
   const [modalContent, setModalContent] = useState<string>("");
@@ -138,19 +155,25 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex justify-center p-4">
+    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center p-4 dark:bg-gray-900 dark:text-gray-100">
       {/* Scroll Progress Indicator */}
       <div className="fixed top-0 left-0 z-50">
         <div className="h-1 bg-blue-500" style={{ width: `${scrollProgress}%` }} />
       </div>
-      <div className="max-w-4xl w-full bg-gray-800 rounded-lg shadow-lg p-6 relative">
+      <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative">
         {/* Button to open overview modal */}
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 flex space-x-2">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
             onClick={() => setShowOverviewModal(true)}
           >
             About this Project
+          </button>
+          <button
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
+            onClick={toggleDarkMode}
+          >
+            {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
         </div>
         {/* Top Banner */}
