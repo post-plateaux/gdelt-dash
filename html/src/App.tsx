@@ -205,12 +205,19 @@ const App: React.FC = () => {
         </div>
         {/* Visualizations Section */}
         <section className="mt-4">
-          <div className="flex flex-col md:flex-row md:space-x-8">
+          <div className="flex flex-col md:flex-row md:space-x-8 items-center">
             <iframe
               src="http://localhost/gdelt/d-solo/ee25sajexuupsc/gdelt?orgId=1&amp;timezone=browser&amp;panelId=2&amp;__feature.dashboardSceneSolo"
               frameBorder="0"
               className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-lg shadow-lg mb-4 md:mb-0"
             ></iframe>
+            <div className="hidden md:flex flex-col items-center px-4">
+              <hr className="w-px h-full border-l border-gray-700" />
+              <div className="my-2">
+                <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+              </div>
+              <hr className="w-px h-full border-l border-gray-700" />
+            </div>
             <iframe
               src="http://localhost/gdelt/d-solo/ee25sajexuupsc/gdelt?orgId=1&amp;timezone=browser&amp;panelId=1&amp;__feature.dashboardSceneSolo"
               frameBorder="0"
