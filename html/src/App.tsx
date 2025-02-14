@@ -21,7 +21,6 @@ marked.setOptions({
 
 const App: React.FC = () => {
   const [latestArticle, setLatestArticle] = useState<string>("");
-  const [globalArticle, setGlobalArticle] = useState<string>("");
   const [oldArticles, setOldArticles] = useState<string[]>([]);
   const [modalContent, setModalContent] = useState<string>("");
 
@@ -55,12 +54,6 @@ const App: React.FC = () => {
     }
   };
 
-  const fetchGlobalArticle = () => {
-    fetch("content/article.md")
-      .then((response) => response.text())
-      .then((text) => setGlobalArticle(text))
-      .catch((err) => console.error("Error fetching global article:", err));
-  };
 
   const fetchOldArticles = () => {
     fetch("content/ancients.md")
@@ -81,7 +74,6 @@ const App: React.FC = () => {
 
   useEffect(() => {
     fetchLatestArticle();
-    fetchGlobalArticle();
     fetchOldArticles();
     fetchModalContent();
     const interval = setInterval(fetchLatestArticle, 900000);
@@ -100,7 +92,7 @@ const App: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const overviewContent = latestArticle + "\n\n" + globalArticle;
+  const overviewContent = latestArticle;
 
   const extractArticleTitle = (articleContent: string) => {
     const titleMatch = articleContent.match(/<summary>(.*?)<\/summary>/);
