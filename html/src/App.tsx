@@ -155,14 +155,14 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center p-4 dark:bg-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-stone-200 text-gray-900 flex justify-center p-4 dark:bg-gray-900 dark:text-gray-100">
       {/* Scroll Progress Indicator */}
       <div className="fixed top-0 left-0 z-50">
         <div className="h-1 bg-blue-500" style={{ width: `${scrollProgress}%` }} />
       </div>
-      <div className="max-w-4xl w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative">
+      <div className="max-w-4xl w-full bg-amber-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-lg shadow-lg p-6 relative">
         {/* Button to open overview modal */}
-        <div className="absolute top-4 right-4 flex space-x-2">
+        <div className="absolute top-4 left-4 flex space-x-2">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
             onClick={() => setShowOverviewModal(true)}
