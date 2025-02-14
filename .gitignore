@@ -6,5 +6,5 @@ GDELT_2.0_eventMentions_Column_Labels_Header_Row_Sep2016.tsv
 GDELT_2.0_gdeltKnowledgeGraph_Column_Labels_Header_Row_Sep2016.tsv
 data/
 Multi_Summary.json
-summerizer/content/
-summerizer/content/
+summerizer/content/ancients.md
+summerizer/content/article.md
