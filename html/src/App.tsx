@@ -20,10 +20,8 @@ marked.setOptions({
 });
 
 const App: React.FC = () => {
-  // Initialize darkMode based on system preference
-  const [darkMode, setDarkMode] = useState<boolean>(
-    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
+  // Default darkMode to true for all visitors
+  const [darkMode, setDarkMode] = useState<boolean>(true);
 
   // Apply or remove the dark class on the html element
   useEffect(() => {
