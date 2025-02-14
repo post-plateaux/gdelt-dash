@@ -155,25 +155,28 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-stone-200 text-gray-900 flex justify-center p-4 dark:bg-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center p-4 dark:bg-gray-900 dark:text-gray-100">
       {/* Scroll Progress Indicator */}
       <div className="fixed top-0 left-0 z-50">
         <div className="h-1 bg-blue-500" style={{ width: `${scrollProgress}%` }} />
       </div>
-      <div className="max-w-4xl w-full bg-amber-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-lg shadow-lg p-6 relative">
-        {/* Button to open overview modal */}
-        <div className="absolute top-4 left-4 flex space-x-2">
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
-            onClick={() => setShowOverviewModal(true)}
-          >
-            About this Project
-          </button>
+      <div className="max-w-4xl w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg p-6 relative">
+        {/* Dark mode toggle */}
+        <div className="absolute top-4 left-4">
           <button
             className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
             onClick={toggleDarkMode}
           >
             {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
+        </div>
+        {/* About this Project button */}
+        <div className="absolute top-4 right-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
+            onClick={() => setShowOverviewModal(true)}
+          >
+            About this Project
           </button>
         </div>
         {/* Top Banner */}
@@ -226,7 +229,7 @@ const App: React.FC = () => {
             {oldArticles.map((article, index) => (
               <div
                 key={index}
-                className="bg-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-600 transform hover:scale-105 transition-all duration-300"
+                className="bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transform hover:scale-105 transition-all duration-300"
                 onClick={() => {
                   setSelectedArticle(article);
                   setShowArticleModal(true);
@@ -250,7 +253,7 @@ const App: React.FC = () => {
           >
             <div
               ref={overviewModalRef}
-              className={`bg-gray-800 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
+              className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
                 closingOverview ? "animate-fadeOut" : "animate-fadeIn"
               }`}
               onClick={(e) => e.stopPropagation()}
@@ -290,7 +293,7 @@ const App: React.FC = () => {
           >
             <div
               ref={articleModalRef}
-              className={`bg-gray-800 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
+              className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
                 closingArticle ? "animate-fadeOut" : "animate-fadeIn"
               }`}
               onClick={(e) => e.stopPropagation()}
