@@ -188,16 +188,16 @@ services:
       - backend
       - shared_net
 
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    restart: unless-stopped
-    command: tunnel run
-    networks:
-      - backend
-      - shared_net
+#  cloudflared:
+#    image: cloudflare/cloudflared:latest
+#    container_name: cloudflared
+#    environment:
+#      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+#    restart: unless-stopped
+#    command: tunnel run
+#    networks:
+#      - backend
+#      - shared_net
 
 
 volumes:
