@@ -180,6 +180,7 @@ const App: React.FC = () => {
         {/* Top Banner */}
         <div className="mb-8 flex justify-center">
           <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=9&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=8&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
         </div>
         {/* Overview Section */}
         <section className="mt-8">
