@@ -156,8 +156,6 @@ services:
       kafka:
         condition: service_healthy
     restart: always
-    ports:
-      - "8000:8000"
     volumes:
       - ./summerizer/content:/app/content
     networks:
