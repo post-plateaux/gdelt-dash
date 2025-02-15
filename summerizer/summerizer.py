@@ -10,6 +10,7 @@ import time
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE, SQL_QUERY
+from crawler_client import call_crawler
 from openai import OpenAI
 import concurrent.futures
 from datetime import datetime
@@ -291,7 +292,7 @@ def main():
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
-                    executor.submit(call_crawler, row)
+                    executor.submit(call_crawler, row, get_summary)
                     for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
                 ]
             all_results = [f.result() for f in futures]
