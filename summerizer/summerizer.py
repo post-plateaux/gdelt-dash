@@ -340,26 +340,6 @@ def main():
                     logging.error("Error calling crawler selection LLM: %s", e)
             else:
                 logging.warning("No valid crawler titles found for selection LLM.")
-            if 'selected_crawlers' in selection_result:
-                for num in selection_result["selected_crawlers"]:
-                    index = num - 1
-                    if index < len(all_results):
-                        crawler = all_results[index]
-                        if crawler.get("language", "unknown") != "en" and "content" in crawler:
-                            try:
-                                translate_response = post_with_retries("http://libretranslate:5000/translate",
-                                                                       data={
-                                                                           "q": crawler["content"],
-                                                                           "source": crawler["language"],
-                                                                           "target": "en"
-                                                                       },
-                                                                       timeout=120,
-                                                                       retries=4)
-                                translate_data = translate_response.json()
-                                crawler["content"] = translate_data.get("translatedText", crawler["content"])
-                                logging.info("Translated content for selected crawler %s", crawler["source"])
-                            except Exception as e:
-                                logging.error("Error translating selected crawler content for %s: %s", crawler["source"], e)
             url_completed_list = [
                 res for res in all_results 
                 if res.get("LLM_summary") 
