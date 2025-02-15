@@ -179,8 +179,8 @@ const App: React.FC = () => {
         </div>
         {/* Top Banner */}
         <div className="mb-8 flex justify-center">
-          <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=9&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-          <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=8&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=9&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=8&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
         </div>
         {/* Overview Section */}
         <section className="mt-8">
@@ -195,8 +195,8 @@ const App: React.FC = () => {
         {/* Additional Visualizations Section */}
         <section className="mt-4">
           <div className="flex justify-center space-x-8">
-            <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-            <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
           </div>
         </section>
         {/* Divider with a visual element */}
@@ -210,8 +210,8 @@ const App: React.FC = () => {
         {/* Visualizations Section */}
         <section className="mt-4">
           <div className="flex justify-center space-x-8">
-            <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-            <iframe src="http://localhost:8081/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
           </div>
         </section>
         {/* Divider with a visual element */}
