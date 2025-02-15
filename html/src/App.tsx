@@ -53,14 +53,12 @@ const App: React.FC = () => {
 
   const fetchLatestArticle = async () => {
     try {
-      const response = await fetch("/latest_article");
-      if (!response.ok) throw new Error("Failed to fetch /latest_article");
-      const data = await response.json();
-      if (data.article) {
-        setLatestArticle(data.article);
-      }
+      const response = await fetch("content/article.md");
+      if (!response.ok) throw new Error("Failed to fetch article.md");
+      const text = await response.text();
+      setLatestArticle(text);
     } catch (err) {
-      console.error("Error fetching latest article:", err);
+      console.error("Error fetching article.md:", err);
     }
   };
 
