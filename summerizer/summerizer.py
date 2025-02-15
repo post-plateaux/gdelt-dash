@@ -174,6 +174,29 @@ def get_article(aggregated_text):
     completion = client.chat.completions.create(**completion_args)
     return {"article": completion.choices[0].message.content}
 
+def get_selected_crawlers(crawler_titles):
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.environ.get("OPENROUTER_API_KEY"),
+    )
+    prompt = f"Placeholder Prompt: Given the following crawlers:\n{json.dumps(crawler_titles, indent=2)}\nPlease select ten of the crawlers at random by their number. Return a JSON object with a single key \"selected_crawlers\" that is a list of the crawler numbers selected."
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
+            "X-Title": os.environ.get("SITE_NAME", "My Site")
+        },
+        model=os.environ.get("OPENROUTER_MODEL"),
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+    )
+    try:
+        response_json = json.loads(completion.choices[0].message.content)
+    except Exception as e:
+        logging.error(f"LLM did not return valid JSON for crawler selection, fallback triggered: {e}")
+        response_json = {"selected_crawlers": []}
+    return response_json
+
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
     consumer = KafkaConsumer(
@@ -233,9 +256,10 @@ def main():
                                 data["result"] = json.dumps(original_result)
                             else:
                                 data["result"] = "[CONTENT HIDDEN]"
-                        raw_title = None
-                        if original_result and isinstance(original_result, dict) and "title" in original_result:
-                            raw_title = original_result["title"]
+                        # Use translated_title from data if available, otherwise use title from original_result
+                        raw_title = data.get("translated_title")
+                        if not raw_title and original_result and isinstance(original_result, dict):
+                            raw_title = original_result.get("title")
                         final_result["status"].append("Crawler returned successfully.")
                     except Exception as e:
                         final_result["error"] = f"Error parsing crawler response: {response.text}"
@@ -303,6 +327,19 @@ def main():
                     for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
                 ]
             all_results = [f.result() for f in futures]
+            # New LLM call to select crawlers from their titles
+            crawler_titles = {}
+            for idx, res in enumerate(all_results, start=1):
+                if "title" in res and res["title"] != "N/A":
+                    crawler_titles[idx] = res["title"]
+            if crawler_titles:
+                try:
+                    selection_result = get_selected_crawlers(crawler_titles)
+                    logging.info("Crawler selection LLM returned: %s", json.dumps(selection_result, indent=2))
+                except Exception as e:
+                    logging.error("Error calling crawler selection LLM: %s", e)
+            else:
+                logging.warning("No valid crawler titles found for selection LLM.")
             url_completed_list = [
                 res for res in all_results 
                 if res.get("LLM_summary") 
