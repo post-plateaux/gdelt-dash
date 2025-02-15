@@ -5,6 +5,7 @@ import json
 import requests
 import subprocess
 from kafka import KafkaConsumer, KafkaProducer
+from kafka_client import create_consumer, create_producer, send_message
 from db_utils import run_sql_query
 import time
 import logging
@@ -199,12 +200,12 @@ def get_selected_crawlers(crawler_titles):
 
 def main():
     print("Summerizer is waiting for 'database populated' messages from Kafka...")
-    consumer = KafkaConsumer(
-        'database_status',
-        bootstrap_servers=["kafka:9092"],
-        auto_offset_reset="latest",
+    consumer = create_consumer(
+        topic='database_status',
+        servers=["kafka:9092"],
         group_id="summerizer_group",
-        max_poll_interval_ms=600000  # 10 minutes in milliseconds
+        auto_offset_reset="latest",
+        max_poll_interval_ms=600000
     )
     for message in consumer:
         msg = message.value.decode('utf-8')
@@ -287,9 +288,8 @@ def main():
                     with open("content/article.md", "w", encoding="utf-8") as md_file:
                         md_file.write(latest_article_text)
                     logging.info("Article successfully written to content/article.md")
-                    producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
-                    producer.send("article_update", b"article updated")
-                    producer.flush()
+                    producer = create_producer(servers=["kafka:9092"])
+                    send_message(producer, "article_update", b"article updated")
 
                     logging.info("Article update complete. Pausing for 10 minutes before processing new requests.")
                     time.sleep(600)  # delay for 10 minutes
