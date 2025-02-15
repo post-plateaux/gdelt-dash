@@ -11,7 +11,7 @@ import time
 import logging
 from file_manager import archive_article, write_article
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-from config import ACTOR_CODE, SQL_QUERY
+from config import config
 from crawler_client import call_crawler
 from llm_client import get_summary, get_article, get_selected_crawlers
 import concurrent.futures
@@ -64,7 +64,7 @@ def main():
         if msg == "database populated":
             print("Received 'database populated' message from Kafka!")
             # Retrieve SQL query from config
-            query = SQL_QUERY.format(actor_code=ACTOR_CODE)
+            query = config.SQL_QUERY.format(actor_code=config.ACTOR_CODE)
 
 
             results = run_sql_query(query)
