@@ -88,6 +88,18 @@ const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const socket = new WebSocket(protocol + '://' + window.location.host + '/ws');
+    socket.onmessage = (event) => {
+      if (event.data === "article updated" || event.data === "article_update") {
+        fetchLatestArticle();
+        fetchOldArticles();
+      }
+    };
+    return () => socket.close();
+  }, []);
+
   // Scroll progress indicator effect
   useEffect(() => {
     const handleScroll = () => {

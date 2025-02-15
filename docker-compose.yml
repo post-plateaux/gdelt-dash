@@ -162,6 +162,16 @@ services:
       - backend
       - shared_net
 
+  ws:
+    build:
+      context: ./ws
+      dockerfile: Dockerfile
+    container_name: ws_server
+    restart: always
+    networks:
+      - backend
+      - shared_net
+
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     ports:
