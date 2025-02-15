@@ -10,7 +10,7 @@ from kafka import KafkaConsumer, KafkaProducer
 import time
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-from config import ACTOR_CODE
+from config import ACTOR_CODE, SQL_QUERY
 from openai import OpenAI
 import concurrent.futures
 from datetime import datetime
@@ -187,46 +187,8 @@ def main():
         msg = message.value.decode('utf-8')
         if msg == "database populated":
             print("Received 'database populated' message from Kafka!")
-            # Define the SQL query
-            SQL_QUERY = f"""WITH ref_actor_events AS (
-              SELECT globaleventid
-              FROM events
-              WHERE actor1type1code = '{ACTOR_CODE}'
-                    OR actor1type2code = '{ACTOR_CODE}'
-                    OR actor1type3code = '{ACTOR_CODE}'
-                    OR actor2type1code = '{ACTOR_CODE}'
-                    OR actor2type2code = '{ACTOR_CODE}'
-                    OR actor2type3code = '{ACTOR_CODE}'
-              UNION
-              SELECT globaleventid
-              FROM events_translated
-              WHERE actor1type1code = '{ACTOR_CODE}'
-                    OR actor1type2code = '{ACTOR_CODE}'
-                    OR actor1type3code = '{ACTOR_CODE}'
-                    OR actor2type1code = '{ACTOR_CODE}'
-                    OR actor2type2code = '{ACTOR_CODE}'
-                    OR actor2type3code = '{ACTOR_CODE}'
-            ),
-            combined_mentions AS (
-              SELECT *
-              FROM mentions
-              WHERE globaleventid IN (SELECT globaleventid FROM ref_actor_events)
-                AND confidence >= 70
-              UNION ALL
-              SELECT *
-              FROM mentions_translated
-              WHERE globaleventid IN (SELECT globaleventid FROM ref_actor_events)
-                AND confidence >= 70
-            ),
-            unique_mentions AS (
-              SELECT DISTINCT ON (mentionidentifier) *
-              FROM combined_mentions
-              ORDER BY mentionidentifier, globaleventid
-            )
-            SELECT DISTINCT ON (globaleventid) *
-            FROM unique_mentions
-            ORDER BY globaleventid, mentionidentifier;
-            """
+            # Retrieve SQL query from config
+            query = SQL_QUERY.format(actor_code=ACTOR_CODE)
 
             def run_sql_query(query):
                 host = os.environ.get("POSTGRES_HOST", "postgres")
@@ -242,7 +204,7 @@ def main():
                 conn.close()
                 return result
 
-            results = run_sql_query(SQL_QUERY)
+            results = run_sql_query(query)
             print("[SQL] Query Results:")
             print(json.dumps(results, indent=2))
             print(f"[Dispatch] Dispatching {len(results)} crawler requests...\n")

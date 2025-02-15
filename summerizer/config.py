@@ -43,3 +43,41 @@ UIS     Unidentified State Actor
 SET     Settler
 """
 ACTOR_CODE = "GOV"
+SQL_QUERY = """WITH ref_actor_events AS (
+              SELECT globaleventid
+              FROM events
+              WHERE actor1type1code = '{actor_code}'
+                    OR actor1type2code = '{actor_code}'
+                    OR actor1type3code = '{actor_code}'
+                    OR actor2type1code = '{actor_code}'
+                    OR actor2type2code = '{actor_code}'
+                    OR actor2type3code = '{actor_code}'
+              UNION
+              SELECT globaleventid
+              FROM events_translated
+              WHERE actor1type1code = '{actor_code}'
+                    OR actor1type2code = '{actor_code}'
+                    OR actor1type3code = '{actor_code}'
+                    OR actor2type1code = '{actor_code}'
+                    OR actor2type2code = '{actor_code}'
+                    OR actor2type3code = '{actor_code}'
+            ),
+            combined_mentions AS (
+              SELECT *
+              FROM mentions
+              WHERE globaleventid IN (SELECT globaleventid FROM ref_actor_events)
+                AND confidence >= 70
+              UNION ALL
+              SELECT *
+              FROM mentions_translated
+              WHERE globaleventid IN (SELECT globaleventid FROM ref_actor_events)
+                AND confidence >= 70
+            ),
+            unique_mentions AS (
+              SELECT DISTINCT ON (mentionidentifier) *
+              FROM combined_mentions
+              ORDER BY mentionidentifier, globaleventid
+            )
+            SELECT DISTINCT ON (globaleventid) *
+            FROM unique_mentions
+            ORDER BY globaleventid, mentionidentifier;"""
