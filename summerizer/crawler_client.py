@@ -13,7 +13,7 @@ def call_crawler(row, summary_func):
             data = response.json()
             original_result = None
             raw_content = None
-            if "result" in 
+            if "result" in data:
                 try:
                     original_result = json.loads(data["result"])
                 except Exception:
