@@ -4,9 +4,8 @@ import sys
 import json
 import requests
 import subprocess
-import psycopg2
-import psycopg2.extras
 from kafka import KafkaConsumer, KafkaProducer
+from db_utils import run_sql_query
 import time
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -213,19 +212,6 @@ def main():
             # Retrieve SQL query from config
             query = SQL_QUERY.format(actor_code=ACTOR_CODE)
 
-            def run_sql_query(query):
-                host = os.environ.get("POSTGRES_HOST", "postgres")
-                dbname = os.environ.get("POSTGRES_DB")
-                user = os.environ.get("POSTGRES_USER")
-                password = os.environ.get("POSTGRES_PASSWORD")
-                port = int(os.environ.get("POSTGRES_PORT", 5432))
-                conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
-                cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-                cur.execute(query)
-                result = cur.fetchall()
-                cur.close()
-                conn.close()
-                return result
 
             results = run_sql_query(query)
             print("[SQL] Query Results:")
