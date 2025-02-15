@@ -100,6 +100,18 @@ const App: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws = new WebSocket(protocol + '://' + window.location.host + '/ws');
+    ws.onmessage = (event) => {
+      if (event.data === "article_update") {
+         fetchLatestArticle();
+         fetchOldArticles();
+      }
+    };
+    return () => ws.close();
+  }, []);
+
   const overviewContent = latestArticle;
 
   const extractArticleTitle = (articleContent: string) => {

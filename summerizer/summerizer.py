@@ -6,17 +6,23 @@ import requests
 import subprocess
 import psycopg2
 import psycopg2.extras
-from kafka import KafkaConsumer
-from fastapi import FastAPI
+from kafka import KafkaConsumer, KafkaProducer
+from fastapi import FastAPI, WebSocket
 import uvicorn
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE
 from openai import OpenAI
 import concurrent.futures
+import asyncio
 from datetime import datetime
 
 app = FastAPI()
+websocket_connections = []
+
+@app.on_event("startup")
+async def startup_event():
+    app.state.loop = asyncio.get_running_loop()
 
 def is_allowed(url):
     blocked = os.environ.get("BLOCKED_DOMAINS", "")
@@ -53,6 +59,18 @@ def latest_article_endpoint():
         except Exception:
             pass
     return {"article": latest_article_text if latest_article_text else "No article available yet."}
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    websocket_connections.append(websocket)
+    try:
+        while True:
+            await websocket.receive_text()
+    except Exception:
+        pass
+    finally:
+        websocket_connections.remove(websocket)
 
 def run_fastapi():
     uvicorn.run(app, host="0.0.0.0", port=5000)
@@ -435,6 +453,11 @@ def main():
                     with open("content/article.md", "w", encoding="utf-8") as md_file:
                         md_file.write(latest_article_text)
                     logging.info("Article successfully written to content/article.md")
+                    producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
+                    producer.send("article_update", b"article updated")
+                    producer.flush()
+                    for ws in websocket_connections:
+                        asyncio.run_coroutine_threadsafe(ws.send("article_update"), app.state.loop)
                 except Exception as e:
                     logging.error("Failed to write article to content/article.md: %s", e)
         # Continue waiting for additional messages
