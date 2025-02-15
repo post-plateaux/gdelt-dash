@@ -294,8 +294,8 @@ def main():
                                                                                             "source": detected_language,
                                                                                             "target": "en"
                                                                                         },
-                                                                                        timeout=45,
-                                                                                        retries=2)
+                                                                                        timeout=120,
+                                                                                        retries=4)
                                         translate_content_data = translate_content_response.json()
                                         translated_content = translate_content_data.get("translatedText", "[TRANSLATION FAILED]")
                                     except Exception as e:
@@ -310,8 +310,8 @@ def main():
                                                                                                 "source": detected_language,
                                                                                                 "target": "en"
                                                                                             },
-                                                                                            timeout=45,
-                                                                                            retries=2)
+                                                                                            timeout=120,
+                                                                                            retries=4)
                                             translate_title_data = translate_title_response.json()
                                             translated_title = translate_title_data.get("translatedText", "[TRANSLATION FAILED]")
                                         except Exception as e:
