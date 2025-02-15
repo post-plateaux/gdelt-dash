@@ -1,15 +1,13 @@
-SELECT COUNT(*) AS trump_related_events                                                                 
-FROM (                                                                                                  
-SELECT mentionidentifier                                                                              
-FROM mentions                                                                                         
-WHERE mentionidentifier ILIKE '%Trump%'                                                               
-                                                                                                        
-UNION ALL                                                                                             
-                                                                                                        
-SELECT mentionidentifier                                                                              
-FROM mentions_translated                                                                              
-WHERE mentionidentifier ILIKE '%Trump%'                                                               
-) AS combined_mentions;   
+SELECT COUNT(*) AS trump_mentions_count
+FROM (
+  SELECT mentionidentifier
+  FROM mentions
+  WHERE mentionidentifier ILIKE '%Trump%'
+  UNION
+  SELECT mentionidentifier
+  FROM mentions_translated
+  WHERE mentionidentifier ILIKE '%Trump%'
+) AS combined_mentions;
 
                                         
 
