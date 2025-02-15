@@ -53,13 +53,8 @@ const App: React.FC = () => {
 
   const fetchLatestArticle = async () => {
     try {
-      let response;
-      try {
-        response = await fetch("http://localhost:5000/latest_article");
-        if (!response.ok) throw new Error("Failed to fetch from port 5000");
-      } catch (e) {
-        response = await fetch("http://localhost:8000/latest_article");
-      }
+      const response = await fetch("/latest_article");
+      if (!response.ok) throw new Error("Failed to fetch /latest_article");
       const data = await response.json();
       if (data.article) {
         setLatestArticle(data.article);
