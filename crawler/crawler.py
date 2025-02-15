@@ -38,23 +38,24 @@ def crawl_url(url: str) -> dict:
     except Exception as e:
         output["postlight_exception"] = str(e)
 
-    # Fallback to Readability extraction if needed
-    if not parser_success:
-        try:
-            print("----- Falling Back to Readability Extraction -----")
-            response = requests.get(url)
-            if response.status_code == 200:
-                doc = Document(response.text)
-                raw_html = doc.summary()
-                md_converter = html2text.HTML2Text()
-                md_converter.ignore_links = False
-                md_text = md_converter.handle(raw_html)
-                output["source"] = "Readability"
-                output["result"] = md_text
-            else:
-                output["readability_error"] = f"HTTP status code: {response.status_code}"
-        except Exception as e:
-            output["readability_exception"] = str(e)
+    if parser_success:
+        # Extract title from markdown result; use the first line starting with "# "
+        title = ""
+        for line in output["result"].splitlines():
+            if line.startswith("# "):
+                title = line[2:].strip()
+                break
+        if title:
+            try:
+                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": title}, timeout=30)
+                detect_data = detect_response.json()
+                if isinstance(detect_data, list) and len(detect_data) > 0:
+                    detected_language = detect_data[0].get("language", "unknown")
+                else:
+                    detected_language = "unknown"
+            except Exception as e:
+                detected_language = "unknown"
+            output["detected_language"] = detected_language
     return output
 
 @app.post("/crawl")
