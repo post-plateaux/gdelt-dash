@@ -56,6 +56,24 @@ def crawl_url(url: str) -> dict:
             except Exception as e:
                 detected_language = "unknown"
             output["detected_language"] = detected_language
+            # If the title is not in English, translate it
+            if detected_language != "en":
+                try:
+                    translate_response = requests.post(
+                        "http://libretranslate:5000/translate",
+                        data={
+                            "q": title,
+                            "source": detected_language,
+                            "target": "en",
+                            "format": "text"
+                        },
+                        timeout=30
+                    )
+                    translate_data = translate_response.json()
+                    translated_title = translate_data.get("translatedText", title)
+                except Exception as e:
+                    translated_title = title
+                output["translated_title"] = translated_title
     return output
 
 @app.post("/crawl")
