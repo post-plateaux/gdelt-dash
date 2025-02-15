@@ -42,4 +42,4 @@ NGO     Non-Governmental Organization
 UIS     Unidentified State Actor
 SET     Settler
 """
-ACTOR_CODE = "REF"
+ACTOR_CODE = "GOV"
