@@ -279,7 +279,7 @@ def main():
                             "title": raw_title if raw_title else "N/A",
                             "content": summary_input,
                             "LLM_summary": final_result.get("LLM_summary", {}),
-                            "language": detected_language
+                            "language": "unknown"
                         }
                         return url_completed
                     else:
