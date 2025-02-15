@@ -9,6 +9,7 @@ from kafka_client import create_consumer, create_producer, send_message
 from db_utils import run_sql_query
 import time
 import logging
+from file_manager import archive_article, write_article
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE, SQL_QUERY
 from crawler_client import call_crawler
@@ -114,38 +115,19 @@ def main():
                     logging.error("Error calling aggregated article LLM: %s", e)
                     
                 try:
-                    # Archive the current article from article.md to ancients.md if it exists
-                    try:
-                        with open("content/article.md", "r", encoding="utf-8") as ad_file:
-                            old_article = ad_file.read()
-                    except FileNotFoundError:
-                        old_article = ""
-                    if old_article.strip():
-                        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        archive_block = f"<details>\n<summary>{timestamp}</summary>\n\n{old_article}\n\n</details>\n\n"
-                        try:
-                            with open("content/ancients.md", "r", encoding="utf-8") as an_file:
-                                used_ancients = an_file.read()
-                        except FileNotFoundError:
-                            used_ancients = ""
-                        new_ancients = archive_block + used_ancients
-                        with open("content/ancients.md", "w", encoding="utf-8") as an_file:
-                            an_file.write(new_ancients)
-                        logging.info("Previous article archived to content/ancients.md")
+                    archive_article()
                 except Exception as e:
-                    logging.error("Failed to archive previous article: %s", e)
-                    
-                try:
-                    with open("content/article.md", "w", encoding="utf-8") as md_file:
-                        md_file.write(latest_article_text)
-                    logging.info("Article successfully written to content/article.md")
-                    producer = create_producer(servers=["kafka:9092"])
-                    send_message(producer, "article_update", b"article updated")
+                    logging.error("Archiving article failed: %s", e)
 
-                    logging.info("Article update complete. Pausing for 10 minutes before processing new requests.")
-                    time.sleep(600)  # delay for 10 minutes
+                try:
+                    write_article(latest_article_text)
                 except Exception as e:
-                    logging.error("Failed to write article to content/article.md: %s", e)
+                    logging.error("Writing article failed: %s", e)
+
+                producer = create_producer(servers=["kafka:9092"])
+                send_message(producer, "article_update", b"article updated")
+                logging.info("Article update complete. Pausing for 10 minutes before processing new requests.")
+                time.sleep(600)  # delay for 10 minutes
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
