@@ -43,7 +43,7 @@ UIS     Unidentified State Actor
 SET     Settler
 """
 ACTOR_CODE = "GOV"
-SQL_QUERY = """SELECT COUNT(*) AS trump_mentions_count
+SQL_QUERY = """SELECT mentionidentifier
 FROM (
   SELECT mentionidentifier
   FROM mentions
