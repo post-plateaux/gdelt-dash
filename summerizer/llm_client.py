@@ -137,7 +137,7 @@ def get_selected_crawlers(crawler_titles):
         base_url="https://openrouter.ai/api/v1",
         api_key=os.environ.get("OPENROUTER_API_KEY"),
     )
-    prompt = f"Placeholder Prompt: Given the following crawlers:\n{json.dumps(crawler_titles, indent=2)}\nPlease select ten of the crawlers at random by their number. Return a JSON object with a single key \"selected_crawlers\" that is a list of the crawler numbers selected."
+    prompt = f"Given the following crawlers:\n{json.dumps(crawler_titles, indent=2)}\nSelect exactly ten crawlers at random by their number and return a JSON object strictly following the provided JSON schema. The JSON object must contain one key 'selected_crawlers' whose value is an array of integers."
     completion = client.chat.completions.create(
         extra_headers={
             "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
@@ -147,6 +147,25 @@ def get_selected_crawlers(crawler_titles):
         messages=[
             {"role": "user", "content": prompt}
         ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "crawler_selection",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "selected_crawlers": {
+                            "type": "array",
+                            "items": {"type": "integer"},
+                            "description": "List of selected crawler numbers"
+                        }
+                    },
+                    "required": ["selected_crawlers"],
+                    "additionalProperties": False
+                }
+            }
+        }
     )
     try:
         response_json = json.loads(completion.choices[0].message.content)
