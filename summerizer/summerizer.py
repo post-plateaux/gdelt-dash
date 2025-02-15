@@ -14,6 +14,18 @@ from openai import OpenAI
 import concurrent.futures
 from datetime import datetime
 
+def post_with_retries(url, data, timeout, retries=2):
+    attempts = 0
+    while attempts <= retries:
+        try:
+            response = requests.post(url, data=data, timeout=timeout)
+            response.raise_for_status()
+            return response
+        except Exception as e:
+            attempts += 1
+            if attempts > retries:
+                raise e
+
 
 
 def is_allowed(url):
