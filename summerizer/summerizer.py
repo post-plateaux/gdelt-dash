@@ -242,71 +242,41 @@ def main():
                         print(json.dumps(final_result, indent=2))
                         return
                     if raw_content:
-                        detected_language = "unknown"
-                        try:
-                            detect_response = requests.post("http://libretranslate:5000/detect", data={"q": raw_content}, timeout=30)
-                            detect_data = detect_response.json()
-                            if isinstance(detect_data, list) and len(detect_data) > 0:
-                                detected_language = detect_data[0].get("language", "unknown")
-                                final_result["status"].append(f"Detected language for URL {url_arg}: {detected_language}.")
-                                if detected_language != "en":
-                                    final_result["status"].append(f"Non-English content detected; initiating translation for URL {url_arg}.")
-                                    try:
-                                        translate_content_response = post_with_retries("http://libretranslate:5000/translate",
-                                                                                        data={
-                                                                                            "q": raw_content,
-                                                                                            "source": detected_language,
-                                                                                            "target": "en"
-                                                                                        },
-                                                                                        timeout=120,
-                                                                                        retries=4)
-                                        translate_content_data = translate_content_response.json()
-                                        translated_content = translate_content_data.get("translatedText", "[TRANSLATION FAILED]")
-                                    except Exception as e:
-                                        final_result["error"] = f"Error calling /translate for URL {url_arg} (content): {e}"
-                                        translated_content = "[TRANSLATION FAILED]"
-                                    translated_title = None
-                                    if raw_title:
-                                        try:
-                                            translate_title_response = post_with_retries("http://libretranslate:5000/translate",
-                                                                                            data={
-                                                                                                "q": raw_title,
-                                                                                                "source": detected_language,
-                                                                                                "target": "en"
-                                                                                            },
-                                                                                            timeout=120,
-                                                                                            retries=4)
-                                            translate_title_data = translate_title_response.json()
-                                            translated_title = translate_title_data.get("translatedText", "[TRANSLATION FAILED]")
-                                        except Exception as e:
-                                            final_result.setdefault("errors", []).append(f"Error calling /translate for URL {url_arg} (title): {e}")
-                                            translated_title = "[TRANSLATION FAILED]"
-                                    final_result["translation_result"] = {
-                                        "translatedTitle": translated_title if translated_title is not None else "[NO TITLE]",
-                                        "translatedContent": translated_content,
-                                        "translatedFrom": detected_language
-                                    }
-                                    summary_input = translated_content
-                                else:
-                                    final_result["status"].append(f"Content is in English; initiating summarization for URL {url_arg}.")
-                                    summary_input = raw_content
-                                try:
-                                    summary_result = get_summary(summary_input, mention_source)
-                                    final_summary = {"is_relevent": summary_result.get("is_relevent", False)}
-                                    if final_summary["is_relevent"]:
-                                        final_summary.update({
-                                            "who": summary_result.get("who", ""),
-                                            "what": summary_result.get("what", ""),
-                                            "when": summary_result.get("when", ""),
-                                            "where": summary_result.get("where", ""),
-                                            "why": summary_result.get("why", ""),
-                                            "how": summary_result.get("how", "")
-                                        })
-                                    final_result["LLM_summary"] = final_summary
-                                except Exception as e:
-                                    final_result.setdefault("errors", []).append(f"Error calling LLM summerizer for URL {url_arg}: {e}")
-                        except Exception as e:
-                            final_result.setdefault("errors", []).append(f"Error processing raw content for URL {url_arg}: {e}")
+                        detected_language = data.get("detected_language", "unknown")
+                        if detected_language == "en":
+                            final_result["status"].append(f"Content is in English; initiating summarization for URL {url_arg}.")
+                            summary_input = raw_content
+                        else:
+                            final_result["status"].append(f"Non-English content detected (detected via title); initiating translation for URL {url_arg}.")
+                            try:
+                                translate_content_response = post_with_retries("http://libretranslate:5000/translate",
+                                                                               data={
+                                                                                   "q": raw_content,
+                                                                                   "source": detected_language,
+                                                                                   "target": "en"
+                                                                               },
+                                                                               timeout=120,
+                                                                               retries=4)
+                                translate_content_data = translate_content_response.json()
+                                summary_input = translate_content_data.get("translatedText", "[TRANSLATION FAILED]")
+                            except Exception as e:
+                                final_result["error"] = f"Error calling /translate for URL {url_arg} (content): {e}"
+                                summary_input = "[TRANSLATION FAILED]"
+                            try:
+                                summary_result = get_summary(summary_input, mention_source)
+                                final_summary = {"is_relevent": summary_result.get("is_relevent", False)}
+                                if final_summary["is_relevent"]:
+                                    final_summary.update({
+                                        "who": summary_result.get("who", ""),
+                                        "what": summary_result.get("what", ""),
+                                        "when": summary_result.get("when", ""),
+                                        "where": summary_result.get("where", ""),
+                                        "why": summary_result.get("why", ""),
+                                        "how": summary_result.get("how", "")
+                                    })
+                                final_result["LLM_summary"] = final_summary
+                            except Exception as e:
+                                final_result.setdefault("errors", []).append(f"Error calling LLM summerizer for URL {url_arg}: {e}")
                     if raw_content:
                         final_result["article_source"] = summary_input  # save the translated or original content
                     print(f"[Crawler] URL: {url_arg} - Final result:")
