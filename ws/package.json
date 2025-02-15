@@ -1,0 +1,10 @@
+{
+  "name": "ws-server",
+  "version": "1.0.0",
+  "main": "ws-server.js",
+  "license": "MIT",
+  "dependencies": {
+    "kafkajs": "^2.2.3",
+    "ws": "^8.13.0"
+  }
+}

@@ -407,6 +407,9 @@ def main():
                     with open("content/article.md", "w", encoding="utf-8") as md_file:
                         md_file.write(latest_article_text)
                     logging.info("Article successfully written to content/article.md")
+                    producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
+                    producer.send("article_update", b"article updated")
+                    producer.flush()
                 except Exception as e:
                     logging.error("Failed to write article to content/article.md: %s", e)
         # Continue waiting for additional messages
