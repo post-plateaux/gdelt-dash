@@ -7,6 +7,7 @@ import subprocess
 import psycopg2
 import psycopg2.extras
 from kafka import KafkaConsumer, KafkaProducer
+import time
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import ACTOR_CODE
@@ -179,7 +180,8 @@ def main():
         'database_status',
         bootstrap_servers=["kafka:9092"],
         auto_offset_reset="latest",
-        group_id="summerizer_group"
+        group_id="summerizer_group",
+        max_poll_interval_ms=600000  # 10 minutes in milliseconds
     )
     for message in consumer:
         msg = message.value.decode('utf-8')
@@ -420,6 +422,9 @@ def main():
                     producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
                     producer.send("article_update", b"article updated")
                     producer.flush()
+
+                    logging.info("Article update complete. Pausing for 10 minutes before processing new requests.")
+                    time.sleep(600)  # delay for 10 minutes
                 except Exception as e:
                     logging.error("Failed to write article to content/article.md: %s", e)
         # Continue waiting for additional messages
