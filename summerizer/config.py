@@ -54,15 +54,8 @@ class Config:
         # Constants
         self.ACTOR_CODE = "GOV"
         self.SQL_QUERY = """SELECT mentionidentifier
-            FROM (
-              SELECT mentionidentifier
-              FROM mentions
-              WHERE mentionidentifier ILIKE '%Trump%'
-              UNION
-              SELECT mentionidentifier
-              FROM mentions_translated
-              WHERE mentionidentifier ILIKE '%Trump%'
-            ) AS combined_mentions;"""
+            FROM mentions_translated
+            WHERE mentionidentifier ILIKE '%Trump%';"""
 
         # Database settings
         self.POSTGRES_HOST = self.get_env("POSTGRES_HOST", "postgres")
@@ -104,3 +97,15 @@ class Config:
 
 # Create a global instance
 config = Config()
+
+# Original SQL command (from before refactoring):
+# SELECT mentionidentifier
+#             FROM (
+#               SELECT mentionidentifier
+#               FROM mentions
+#               WHERE mentionidentifier ILIKE '%Trump%'
+#               UNION
+#               SELECT mentionidentifier
+#               FROM mentions_translated
+#               WHERE mentionidentifier ILIKE '%Trump%'
+#             ) AS combined_mentions;
