@@ -75,7 +75,7 @@ def main():
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
-                    executor.submit(call_crawler, row, get_summary)
+                    executor.submit(call_crawler, row)
                     for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
                 ]
             all_results = [f.result() for f in futures]
@@ -90,14 +90,27 @@ def main():
                     logging.info("Crawler selection LLM returned: %s", json.dumps(selection_result, indent=2))
                 except Exception as e:
                     logging.error("Error calling crawler selection LLM: %s", e)
+                    selection_result = {}
             else:
                 logging.warning("No valid crawler titles found for selection LLM.")
-            url_completed_list = [
-                res for res in all_results 
-                if res.get("LLM_summary") 
-                and res.get("source") 
-                and res["LLM_summary"].get("is_relevent", False)
-            ]
+                selection_result = {}
+
+            selected_results = []
+            if selection_result.get("selected_crawlers"):
+                for idx in selection_result["selected_crawlers"]:
+                    # idx is 1-based index
+                    res = all_results[idx - 1]
+                    try:
+                        summary = get_summary(res["source"])
+                    except Exception as e:
+                        logging.error("Error calling summary LLM for selected result %s: %s", idx, e)
+                        summary = {"is_relevent": False}
+                    res["LLM_summary"] = summary
+                    selected_results.append(res)
+            else:
+                logging.warning("No crawlers selected by the crawler selection LLM.")
+
+            url_completed_list = selected_results
             if not url_completed_list:
                 logging.warning("No successful crawler results returned; skipping article generation.")
             else:
