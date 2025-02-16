@@ -12,7 +12,7 @@ import logging
 from file_manager import archive_article, write_article
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import config
-from crawler_client import call_crawler
+from crawler_client import call_crawler, debug_print
 from llm_client import get_summary, get_article, get_selected_crawlers
 from get_translation import get_translation
 import concurrent.futures
