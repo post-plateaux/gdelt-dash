@@ -115,7 +115,13 @@ def main():
                     # idx is 1-based index
                     res = all_results[idx - 1]
                     try:
+                        debug_print(f"\n=== TRANSLATION INPUT ===")
+                        debug_print(f"Original content ({len(res['content'])} chars): {res['content'][:200]}...")
+                        
                         translated_content = get_translation(res["content"])
+                        
+                        debug_print(f"\n=== TRANSLATION OUTPUT ===")
+                        debug_print(f"Translated content ({len(translated_content)} chars): {translated_content[:200]}...")
                         summary = get_summary(translated_content)
                     except Exception as e:
                         logging.error("Error calling translation/summarization LLM for selected result %s: %s", idx, e)
