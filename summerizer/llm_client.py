@@ -2,6 +2,7 @@ import os
 import json
 import logging
 from openai import OpenAI
+from summerizer.prompts import SUMMARY_PROMPT, ARTICLE_PROMPT, CRAWLER_SELECTION_PROMPT
 
 def get_summary(text, mentionsourcename=None):
     api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -16,10 +17,7 @@ def get_summary(text, mentionsourcename=None):
         api_key=api_key,
     )
     
-    summary_prompt = os.environ.get("SUMMARY_PROMPT")
-    if not summary_prompt:
-        raise ValueError("SUMMARY_PROMPT environment variable is not set")
-    final_summary_prompt = summary_prompt.format(text=text)
+    final_summary_prompt = SUMMARY_PROMPT.format(text=text)
     if mentionsourcename:
         final_summary_prompt += f"\nMention Source: {mentionsourcename}"
     
@@ -104,10 +102,7 @@ def get_article(aggregated_text):
         api_key=api_key,
     )
     
-    article_prompt = os.environ.get("ARTICLE_PROMPT")
-    if not article_prompt:
-        raise ValueError("ARTICLE_PROMPT environment variable not set")
-    final_prompt = f"Using the following aggregated text:\n{aggregated_text}\n\n{article_prompt}"
+    final_prompt = f"Using the following aggregated text:\n{aggregated_text}\n\n{ARTICLE_PROMPT}"
     
     tokens_str = os.environ.get("ARTICLE_MAX_TOKENS")
     temperature_str = os.environ.get("ARTICLE_TEMPERATURE")
@@ -137,7 +132,7 @@ def get_selected_crawlers(crawler_titles):
         base_url="https://openrouter.ai/api/v1",
         api_key=os.environ.get("OPENROUTER_API_KEY"),
     )
-    prompt = f"Given the following crawlers:\n{json.dumps(crawler_titles, indent=2)}\nSelect exactly ten crawlers at random by their number and return a JSON object strictly following the provided JSON schema. The JSON object must contain one key 'selected_crawlers' whose value is an array of integers."
+    prompt = CRAWLER_SELECTION_PROMPT.format(crawler_titles=json.dumps(crawler_titles, indent=2))
     completion = client.chat.completions.create(
         extra_headers={
             "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
