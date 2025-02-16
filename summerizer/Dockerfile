@@ -8,4 +8,4 @@ COPY . .
 # Install dependencies
 RUN pip install fastapi uvicorn openai requests kafka-python psycopg2-binary
 
-CMD ["python", "-u", "summerizer.py"]
+CMD ["python", "-u", "run_summerizer.py"]
