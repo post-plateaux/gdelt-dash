@@ -2,6 +2,12 @@ import requests
 import json
 import logging
 
+DEBUG_MODE = True
+
+def debug_print(*args, **kwargs):
+    if DEBUG_MODE:
+        print(*args, **kwargs)
+
 def call_crawler(row, summary_func=None):
     url_arg = row.get("mentionidentifier")
     mention_source = row.get("mentionsourcename")
@@ -30,7 +36,7 @@ def call_crawler(row, summary_func=None):
             final_result["status"].append("Crawler returned successfully.")
         except Exception as e:
             final_result["error"] = f"Error parsing crawler response: {response.text}"
-            print(json.dumps(final_result, indent=2))
+            debug_print(json.dumps(final_result, indent=2))
             return
 
         if raw_content:
@@ -38,8 +44,8 @@ def call_crawler(row, summary_func=None):
             final_result["status"].append(f"Content received for URL {url_arg}.")
         if raw_content:
             final_result["article_source"] = summary_input  # save the translated or original content
-        print(f"[Crawler] URL: {url_arg} - Final result:")
-        print(json.dumps(final_result, indent=2))
+        debug_print(f"[Crawler] URL: {url_arg} - Final result:")
+        debug_print(json.dumps(final_result, indent=2))
         if raw_content:
             url_completed = {
                 "source": url_arg,
