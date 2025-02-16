@@ -101,12 +101,12 @@ def main():
                     # idx is 1-based index
                     res = all_results[idx - 1]
                     try:
-                        translated_content = get_translation(res["source"])
+                        translated_content = get_translation(res["content"])
                         summary = get_summary(translated_content)
                     except Exception as e:
                         logging.error("Error calling translation/summarization LLM for selected result %s: %s", idx, e)
                         summary = {"is_relevent": False}
-                        translated_content = res["source"]
+                        translated_content = res["content"]
                     res["translated_content"] = translated_content
                     res["LLM_summary"] = summary
                     selected_results.append(res)

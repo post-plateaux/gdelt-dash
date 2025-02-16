@@ -2,7 +2,7 @@ import requests
 import json
 import logging
 
-def call_crawler(row, summary_func):
+def call_crawler(row, summary_func=None):
     url_arg = row.get("mentionidentifier")
     mention_source = row.get("mentionsourcename")
     try:
@@ -36,24 +36,25 @@ def call_crawler(row, summary_func):
         if raw_content:
             summary_input = raw_content
             final_result["status"].append(f"Content received for URL {url_arg}.")
-            try:
-                # Use the provided summary function instead of an internal reference to get_summary
-                summary_result = summary_func(summary_input, mention_source)
-                final_summary = {"is_relevent": summary_result.get("is_relevent", False)}
-                if final_summary["is_relevent"]:
-                    final_summary.update({
-                        "who": summary_result.get("who", ""),
-                        "what": summary_result.get("what", ""),
-                        "when": summary_result.get("when", ""),
-                        "where": summary_result.get("where", ""),
-                        "why": summary_result.get("why", ""),
-                        "how": summary_result.get("how", "")
-                    })
-                final_result["LLM_summary"] = final_summary
-            except Exception as e:
-                final_result.setdefault("errors", []).append(
-                    f"Error calling LLM summerizer for URL {url_arg}: {e}"
-                )
+            if summary_func is not None:
+                try:
+                    # Use the provided summary function instead of an internal reference to get_summary
+                    summary_result = summary_func(summary_input, mention_source)
+                    final_summary = {"is_relevent": summary_result.get("is_relevent", False)}
+                    if final_summary["is_relevent"]:
+                        final_summary.update({
+                            "who": summary_result.get("who", ""),
+                            "what": summary_result.get("what", ""),
+                            "when": summary_result.get("when", ""),
+                            "where": summary_result.get("where", ""),
+                            "why": summary_result.get("why", ""),
+                            "how": summary_result.get("how", "")
+                        })
+                    final_result["LLM_summary"] = final_summary
+                except Exception as e:
+                    final_result.setdefault("errors", []).append(
+                        f"Error calling LLM summerizer for URL {url_arg}: {e}"
+                    )
         if raw_content:
             final_result["article_source"] = summary_input  # save the translated or original content
         print(f"[Crawler] URL: {url_arg} - Final result:")
