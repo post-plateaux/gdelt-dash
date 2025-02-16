@@ -18,6 +18,10 @@ from get_translation import get_translation
 import concurrent.futures
 from datetime import datetime
 TESTING_MODE = True
+# Helper: pause for user confirmation if in testing mode.
+def pause_for_testing(step):
+    if TESTING_MODE:
+        input(f"\n[TEST MODE] About to {step}. Press Enter to continue...")
 
 def post_with_retries(url, data, timeout, retries=2):
     attempts = 0
@@ -65,6 +69,7 @@ def main():
         msg = message.value.decode('utf-8')
         if msg == "database populated":
             print("Received 'database populated' message from Kafka!")
+            pause_for_testing("run SQL query")
             # Retrieve SQL query from config
             query = config.SQL_QUERY.format(actor_code=config.ACTOR_CODE)
 
@@ -72,6 +77,7 @@ def main():
             results = run_sql_query(query)
             print("[SQL] Query Results:")
             print(json.dumps(results, indent=2))
+            pause_for_testing("dispatch crawler requests")
             print(f"[Dispatch] Dispatching {len(results)} crawler requests...\n")
 
 
@@ -84,6 +90,7 @@ def main():
                     for row in filtered_results
                 ]
             all_results = [f.result() for f in futures]
+            pause_for_testing("prepare LLM crawler selection")
             # New LLM call to select crawlers from their titles
             crawler_titles = {}
             for idx, res in enumerate(all_results, start=1):
@@ -119,6 +126,7 @@ def main():
             else:
                 logging.warning("No crawlers selected by the crawler selection LLM.")
 
+            pause_for_testing("aggregate selected results for article generation")
             url_completed_list = selected_results
             if not url_completed_list:
                 logging.warning("No successful crawler results returned; skipping article generation.")
@@ -145,7 +153,8 @@ def main():
                     write_article(latest_article_text)
                 except Exception as e:
                     logging.error("Writing article failed: %s", e)
-
+    
+                pause_for_testing("finalize article update and send Kafka message")
                 producer = create_producer(servers=["kafka:9092"])
                 send_message(producer, "article_update", b"article updated")
                 logging.info("Article update complete. Pausing for 10 minutes before processing new requests.")
