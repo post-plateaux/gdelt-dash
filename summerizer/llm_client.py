@@ -89,6 +89,29 @@ def get_summary(text, mentionsourcename=None):
         }
     return response_json
 
+def get_translation(text):
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    model = os.environ.get("OPENROUTER_MODEL")
+    if not model:
+        raise ValueError("OPENROUTER_MODEL not set")
+    if not api_key:
+        raise ValueError("OPENROUTER_API_KEY not set")
+
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+    )
+    translation_prompt = "Translate the following text to English:\n" + text
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": os.environ.get("SITE_URL", "http://example.com"),
+            "X-Title": os.environ.get("SITE_NAME", "My Site")
+        },
+        model=model,
+        messages=[{"role": "user", "content": translation_prompt}]
+    )
+    return completion.choices[0].message.content.strip()
+
 def get_article(aggregated_text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
     model = os.environ.get("OPENROUTER_ARTICLE_MODEL") or os.environ.get("OPENROUTER_MODEL")

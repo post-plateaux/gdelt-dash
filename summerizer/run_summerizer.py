@@ -13,7 +13,7 @@ from file_manager import archive_article, write_article
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from config import config
 from crawler_client import call_crawler
-from llm_client import get_summary, get_article, get_selected_crawlers
+from llm_client import get_summary, get_translation, get_article, get_selected_crawlers
 import concurrent.futures
 from datetime import datetime
 
@@ -101,10 +101,13 @@ def main():
                     # idx is 1-based index
                     res = all_results[idx - 1]
                     try:
-                        summary = get_summary(res["source"])
+                        translated_content = get_translation(res["source"])
+                        summary = get_summary(translated_content)
                     except Exception as e:
-                        logging.error("Error calling summary LLM for selected result %s: %s", idx, e)
+                        logging.error("Error calling translation/summarization LLM for selected result %s: %s", idx, e)
                         summary = {"is_relevent": False}
+                        translated_content = res["source"]
+                    res["translated_content"] = translated_content
                     res["LLM_summary"] = summary
                     selected_results.append(res)
             else:
