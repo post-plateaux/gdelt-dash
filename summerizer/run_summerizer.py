@@ -17,6 +17,7 @@ from llm_client import get_summary, get_article, get_selected_crawlers
 from get_translation import get_translation
 import concurrent.futures
 from datetime import datetime
+TESTING_MODE = True
 
 def post_with_retries(url, data, timeout, retries=2):
     attempts = 0
@@ -74,10 +75,13 @@ def main():
             print(f"[Dispatch] Dispatching {len(results)} crawler requests...\n")
 
 
+            filtered_results = [row for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))]
+            if TESTING_MODE:
+                filtered_results = filtered_results[:2]
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
                     executor.submit(call_crawler, row)
-                    for row in results if row.get("mentionidentifier") and is_allowed(row.get("mentionidentifier"))
+                    for row in filtered_results
                 ]
             all_results = [f.result() for f in futures]
             # New LLM call to select crawlers from their titles
