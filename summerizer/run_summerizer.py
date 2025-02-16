@@ -102,8 +102,12 @@ def main():
                     # idx is 1-based index
                     res = all_results[idx - 1]
                     try:
+                        logging.info("Selected result %s content to translate: %s", idx, res["content"])
                         translated_content = get_translation(res["content"])
+                        logging.info("Selected result %s translated content: %s", idx, translated_content)
+                        logging.info("Passing translated content of selected result %s to summarization LLM", idx)
                         summary = get_summary(translated_content)
+                        logging.info("Selected result %s summary: %s", idx, summary)
                     except Exception as e:
                         logging.error("Error calling translation/summarization LLM for selected result %s: %s", idx, e)
                         summary = {"is_relevent": False}
