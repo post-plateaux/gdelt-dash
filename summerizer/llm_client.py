@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from openai import OpenAI
-from summerizer.prompts import SUMMARY_PROMPT, ARTICLE_PROMPT, CRAWLER_SELECTION_PROMPT
+from prompts import SUMMARY_PROMPT, ARTICLE_PROMPT, CRAWLER_SELECTION_PROMPT
 
 def get_summary(text, mentionsourcename=None):
     api_key = os.environ.get("OPENROUTER_API_KEY")
