@@ -89,35 +89,6 @@ def get_summary(text, mentionsourcename=None):
         }
     return response_json
 
-def get_translation(text):
-    import requests
-    try:
-        detect_response = requests.post("http://libretranslate:5000/detect", data={"q": text}, timeout=30)
-        detect_data = detect_response.json()
-        if isinstance(detect_data, list) and len(detect_data) > 0:
-            detected_language = detect_data[0].get("language", "en")
-        else:
-            detected_language = "en"
-    except Exception:
-        detected_language = "en"
-    if detected_language == "en":
-        return text
-    try:
-        translate_response = requests.post(
-            "http://libretranslate:5000/translate",
-            data={
-                "q": text,
-                "source": detected_language,
-                "target": "en",
-                "format": "text"
-            },
-            timeout=30
-        )
-        translate_data = translate_response.json()
-        translated_text = translate_data.get("translatedText", text)
-    except Exception:
-        translated_text = text
-    return translated_text
 
 def get_article(aggregated_text):
     api_key = os.environ.get("OPENROUTER_API_KEY")
