@@ -45,24 +45,30 @@ def crawl_url(url: str) -> dict:
             if line.startswith("# "):
                 title = line[2:].strip()
                 break
-        if title:
+        if output.get("result"):
+            full_text = output["result"]
+            print("=== DEBUG: Sending full content for language detection ===")
+            print("Content snippet:", full_text[:500])
             try:
-                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": title}, timeout=30)
+                detect_response = requests.post("http://libretranslate:5000/detect", data={"q": full_text}, timeout=30)
                 detect_data = detect_response.json()
+                print("=== DEBUG: Detection response:", json.dumps(detect_data, indent=2))
                 if isinstance(detect_data, list) and len(detect_data) > 0:
                     detected_language = detect_data[0].get("language", "unknown")
                 else:
                     detected_language = "unknown"
             except Exception as e:
+                print("=== DEBUG: Detection failed with exception", e)
                 detected_language = "unknown"
             output["detected_language"] = detected_language
-            # If the title is not in English, translate it
+            print("=== DEBUG: Detected language:", detected_language)
+            # If the detected language is not English, translate the full content
             if detected_language != "en":
                 try:
                     translate_response = requests.post(
                         "http://libretranslate:5000/translate",
                         data={
-                            "q": title,
+                            "q": full_text,
                             "source": detected_language,
                             "target": "en",
                             "format": "text"
@@ -70,10 +76,12 @@ def crawl_url(url: str) -> dict:
                         timeout=30
                     )
                     translate_data = translate_response.json()
-                    translated_title = translate_data.get("translatedText", title)
+                    print("=== DEBUG: Translation response:", json.dumps(translate_data, indent=2))
+                    translated_text = translate_data.get("translatedText", full_text)
                 except Exception as e:
-                    translated_title = title
-                output["translated_title"] = translated_title
+                    print("=== DEBUG: Translation failed with exception", e)
+                    translated_text = full_text
+                output["translated_text"] = translated_text
     return output
 
 @app.post("/crawl")
