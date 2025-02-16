@@ -21,7 +21,8 @@ TESTING_MODE = True
 # Helper: pause for user confirmation if in testing mode.
 def pause_for_testing(step):
     if TESTING_MODE:
-        input(f"\n[TEST MODE] About to {step}. Press Enter to continue...")
+        print(f"\nDEBUGGING PAUSE OCCURRED: ABOUT TO {step.upper()}. PAUSING FOR 20 SECONDS...")
+        time.sleep(20)
 
 def post_with_retries(url, data, timeout, retries=2):
     attempts = 0
