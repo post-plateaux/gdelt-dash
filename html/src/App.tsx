@@ -164,7 +164,7 @@ const App: React.FC = () => {
       <div className="fixed top-0 left-0 z-50">
         <div className="h-1 bg-blue-500" style={{ width: `${scrollProgress}%` }} />
       </div>
-      <div className="max-w-4xl w-full bg-amber-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg p-6 relative">
+      <div className="max-w-4xl w-full bg-amber-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg pt-16 pr-6 pb-6 pl-6 relative">
         {/* Dark mode toggle */}
         <div className="absolute top-8 left-4">
           <button
