@@ -39,12 +39,12 @@ def crawl_url(url: str) -> dict:
         output["postlight_exception"] = str(e)
 
     if parser_success:
-        # Extract title from markdown result; use the first line starting with "# "
-        title = ""
-        for line in output["result"].splitlines():
-            if line.startswith("# "):
-                title = line[2:].strip()
-                break
+        # Extract title directly from JSON returned by Postlight Parser CLI.
+        try:
+            result_data = json.loads(output["result"])
+            title = result_data.get("title", "")
+        except Exception as e:
+            title = ""
         if output.get("result"):
             full_text = output["result"]
             print("=== DEBUG: Sending full content for language detection ===")
