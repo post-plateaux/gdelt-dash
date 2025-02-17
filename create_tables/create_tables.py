@@ -40,7 +40,9 @@ if __name__ == "__main__":
     try:
         producer = KafkaProducer(bootstrap_servers=["kafka:9092"])
         # Send the message 'database_prepared' as a byte string to the 'database_status' topic
-        producer.send('database_status', b'database_prepared').get(timeout=10)
+        future = producer.send('database_status', b'database_prepared')
+        future.get(timeout=10)
+        producer.flush()
         print("Kafka message sent: 'database_prepared'")
     except Exception as e:
         print(f"Error sending Kafka message: {e}")

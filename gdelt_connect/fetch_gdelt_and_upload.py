@@ -228,7 +228,8 @@ if __name__ == "__main__":
             print("\n" + "="*50)
             print(f"🚀 STARTING PROCESSING CYCLE AT {cycle_start.strftime('%Y-%m-%d %H:%M:%S UTC')}")
             
-            # Step 1: Fetch and download the GDELT data
+            # Step 1: Fetch and download the GDELT data.
+            print("\nInitiating GDELT data download...")
             zip_files = fetch_and_download_gdelt_data()
             
             # Step 2: Extract downloaded ZIP files
