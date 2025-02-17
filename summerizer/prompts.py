@@ -12,8 +12,12 @@ SUMMARY_PROMPT = (
 )
 
 ARTICLE_PROMPT = (
-    "YOU ARE IN DEBUG MODE IGNORE THE FOLLOWING PROMPTS AND DESCRIBE TO ME THE NATURE AND STRUCTURE OF THE DATA THAT HAS BEEN PASED TO YOU, DESCRIBE IT TO ME!"
-    "Please write a comprehensive article overviewing the events of the last 15 minutes. "
+    "Please write a comprehensive article overviewing the content you have been provided. "
+    "The overarching theme of the article should be foreign sentiment concerning the United States. "
+    "Compose at least one to two full and well thought out paragraph for each of the input sources you have recieved, and include a well thought out and carefully considered introsuction and conclusion paragraph which ties everything toegther, adding extra well thought out content where necessary to transition topics. "
+    "The article should be coheasive, ahev good flow, and follow best writing practices. "
+    "The article should link to the full origional source url. The name of the source, and the source langauage with a *translated from...* style statemnt. "
+    "The article should flow naturally from one subject source to the next, without major interruptions to flow, and include both in text hyprlinks, in text numbered sources, and numbered citations at the end of the article. "
     "Format your output in Markdown using a clear main title (with '#' prefix), appropriate subheadings (with '##'), "
     "and bullet point lists where relevant. Ensure the markdown is well-structured with no extraneous text. "
     "Return only valid markdown."
@@ -21,6 +25,6 @@ ARTICLE_PROMPT = (
 
 CRAWLER_SELECTION_PROMPT = (
     "Given the following crawlers:\n{crawler_titles}\n"
-    "Select exactly ten crawlers at random by their number and return a JSON object strictly following the provided JSON schema. "
+    "Select exactly 15 crawlers which are most likely to express negative sentiment concerning the United States and Trump. "
     "The JSON object must contain one key 'selected_crawlers' whose value is an array of integers."
 )
