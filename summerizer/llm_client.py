@@ -40,34 +40,14 @@ def get_summary(text, mentionsourcename=None):
                     "properties": {
                         "is_relevent": {
                             "type": "boolean",
-                            "description": "True if the content is about refugees globally; otherwise false."
+                            "description": "True if the content is about foreign sentiment; otherwise false."
                         },
-                        "who": {
+                        "foreign_sentiment": {
                             "type": "string",
-                            "description": "If is_relevent is true, provide two sentences describing who is involved."
-                        },
-                        "what": {
-                            "type": "string",
-                            "description": "If is_relevent is true, provide two sentences describing what is happening."
-                        },
-                        "when": {
-                            "type": "string",
-                            "description": "If is_relevent is true, provide two sentences describing when the events occurred."
-                        },
-                        "where": {
-                            "type": "string",
-                            "description": "If is_relevent is true, provide two sentences describing where the events occurred."
-                        },
-                        "why": {
-                            "type": "string",
-                            "description": "If is_relevent is true, provide two sentences describing why the events occurred."
-                        },
-                        "how": {
-                            "type": "string",
-                            "description": "If is_relevent is true, provide two sentences describing how the events occurred."
+                            "description": "A sentiment description regarding foreign policy or related context."
                         }
                     },
-                    "required": ["is_relevent"],
+                    "required": ["is_relevent", "foreign_sentiment"],
                     "additionalProperties": False
                 }
             }
@@ -80,12 +60,7 @@ def get_summary(text, mentionsourcename=None):
         logging.error(f"LLM did not return valid JSON, fallback triggered: {e}")
         response_json = {
             "is_relevent": False,
-            "who": "",
-            "what": "",
-            "when": "",
-            "where": "",
-            "why": "",
-            "how": ""
+            "foreign_sentiment": ""
         }
     return response_json
 
