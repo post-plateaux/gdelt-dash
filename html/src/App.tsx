@@ -231,7 +231,7 @@ const App: React.FC = () => {
         {/* Old Articles Section */}
         <section className="mt-8">
           <h2 className="text-2xl font-bold mb-4 text-center text-blue-400">
-            Rpevious Entries
+            Previous Entries
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {oldArticles.map((article, index) => (
