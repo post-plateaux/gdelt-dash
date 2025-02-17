@@ -100,8 +100,17 @@ def get_article(aggregated_text):
     if temperature is not None:
         completion_args["temperature"] = temperature
     
-    completion = client.chat.completions.create(**completion_args)
-    return {"article": completion.choices[0].message.content}
+    try:
+        completion = client.chat.completions.create(**completion_args)
+        if not completion.choices or len(completion.choices) == 0:
+            logging.error("LLM returned no choices. Full response: %s", completion)
+            raise Exception("LLM returned no choices.")
+        article_text = completion.choices[0].message.content
+    except Exception as e:
+        logging.error("Error calling aggregated article LLM: %s", e)
+        raise e
+    
+    return {"article": article_text}
 
 def get_selected_crawlers(crawler_titles):
     client = OpenAI(
