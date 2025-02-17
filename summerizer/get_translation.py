@@ -35,12 +35,3 @@ def get_translation(text):
                 continue
             else:
                 return text
-
-if __name__ == '__main__':                                                                              
- import sys                                                                                          
- if len(sys.argv) > 1:                                                                               
-     input_text = " ".join(sys.argv[1:])                                                             
-     translated = get_translation(input_text)                                                        
-     print(translated)                                                                               
- else:                                                                                               
-     print("Usage: python get_translation.py <text>")  
