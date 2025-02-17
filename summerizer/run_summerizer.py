@@ -168,8 +168,7 @@ def main():
                 pause_for_testing("finalize article update and send Kafka message")
                 producer = create_producer(servers=["kafka:9092"])
                 send_message(producer, "article_update", b"article updated")
-                logging.info("Article update complete. Pausing for 10 minutes before processing new requests.")
-                time.sleep(600)  # delay for 10 minutes
+                logging.info("Article update complete. Awaiting next Kafka message immediately.")
         # Continue waiting for additional messages
 
 if __name__ == "__main__":
