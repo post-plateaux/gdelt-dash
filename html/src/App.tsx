@@ -165,17 +165,13 @@ const App: React.FC = () => {
         <div className="h-1 bg-blue-500" style={{ width: `${scrollProgress}%` }} />
       </div>
       <div className="max-w-4xl w-full bg-amber-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg pt-16 pr-6 pb-6 pl-6 relative">
-        {/* Dark mode toggle */}
-        <div className="absolute top-8 left-4">
+        <div className="absolute top-10 left-1/2 transform -translate-x-1/2 flex space-x-4">
           <button
             className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
             onClick={toggleDarkMode}
           >
             {darkMode ? "Light Mode" : "Dark Mode"}
           </button>
-        </div>
-        {/* About this Project button */}
-        <div className="absolute top-8 right-4">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded transition-shadow duration-300 hover:shadow-xl"
             onClick={() => setShowOverviewModal(true)}
