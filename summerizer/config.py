@@ -55,8 +55,15 @@ class Config:
         # Constants
         self.ACTOR_CODE = "GOV"
         self.SQL_QUERY = """SELECT DISTINCT mentionidentifier
-            FROM mentions_translated
-            WHERE mentionidentifier ILIKE '%Trump%';"""
+FROM (
+  SELECT mentionidentifier
+  FROM mentions_translated
+  WHERE mentionidentifier ILIKE '%DOGE%'
+  UNION
+  SELECT mentionidentifier
+  FROM mentions_translated
+  WHERE mentionidentifier ILIKE '%Trump%'
+) AS combined_mentions;"""
 
         # Database settings
         self.POSTGRES_HOST = self.get_env("POSTGRES_HOST", "postgres")
