@@ -317,9 +317,12 @@ if __name__ == "__main__":
             traceback.print_exc()
             
         finally:
-            next_run = datetime.utcnow() + timedelta(minutes=interval_minutes)
-            print(f"\n⏳ NEXT UPDATE AT {next_run.strftime('%H:%M:%S UTC')} ({interval_minutes} MINUTES FROM NOW)")
+            elapsed = (datetime.utcnow() - cycle_start).total_seconds()
+            cycle_duration = interval_minutes * 60
+            sleep_time = max(0, cycle_duration - elapsed)
+            next_run = datetime.utcnow() + timedelta(seconds=sleep_time)
+            print(f"\n⏳ NEXT UPDATE AT {next_run.strftime('%H:%M:%S UTC')} (in {sleep_time:.2f} seconds)")
             print("="*50 + "\n")
-            time.sleep(interval_minutes * 60)
+            time.sleep(sleep_time)
 
 
