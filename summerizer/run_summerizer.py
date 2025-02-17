@@ -111,15 +111,14 @@ def main():
 
             selected_results = []
             if selection_result.get("selected_crawlers"):
-                for idx in selection_result["selected_crawlers"]:
-                    # idx is 1-based index
+                # Define a helper function to process translation and summarization
+                def process_translation(idx):
+                    # idx is a 1-based index
                     res = all_results[idx - 1]
                     try:
                         debug_print(f"\n=== TRANSLATION INPUT ===")
                         debug_print(f"Original content ({len(res['content'])} chars): {res['content'][:200]}...")
-                        
                         translated_content = get_translation(res["content"])
-                        
                         debug_print(f"\n=== TRANSLATION OUTPUT ===")
                         debug_print(f"Translated content ({len(translated_content)} chars): {translated_content[:200]}...")
                         summary = get_summary(translated_content)
@@ -129,7 +128,16 @@ def main():
                         translated_content = res["content"]
                     res["translated_content"] = translated_content
                     res["LLM_summary"] = summary
-                    selected_results.append(res)
+                    return res
+
+                with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+                    futures_translation = [executor.submit(process_translation, idx) for idx in selection_result["selected_crawlers"]]
+                    for future in concurrent.futures.as_completed(futures_translation):
+                        try:
+                            result = future.result()
+                            selected_results.append(result)
+                        except Exception as exc:
+                            logging.error("Translation thread generated an exception: %s", exc)
             else:
                 logging.warning("No crawlers selected by the crawler selection LLM.")
 
