@@ -1,5 +1,6 @@
 import os
 from typing import Any, Optional
+from prompts import SUMMARY_PROMPT, ARTICLE_PROMPT, CRAWLER_SELECTION_PROMPT
 
 class Config:
     """Configuration manager for the summerizer application"""
@@ -73,9 +74,10 @@ class Config:
         self.SITE_URL = self.get_env("SITE_URL", "http://example.com")
         self.SITE_NAME = self.get_env("SITE_NAME", "My Site")
         
-        # Prompt settings
-        self.SUMMARY_PROMPT = self.get_env("SUMMARY_PROMPT")
-        self.ARTICLE_PROMPT = self.get_env("ARTICLE_PROMPT")
+        # Prompt settings loaded from prompts.py
+        self.SUMMARY_PROMPT = SUMMARY_PROMPT
+        self.ARTICLE_PROMPT = ARTICLE_PROMPT
+        self.CRAWLER_SELECTION_PROMPT = CRAWLER_SELECTION_PROMPT
         
         # Article generation settings
         self.ARTICLE_MAX_TOKENS = self.get_env("ARTICLE_MAX_TOKENS")
