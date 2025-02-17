@@ -138,9 +138,13 @@ def main():
             if not url_completed_list:
                 logging.warning("No successful crawler results returned; skipping article generation.")
             else:
-                # Convert the list of URL_COMPLETED objects to a JSON-formatted string
-                aggregated_payload = json.dumps(url_completed_list, indent=2)
-                logging.debug("Aggregated URL_COMPLETED payload for article generation:\n%s", aggregated_payload)
+                # Filter out "language" and untranslated "content" from each result
+                filtered_results_for_article = [
+                    {key: value for key, value in result.items() if key not in ["language", "content"]}
+                    for result in selected_results
+                ]
+                aggregated_payload = json.dumps(filtered_results_for_article, indent=2)
+                logging.debug("Aggregated payload for article generation:\n%s", aggregated_payload)
                 try:
                     article_result = get_article(aggregated_payload)
                     logging.info("Aggregated Article Overview generated successfully:")
