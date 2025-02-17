@@ -53,7 +53,7 @@ class Config:
     def __init__(self):
         # Constants
         self.ACTOR_CODE = "GOV"
-        self.SQL_QUERY = """SELECT mentionidentifier
+        self.SQL_QUERY = """SELECT DISTINCT mentionidentifier
             FROM mentions_translated
             WHERE mentionidentifier ILIKE '%Trump%';"""
 
