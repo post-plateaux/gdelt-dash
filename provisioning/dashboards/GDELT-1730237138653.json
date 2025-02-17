@@ -37,7 +37,7 @@
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
-            "axisPlacement": "auto",
+            "axisPlacement": "hidden",
             "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
@@ -96,7 +96,7 @@
           "placement": "bottom",
           "showLegend": false
         },
-        "orientation": "auto",
+        "orientation": "vertical",
         "showValue": "auto",
         "stacking": "none",
         "tooltip": {
@@ -138,7 +138,7 @@
           }
         }
       ],
-      "title": "Top 15 National Instigators of Conflict and Violent Actions",
+      "title": "National Instigators of Conflict and Violent",
       "type": "barchart"
     },
     {
@@ -561,7 +561,7 @@
         "legend": {
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true,
+          "showLegend": false,
           "values": [
             "percent"
           ]
@@ -629,6 +629,6 @@
   "timezone": "browser",
   "title": "GDELT",
   "uid": "ee25sajexuupsc",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
