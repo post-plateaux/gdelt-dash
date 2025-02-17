@@ -7,6 +7,7 @@ SUMMARY_PROMPT = (
     "If a mention source is provided, use it as additional context when determining relevance. "
     "If the content is closely related to Trump, the Trump administration, American foreign policy, or American conservatism in general return a JSON object with 'is_relevent' set to true. "
     "If the content is not directly related to the above subjects, return 'is_relevent' as false without any additional fields. "
+    "If is_relevent is True, retirn 1 to 2 sentences corcening the sentiments of the  foreign sources' concerning the United States of America in the foreign_sentiment field. "
     "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
 )
 
