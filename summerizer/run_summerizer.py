@@ -17,7 +17,7 @@ from llm_client import get_summary, get_article, get_selected_crawlers
 from get_translation import get_translation
 import concurrent.futures
 from datetime import datetime
-TESTING_MODE = True
+TESTING_MODE = False
 # Helper: pause for user confirmation if in testing mode.
 def pause_for_testing(step):
     if TESTING_MODE:
