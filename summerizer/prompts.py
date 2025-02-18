@@ -5,9 +5,10 @@ All prompt texts are defined here for easy modification.
 SUMMARY_PROMPT = (
     "Evaluate the following content for its relevance to American conservatism and foreign policy. "
     "If a mention source is provided, use it as additional context when determining relevance. "
-    "If the content is closely related to Trump, the Trump administration, American foreign policy, or American conservatism in general return a JSON object with 'is_relevent' set to true. "
-    "If the content is not directly related to the above subjects, return 'is_relevent' as false without any additional fields. "
-    "If is_relevent is True, retirn 1 to 2 sentences corcening the sentiments of the  foreign sources' concerning the United States of America in the foreign_sentiment field. "
+    "Return a JSON object with the following keys: 'is_relevent' (boolean), 'foreign_sentiment' (number), and 'summary' (string). "
+    "For content closely related to Trump, the Trump administration, American foreign policy, or American conservatism, set 'is_relevent' to true; otherwise set it to false. "
+    "When 'is_relevent' is true, 'foreign_sentiment' must be one of the following numbers: -3 (very negative), -2 (negative), -1 (slightly negative), 0 (neutral), 1 (slightly positive), 2 (positive), or 3 (very positive), and 'summary' should be a brief 1 to 2 sentence summary. "
+    "If 'is_relevent' is false, set 'foreign_sentiment' to 0 and 'summary' to an empty string. "
     "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
 )
 
