@@ -158,6 +158,8 @@ def main():
                 ]
                 aggregated_payload = json.dumps(filtered_results_for_article, indent=2)
                 logging.debug("Aggregated payload for article generation:\n%s", aggregated_payload)
+                for result in filtered_results_for_article:
+                    logging.info("Final JSON for article generation: %s", json.dumps(result, indent=2))
                 try:
                     article_result = get_article(aggregated_payload)
                     logging.info("Aggregated Article Overview generated successfully:")
