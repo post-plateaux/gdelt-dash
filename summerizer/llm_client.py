@@ -50,9 +50,13 @@ def get_summary(text, mentionsourcename=None):
                         "summary": {
                             "type": "string",
                             "description": "A concise summary of the content when relevant, or an empty string otherwise."
+                        },
+                        "quote": {
+                            "type": "string",
+                            "description": "An extract quote from the content that reflects the overall sentiment, or an empty string if not relevant."
                         }
                     },
-                    "required": ["is_relevent", "foreign_sentiment", "summary"],
+                    "required": ["is_relevent", "foreign_sentiment", "summary", "quote"],
                     "additionalProperties": False
                 }
             }
