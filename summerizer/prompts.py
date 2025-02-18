@@ -7,7 +7,8 @@ SUMMARY_PROMPT = (
     "If a mention source is provided, use it as additional context when determining relevance. "
     "Return a JSON object with the following keys: 'is_relevent' (boolean), 'foreign_sentiment' (string), 'summary' (string), and 'quote' (string). "
     "For content closely related to Trump, the Trump administration, American foreign policy, or American conservatism, set 'is_relevent' to true; otherwise set it to false. "
-    "When 'is_relevent' is true, 'foreign_sentiment' should be one of the following labels: 'very negative', 'negative', 'slightly negative', 'neutral', 'slightly positive', 'positive', or 'very positive', 'summary' should be a brief one-paragraph summary, and 'quote' should be a very short impactful extract quote (must be in English) from the content that reflects poorly on the United States. "
+    "When 'is_relevent' is true, 'foreign_sentiment' should be one of the following labels: 'very negative', 'negative', 'slightly negative', 'neutral', 'slightly positive', 'positive', or 'very positive', 'summary' should be a brief one-paragraph summary, and 'quote' should be a very short impactful extract quote from the content that reflects poorly on the United States. "
+    "Only include quotes from the translated content, in the english language. "
     "If 'is_relevent' is false, set 'foreign_sentiment' to an empty string and both 'summary' and 'quote' to an empty string. "
     "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
 )
