@@ -198,7 +198,7 @@ const App: React.FC = () => {
           <h2 className="text-2xl font-bold mb-2 text-center text-blue-700 dark:text-blue-400">
             15 Every 15
           </h2>
-          <p className="text-md text-center mb-4 text-gray-600 dark:text-gray-300">
+          <p className="text-2xl font-bold mb-2 text-center text-blue-700 dark:text-blue-400">
             Translating 15 International Reports on the U.S. Every 15 Minutes
           </p>
           <div
