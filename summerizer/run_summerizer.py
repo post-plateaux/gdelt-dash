@@ -147,9 +147,13 @@ def main():
             if not url_completed_list:
                 logging.warning("No successful crawler results returned; skipping article generation.")
             else:
-                # Filter out "language" and untranslated "content" from each result
                 filtered_results_for_article = [
-                    {key: value for key, value in result.items() if key not in ["language", "content"]}
+                    {
+                        "original_title": result.get("original_title"),
+                        "translated_title": result.get("translated_title"),
+                        "language": result.get("language"),
+                        "LLM_summary": result.get("LLM_summary")
+                    }
                     for result in selected_results
                 ]
                 aggregated_payload = json.dumps(filtered_results_for_article, indent=2)
