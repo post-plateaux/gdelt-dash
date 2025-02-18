@@ -40,3 +40,9 @@ h1, h2, h3, h4, h5, h6, p, span, div {
 .animate-fadeOut {
   animation: fadeOut 0.2s ease-in forwards;
 }
+
+/* Custom styling for Grafana iframes */
+iframe[src^="https://fifteen.postplateaux.com/grafana"] {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
