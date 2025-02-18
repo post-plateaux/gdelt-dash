@@ -247,7 +247,7 @@ const App: React.FC = () => {
             {currentOldArticles.map((article, index) => (
               <div
                 key={index}
-                className="bg-amber-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 rounded-lg p-4 cursor-pointer hover:bg-amber-300 dark:hover:bg-gray-600 transform hover:scale-105 transition-all duration-300"
+                className="bg-[#EBEDEF] dark:bg-gray-700 text-gray-900 dark:text-gray-300 rounded-lg p-4 cursor-pointer hover:bg-[#D3D3D3] dark:hover:bg-gray-600 transform hover:scale-105 transition-all duration-300"
                 onClick={() => {
                   setSelectedArticle(article);
                   setShowArticleModal(true);
@@ -289,7 +289,7 @@ const App: React.FC = () => {
           >
             <div
               ref={overviewModalRef}
-              className={`bg-amber-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
+              className={`bg-[#EBEDEF] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
                 closingOverview ? "animate-fadeOut" : "animate-fadeIn"
               }`}
               onClick={(e) => e.stopPropagation()}
@@ -329,7 +329,7 @@ const App: React.FC = () => {
           >
             <div
               ref={articleModalRef}
-              className={`bg-amber-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
+              className={`bg-[#EBEDEF] dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto relative p-6 ${
                 closingArticle ? "animate-fadeOut" : "animate-fadeIn"
               }`}
               onClick={(e) => e.stopPropagation()}
