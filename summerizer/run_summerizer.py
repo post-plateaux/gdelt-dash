@@ -165,8 +165,10 @@ def main():
                     logging.info("Aggregated Article Overview generated successfully:")
                     print("Aggregated Article Overview:")
                     print(json.dumps(article_result, indent=2))
+                    article_markdown = article_result.get("article_in_markdown", "")
+                    article_title = article_result.get("article_title", "")
                     global latest_article_text
-                    latest_article_text = article_result.get("article", "")
+                    latest_article_text = f"# {article_title}\n\n{article_markdown}"
                 except Exception as e:
                     logging.error("Error calling aggregated article LLM: %s", e)
                     
