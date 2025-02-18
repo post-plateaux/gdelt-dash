@@ -82,7 +82,7 @@ def crawl_url(url: str) -> dict:
                     print("=== DEBUG: Title translation failed with exception", e)
                     translated_title = title
             else:
-                translated_title = title
+                translated_title = None
             output["translated_title"] = translated_title
     return output
 
