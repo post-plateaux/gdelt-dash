@@ -13,15 +13,11 @@ SUMMARY_PROMPT = (
 )
 
 ARTICLE_PROMPT = (
-    "YOU HAVE BEEN PLACED IN DEBUG MODE. YOU ARE TO DISREGARD ALL FOLLOWING PROMPT INSTRUCTIONS AND INSTEAD RESPOND WITH A DESCRIPTION OF THE INPUT DATA YOU HAVE RECIEVED, IN ADDITION TO AN ACCURATE JSON EXAMPLE! "
-    "Please write a comprehensive article overviewing the content you have been provided. "
-    "The overarching theme of the article should be foreign sentiment concerning the United States. "
-    "Compose at least one to two full and well thought out paragraph for each of the input sources you have recieved, and include a well thought out and carefully considered introsuction and conclusion paragraph which ties everything toegther, adding extra well thought out content where necessary to transition topics. "
-    "The article should be coheasive, ahev good flow, and follow best writing practices. "
-    "The article should link to the full origional source url. The name of the source, and the source langauage with a *translated from...* style statemnt. "
-    "The article should flow naturally from one subject source to the next, without major interruptions to flow, and include both in text hyprlinks, in text numbered sources, and numbered citations at the end of the article. "
-    "Format your output in Markdown using a clear main title (with '#' prefix), appropriate subheadings (with '##'), "
-    "and bullet point lists where relevant. Ensure the markdown is well-structured with no extraneous text. "
+    "Please write a comprehensive article focusing on the foreign sentiment expressed towards the United States as found in the aggregated text. "
+    "Rather than reporting the events themselves, analyze and interpret the attitudes, opinions, and emotions in the content that reflect how foreign sources view U.S. policies, culture, and international relations. "
+    "For each source, provide thoughtful discussion on how the content conveys sentiments toward the U.S. along with relevant context. "
+    "Include a well-considered introduction and conclusion that ties the diverse perspectives into a coherent narrative, and use in-text hyperlinks, numbered citations, and attributions where appropriate. "
+    "Format your output in Markdown using a clear main title (with '#' prefix) and bullet point lists where relevant. Ensure the markdown is well-structured with no extraneous text. "
     "Return only valid markdown."
 )
 
