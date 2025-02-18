@@ -43,9 +43,9 @@ def get_summary(text, mentionsourcename=None):
                             "description": "True if the content is about foreign sentiment; otherwise false."
                         },
                         "foreign_sentiment": {
-                            "type": "integer",
-                            "enum": [-3, -2, -1, 0, 1, 2, 3],
-                            "description": "A numerical representation: -3 very negative, -2 negative, -1 slightly negative, 0 neutral, 1 slightly positive, 2 positive, 3 very positive."
+                            "type": "string",
+                            "enum": ["-3", "-2", "-1", "0", "1", "2", "3"],
+                            "description": "A numerical representation as a string: '-3' very negative, '-2' negative, '-1' slightly negative, '0' neutral, '1' slightly positive, '2' positive, '3' very positive."
                         },
                         "summary": {
                             "type": "string",
