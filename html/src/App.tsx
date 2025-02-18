@@ -228,24 +228,7 @@ const App: React.FC = () => {
             <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
             <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
           </div>
-          <div className="flex justify-center mt-4 space-x-4">
-            {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
-              >
-                Previous
-              </button>
-            )}
-            {indexOfLastArticle < oldArticles.length && (
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
-              >
-                Next
-              </button>
-            )}
-          </div>
+          
           </section>
         {/* Divider with a visual element */}
         <div className="my-8 flex items-center">
@@ -278,6 +261,24 @@ const App: React.FC = () => {
                 </p>
               </div>
             ))}
+          </div>
+          <div className="flex justify-center mt-4 space-x-4">
+            {currentPage > 1 && (
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+              >
+                Previous
+              </button>
+            )}
+            {indexOfLastArticle < oldArticles.length && (
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+              >
+                Next
+              </button>
+            )}
           </div>
         </section>
         {/* Overview Modal */}
