@@ -124,8 +124,8 @@ def main():
                         logging.error("Error processing translation/summarization for result %s: %s", idx, e)
                         summary = {"is_relevent": False}
                     processed = {
-                        "original_title": res.get("title"),
-                        "translated_title": res.get("translated_title"),
+                        "original_title": res.get("original_title"),
+                        "translated_title": res.get("title"),
                         "language": res.get("language"),
                         "LLM_summary": summary,
                     }

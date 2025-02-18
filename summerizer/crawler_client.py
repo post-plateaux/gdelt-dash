@@ -47,9 +47,10 @@ def call_crawler(row, summary_func=None):
                     data["result"] = json.dumps(original_result)
                 else:
                     data["result"] = "[CONTENT HIDDEN]"
-            raw_title = data.get("translated_title")
-            if not raw_title and original_result and isinstance(original_result, dict):
-                raw_title = original_result.get("title")
+            original_title = None
+            if original_result and isinstance(original_result, dict):
+                original_title = original_result.get("title")
+            raw_translated_title = data.get("translated_title")
             final_result["status"].append("Crawler returned successfully.")
         except Exception as e:
             final_result["error"] = f"Error parsing crawler response: {response.text}"
