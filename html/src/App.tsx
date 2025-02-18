@@ -37,6 +37,11 @@ const App: React.FC = () => {
 
   const [latestArticle, setLatestArticle] = useState<string>("");
   const [oldArticles, setOldArticles] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const articlesPerPage = 12;
+  const indexOfLastArticle = currentPage * articlesPerPage;
+  const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
+  const currentOldArticles = oldArticles.slice(indexOfFirstArticle, indexOfLastArticle);
   const [modalContent, setModalContent] = useState<string>("");
 
   const [showOverviewModal, setShowOverviewModal] = useState<boolean>(false);
@@ -207,6 +212,24 @@ const App: React.FC = () => {
             <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
             <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
           </div>
+          <div className="flex justify-center mt-4 space-x-4">
+            {currentPage > 1 && (
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+              >
+                Previous
+              </button>
+            )}
+            {indexOfLastArticle < oldArticles.length && (
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
+              >
+                Next
+              </button>
+            )}
+          </div>
         </section>
         {/* Divider with a visual element */}
         <div className="my-8 flex items-center">
@@ -237,7 +260,7 @@ const App: React.FC = () => {
             Previous Entries
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {oldArticles.map((article, index) => (
+            {currentOldArticles.map((article, index) => (
               <div
                 key={index}
                 className="bg-amber-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 rounded-lg p-4 cursor-pointer hover:bg-amber-300 dark:hover:bg-gray-600 transform hover:scale-105 transition-all duration-300"
