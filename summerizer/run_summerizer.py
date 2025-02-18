@@ -150,7 +150,7 @@ def main():
                 filtered_results_for_article = [
                     {
                         "original_title": result.get("original_title"),
-                        "translated_title": result.get("translated_title"),
+                        "title": result.get("translated_title") or result.get("original_title"),
                         "language": result.get("language"),
                         "LLM_summary": result.get("LLM_summary")
                     }
