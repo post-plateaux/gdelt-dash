@@ -123,9 +123,9 @@ def main():
                 lang = res.get("detected_language", "N/A")
                 publication = urlparse(url).netloc if url != "No URL" else "N/A"
                 bibliography_entries.append(
-                    f"Title: <a href='{url}'>{title}</a>, Date: {now}, Source: {publication}, Language: {lang}"
+                    f"<a href='{url}'>{title}</a>, {now}, {publication}, {lang}"
                 )
-            bib_block = "\n".join(bibliography_entries)
+            bib_block = "\n".join(f"{i+1}. {entry}" for i, entry in enumerate(bibliography_entries))
             print("Bibliography:\n" + bib_block)
             
             selected_results = []
