@@ -108,7 +108,29 @@ def get_article(aggregated_text):
         model=model,
         messages=[
             {"role": "user", "content": final_prompt}
-        ]
+        ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "aggregated_article",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "article_in_markdown": {
+                            "type": "string",
+                            "description": "The aggregated article in markdown format."
+                        },
+                        "article_title": {
+                            "type": "string",
+                            "description": "The title of the aggregated article."
+                        }
+                    },
+                    "required": ["article_in_markdown", "article_title"],
+                    "additionalProperties": False
+                }
+            }
+        }
     )
     if max_tokens is not None:
         completion_args["max_tokens"] = max_tokens
@@ -120,12 +142,12 @@ def get_article(aggregated_text):
         if not completion.choices or len(completion.choices) == 0:
             logging.error("LLM returned no choices. Full response: %s", completion)
             raise Exception("LLM returned no choices.")
-        article_text = completion.choices[0].message.content
+        article_json = json.loads(completion.choices[0].message.content)
     except Exception as e:
         logging.error("Error calling aggregated article LLM: %s", e)
         raise e
     
-    return {"article": article_text}
+    return article_json
 
 def get_selected_crawlers(crawler_titles):
     client = OpenAI(
