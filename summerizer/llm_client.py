@@ -49,7 +49,7 @@ def get_summary(text, mentionsourcename=None):
                         },
                         "summary": {
                             "type": "string",
-                            "description": "A concise summary of the content when relevant, or an empty string otherwise."
+                            "description": "A concise one parapgraph summary of the content when relevant, or an empty string otherwise."
                         },
                         "quote": {
                             "type": "string",
