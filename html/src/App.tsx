@@ -212,6 +212,22 @@ const App: React.FC = () => {
             <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
             <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
           </div>
+          
+        </section>
+        {/* Divider with a visual element */}
+        <div className="my-8 flex items-center">
+          <hr className="flex-grow border-t border-gray-700" />
+          <div className="mx-4">
+            <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+          </div>
+          <hr className="flex-grow border-t border-gray-700" />
+        </div>
+        {/* Visualizations Section */}
+        <section className="mt-4">
+          <div className="flex justify-center space-x-8">
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          </div>
           <div className="flex justify-center mt-4 space-x-4">
             {currentPage > 1 && (
               <button
@@ -229,21 +245,6 @@ const App: React.FC = () => {
                 Next
               </button>
             )}
-          </div>
-        </section>
-        {/* Divider with a visual element */}
-        <div className="my-8 flex items-center">
-          <hr className="flex-grow border-t border-gray-700" />
-          <div className="mx-4">
-            <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
-          </div>
-          <hr className="flex-grow border-t border-gray-700" />
-        </div>
-        {/* Visualizations Section */}
-        <section className="mt-4">
-          <div className="flex justify-center space-x-8">
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
           </div>
         </section>
         {/* Divider with a visual element */}
