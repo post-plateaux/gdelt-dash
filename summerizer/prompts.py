@@ -24,7 +24,7 @@ ARTICLE_PROMPT = (
 
 CRAWLER_SELECTION_PROMPT = (
     "Given the following crawlers:\n{crawler_titles}\n"
-    "Select exactly 3 crawlers which are most likely to express negative sentiment concerning the United States and Trump. "
+    "Select exactly 5 crawlers which are most likely to express negative sentiment concerning the United States and Trump. "
     "Do not select the same article twice if it appears more than once. Try to select articles from distinct languages if possible. "
     "The JSON object must contain one key 'selected_crawlers' whose value is an array of integers."
 )
