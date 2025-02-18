@@ -64,12 +64,16 @@ def get_summary(text, mentionsourcename=None):
     )
     
     try:
+        if not completion.choices or not completion.choices[0].message or not completion.choices[0].message.content:
+            raise Exception("LLM response missing choices or message content")
         response_json = json.loads(completion.choices[0].message.content)
     except Exception as e:
         logging.error(f"LLM did not return valid JSON, fallback triggered: {e}")
         response_json = {
             "is_relevent": False,
-            "foreign_sentiment": ""
+            "foreign_sentiment": 0,
+            "summary": "",
+            "quote": ""
         }
     return response_json
 
