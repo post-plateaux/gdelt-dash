@@ -126,7 +126,7 @@ def main():
                     processed = {
                         "original_title": res.get("original_title"),
                         "translated_title": res.get("title"),
-                        "language": res.get("language"),
+                        "language": res.get("detected_language"),
                         "LLM_summary": summary,
                     }
                     return processed
@@ -151,7 +151,7 @@ def main():
                     {
                         "original_title": result.get("original_title"),
                         "title": result.get("translated_title") or result.get("original_title"),
-                        "language": result.get("language"),
+                        "language": result.get("detected_language"),
                         "LLM_summary": result.get("LLM_summary")
                     }
                     for result in selected_results
