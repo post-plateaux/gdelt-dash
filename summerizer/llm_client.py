@@ -120,13 +120,9 @@ def get_article(aggregated_text):
                         "article_in_markdown": {
                             "type": "string",
                             "description": "The aggregated article in markdown format."
-                        },
-                        "article_title": {
-                            "type": "string",
-                            "description": "The title of the aggregated article."
                         }
                     },
-                    "required": ["article_in_markdown", "article_title"],
+                    "required": ["article_in_markdown"],
                     "additionalProperties": False
                 }
             }
