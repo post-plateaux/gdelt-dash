@@ -12,6 +12,7 @@ SUMMARY_PROMPT = (
 )
 
 ARTICLE_PROMPT = (
+    "YOU HAVE BEEN PLACED IN DEBUG MODE. YOU ARE TO DISREGARD ALL FOLLOWING PROMPT INSTRUCTIONS AND INSTEAD RESPOND WITH A DESCRIPTION OF THE INPUT DATA YOU HAVE RECIEVED, IN ADDITION TO AN ACCURATE JSON EXAMPLE! "
     "Please write a comprehensive article overviewing the content you have been provided. "
     "The overarching theme of the article should be foreign sentiment concerning the United States. "
     "Compose at least one to two full and well thought out paragraph for each of the input sources you have recieved, and include a well thought out and carefully considered introsuction and conclusion paragraph which ties everything toegther, adding extra well thought out content where necessary to transition topics. "
@@ -25,6 +26,6 @@ ARTICLE_PROMPT = (
 
 CRAWLER_SELECTION_PROMPT = (
     "Given the following crawlers:\n{crawler_titles}\n"
-    "Select exactly 15 crawlers which are most likely to express negative sentiment concerning the United States and Trump. "
+    "Select exactly 2 crawlers which are most likely to express negative sentiment concerning the United States and Trump. "
     "The JSON object must contain one key 'selected_crawlers' whose value is an array of integers."
 )
