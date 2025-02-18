@@ -151,7 +151,7 @@ def main():
                     {
                         "original_title": result.get("original_title"),
                         "title": result.get("translated_title") or result.get("original_title"),
-                        "language": result.get("detected_language"),
+                        "language": result.get("language"),
                         "LLM_summary": result.get("LLM_summary")
                     }
                     for result in selected_results
