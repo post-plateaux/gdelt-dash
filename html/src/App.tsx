@@ -246,7 +246,7 @@ const App: React.FC = () => {
               </button>
             )}
           </div>
-        </section>
+          </section>
         {/* Divider with a visual element */}
         <div className="my-8 flex items-center">
           <hr className="flex-grow border-t border-gray-700" />
