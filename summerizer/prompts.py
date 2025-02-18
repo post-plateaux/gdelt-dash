@@ -7,7 +7,7 @@ SUMMARY_PROMPT = (
     "If a mention source is provided, use it as additional context when determining relevance. "
     "Return a JSON object with the following keys: 'is_relevent' (boolean), 'foreign_sentiment' (number), 'summary' (string), and 'quote' (string). "
     "For content closely related to Trump, the Trump administration, American foreign policy, or American conservatism, set 'is_relevent' to true; otherwise set it to false. "
-    "When 'is_relevent' is true, 'foreign_sentiment' must be one of the following numbers: -3 (very negative), -2 (negative), -1 (slightly negative), 0 (neutral), 1 (slightly positive), 2 (positive), or 3 (very positive), 'summary' should be a brief 1 prarapgraph summary, and 'quote' should be an impactful extract quote from the content that reflects the overall sentiment. "
+    "When 'is_relevent' is true, 'foreign_sentiment' must be one of the following numbers: -3 (very negative), -2 (negative), -1 (slightly negative), 0 (neutral), 1 (slightly positive), 2 (positive), or 3 (very positive), 'summary' should be a brief 1 prarapgraph summary, and 'quote' should be a very short impactful extract quote (must be in English) from the content that reflects the overall sentiment. "
     "If 'is_relevent' is false, set 'foreign_sentiment' to 0 and both 'summary' and 'quote' to an empty string. "
     "Strictly adhere to the provided JSON schema and do not include any additional text. Content: {text}"
 )
@@ -28,5 +28,6 @@ ARTICLE_PROMPT = (
 CRAWLER_SELECTION_PROMPT = (
     "Given the following crawlers:\n{crawler_titles}\n"
     "Select exactly 2 crawlers which are most likely to express negative sentiment concerning the United States and Trump. "
+    "Do not select the same article twice if it appears more than once. Try to select articles from distinct languages if possible. "
     "The JSON object must contain one key 'selected_crawlers' whose value is an array of integers."
 )
