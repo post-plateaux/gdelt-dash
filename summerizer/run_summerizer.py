@@ -185,6 +185,8 @@ def main():
                     print("Aggregated Article Overview:")
                     print(json.dumps(article_result, indent=2))
                     article_in_markdown = article_result.get("article_in_markdown", "")
+                    # Append bibliography block in Markdown format with subheading "Sources"
+                    article_in_markdown += "\n\n### Sources\n\n" + bib_block
                     global latest_article_text
                     latest_article_text = article_in_markdown
                 except Exception as e:
