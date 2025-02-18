@@ -73,7 +73,8 @@ def call_crawler(row, summary_func=None):
         if raw_content:
             url_completed = {
                 "source": url_arg,
-                "title": raw_title if raw_title else "N/A",
+                "original_title": original_title if original_title else "N/A",
+                "title": raw_translated_title if raw_translated_title else (original_title if original_title else "N/A"),
                 "content": summary_input,
                 "detected_language": data.get("detected_language", "unknown")
             }
