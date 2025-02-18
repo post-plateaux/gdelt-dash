@@ -150,7 +150,7 @@ def main():
                     }
                     return processed
 
-                with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+                with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
                     futures_translation = [executor.submit(process_translation, idx) for idx in selection_result["selected_crawlers"]]
                     for future in concurrent.futures.as_completed(futures_translation):
                         try:
