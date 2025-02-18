@@ -190,9 +190,12 @@ const App: React.FC = () => {
         </div>
         {/* Overview Section */}
         <section className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700 dark:text-blue-400">
-            Overview of the Last 15
+          <h2 className="text-2xl font-bold mb-2 text-center text-blue-700 dark:text-blue-400">
+            15 Every 15
           </h2>
+          <p className="text-md text-center mb-4 text-gray-600 dark:text-gray-300">
+            Translating 15 International Reports on the U.S. Every 15 Minutes
+          </p>
           <div
             className="prose dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: marked.parse(overviewContent) }}
