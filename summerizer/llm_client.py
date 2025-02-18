@@ -64,6 +64,7 @@ def get_summary(text, mentionsourcename=None):
     )
     
     try:
+        print("DEBUG: Raw LLM response:", completion)
         if not completion.choices or not completion.choices[0].message or not completion.choices[0].message.content:
             raise Exception("LLM response missing choices or message content")
         print("DEBUG: Full LLM response content:", completion.choices[0].message.content)
