@@ -109,6 +109,22 @@ def main():
                 logging.warning("No valid crawler titles found for selection LLM.")
                 selection_result = {}
 
+            # Create bibliography entries for selected sources immediately after LLM selection
+            from urllib.parse import urlparse
+            now = datetime.now().strftime("%Y-%m-%d")
+            bibliography_entries = []
+            for idx in selection_result.get("selected_crawlers", []):
+                res = all_results[idx - 1]
+                title = res.get("title") or res.get("original_title") or "No Title"
+                url = res.get("mentionidentifier", "No URL")
+                lang = res.get("detected_language", "N/A")
+                publication = urlparse(url).netloc if url != "No URL" else "N/A"
+                bibliography_entries.append(
+                    f"Title: {title}, Date: {now}, URL: {url}, Language: {lang}, Publication: {publication}"
+                )
+            bib_block = "\n".join(bibliography_entries)
+            print("Bibliography:\n" + bib_block)
+            
             selected_results = []
             if selection_result.get("selected_crawlers"):
                 # Define a helper function to process translation and summarization
