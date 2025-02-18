@@ -115,6 +115,9 @@ def main():
             bibliography_entries = []
             for idx in selection_result.get("selected_crawlers", []):
                 res = all_results[idx - 1]
+                orig = filtered_results[idx - 1]
+                if "mentionidentifier" not in res:
+                    res["mentionidentifier"] = orig["mentionidentifier"]
                 title = res.get("title") or res.get("original_title") or "No Title"
                 url = res.get("mentionidentifier", "No URL")
                 lang = res.get("detected_language", "N/A")
