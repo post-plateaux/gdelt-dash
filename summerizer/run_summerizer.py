@@ -116,19 +116,20 @@ def main():
                     # idx is a 1-based index
                     res = all_results[idx - 1]
                     try:
-                        debug_print(f"\n=== TRANSLATION INPUT ===")
-                        debug_print(f"Original content ({len(res['content'])} chars): {res['content'][:200]}...")
+                        debug_print(f"Translating content ({len(res['content'])} chars)...")
                         translated_content = get_translation(res["content"])
-                        debug_print(f"\n=== TRANSLATION OUTPUT ===")
-                        debug_print(f"Translated content ({len(translated_content)} chars): {translated_content[:200]}...")
+                        debug_print("Content translation complete.")
                         summary = get_summary(translated_content)
                     except Exception as e:
-                        logging.error("Error calling translation/summarization LLM for selected result %s: %s", idx, e)
+                        logging.error("Error processing translation/summarization for result %s: %s", idx, e)
                         summary = {"is_relevent": False}
-                        translated_content = res["content"]
-                    res["translated_content"] = translated_content
-                    res["LLM_summary"] = summary
-                    return res
+                    processed = {
+                        "original_title": res.get("title"),
+                        "translated_title": res.get("translated_title"),
+                        "language": res.get("language"),
+                        "LLM_summary": summary,
+                    }
+                    return processed
 
                 with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
                     futures_translation = [executor.submit(process_translation, idx) for idx in selection_result["selected_crawlers"]]
