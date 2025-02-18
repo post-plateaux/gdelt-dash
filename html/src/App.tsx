@@ -189,9 +189,9 @@ const App: React.FC = () => {
           </button>
         </div>
         {/* Top Banner */}
-        <div className="mt-4 mb-8 flex justify-center">
-          <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=9&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-          <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=8&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+        <div className="mt-4 mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <iframe className="w-full" src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=9&__feature.dashboardSceneSolo" height="200" frameborder="0"></iframe>
+          <iframe className="w-full" src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=8&__feature.dashboardSceneSolo" height="200" frameborder="0"></iframe>
         </div>
         {/* Overview Section */}
         <section className="mt-8">
@@ -208,9 +208,9 @@ const App: React.FC = () => {
         </section>
         {/* Additional Visualizations Section */}
         <section className="mt-4">
-          <div className="flex justify-center space-x-8">
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe className="w-full" src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=1&__feature.dashboardSceneSolo" height="200" frameborder="0"></iframe>
+            <iframe className="w-full" src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=2&__feature.dashboardSceneSolo" height="200" frameborder="0"></iframe>
           </div>
           
         </section>
@@ -224,9 +224,9 @@ const App: React.FC = () => {
         </div>
         {/* Visualizations Section */}
         <section className="mt-4">
-          <div className="flex justify-center space-x-8">
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
-            <iframe src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <iframe className="w-full" src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=5&__feature.dashboardSceneSolo" height="200" frameborder="0"></iframe>
+            <iframe className="w-full" src="https://fifteen.postplateaux.com/grafana/d-solo/ee25sajexuupsc/gdelt?orgId=1&timezone=browser&panelId=6&__feature.dashboardSceneSolo" height="200" frameborder="0"></iframe>
           </div>
           
           </section>
